@@ -1,10 +1,14 @@
 <template>
 	<div class="welcome">
+        <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
+            <!-- 左侧菜单 -->
             <VueLeft show=""></VueLeft>
+            <!-- 右侧内容 -->
             <div class="main-content">
                 <div class="main-content-inner">
+                    <!-- 面包屑 -->
                     <div class="breadcrumbs" id="breadcrumbs">
                         <ul class="breadcrumb">
                             <li>
@@ -16,8 +20,9 @@
                             </li>
                         </ul>
                     </div>
+                    <!-- 左侧主要内容 -->
                     <div class="page-content">
-                        <h1 class="text-center">欢迎使用实验室安全检查系统</h1>
+                        <h1 class="text-center">{{msg}}</h1>
                     </div>
                 </div>
             </div>
@@ -37,7 +42,7 @@ export default {
     },
     data() {
         return {
-            msg: "Welcome to Your Vue.js App"
+            msg: "欢迎使用实验室安全检查系统"
         }
     }
 };
