@@ -32,5 +32,24 @@ export default {
 .app #breadcrumbs {
     display: none !important;
 }
+a:hover {
+    cursor: pointer;
+}
+.lettle {
+    width:80px;
+}
+.inlineInput {
+    width:100%;
+    max-width: 160px;
+}
+.app .page-content {
+    padding-left:0;
+    padding-right:0;
+}
+@media screen and (max-width:767px){
+    .lettle {
+        width:auto;
+    }  
+}
 </style>
 

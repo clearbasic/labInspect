@@ -1,90 +1,70 @@
 //左侧菜单配置
+let pathName = "";
 export default [
     {
         name:"检查安排",
-        url:"",
+        url:pathName+"",
         icon:"0",
-        route:"/",
         child:[
             {
                 name:"检查指标",
-                url:"",
-                parent:"/",
-                route:"/",
+                url:pathName+"/checkList",
                 icon:"",
             },
             {
                 name:"检查期次",
-                url:"",
-                parent:"/",
-                route:"",
+                url:pathName+"/checkPlan",
                 icon:"",
             }
         ]
     },
     {
         name:"检查工作",
-        url:"",
+        url:pathName+"",
         icon:"",
-        route:"",
         child:[
             {
                 name:"检查小组",
-                url:"",
-                parent:"1",
-                route:"",
+                url:pathName+"",
                 icon:"",
             },
             {
                 name:"检查工作",
-                url:"",
-                parent:"1",
-                route:"",
+                url:pathName+"",
                 icon:"",
             },
             {
                 name:"问题反馈",
-                url:"",
-                parent:"1",
-                route:"",
+                url:pathName+"",
                 icon:"",
             }
         ]
     },
     {
         name:"统计总结",
-        url:"",
-        route:"",
+        url:pathName+"",
         icon:"",
         child:[
             {
                 name:"安全责任人登录表",
-                url:"",
-                parent:"2",
-                route:"",
+                url:pathName+"",
                 icon:"",
             },
             {
                 name:"检查统计表",
-                url:"",
-                parent:"2",
-                route:"",
+                url:pathName+"",
                 icon:"",
             },
             {
                 name:"评奖评优",
-                url:"",
-                parent:"2",
-                route:"",
+                url:pathName+"",
                 icon:"",
             }
         ]
     },
     {
         name:"退出系统",
-        url:"",
-        parent:"3",
-        route:"",
+        url:pathName+"",
         icon:""
     }
 ]
