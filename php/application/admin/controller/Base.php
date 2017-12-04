@@ -14,7 +14,7 @@ use think\Request;
 class Base extends Common
 {
     public function login()
-    {   
+    {
         $userModel = model('User');
         $param = $this->param;
         $username = $param['username'];

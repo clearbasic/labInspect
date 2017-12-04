@@ -14,6 +14,7 @@ return [
         'admin/menus'		   =>'admin/menus',
         'admin/structures'	   =>'admin/structures',
         'admin/posts'          =>'admin/posts',
+        'admin/checklist'      =>'admin/checklist',
     ],
 
 	// 【基础】登录
@@ -55,7 +56,9 @@ return [
 	// 【部门】批量删除
 	'admin/posts/deletes' => ['admin/posts/deletes', ['method' => 'POST']],
 	// 【部门】批量启用/禁用
-	'admin/posts/enables' => ['admin/posts/enables', ['method' => 'POST']],
+    'admin/posts/enables' => ['admin/posts/enables', ['method' => 'POST']],
+    // 【部门】批量启用/禁用
+    'admin/checklist/index' => ['admin/checklist/index', ['method' => 'GET']],
 	
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',

@@ -11,7 +11,7 @@ class Users extends ApiCommon
 {
 
     public function index()
-    {   
+    {
         $userModel = model('User');
         $param = $this->param;
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';

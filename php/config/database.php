@@ -8,13 +8,13 @@ return [
     // 数据库类型
     'type'           => 'mysql',
     // 服务器地址
-    'hostname'       => '127.0.0.1',
+    'hostname'       => 'mysql-web.crigh.net',
     // 数据库名
-    'database'       => '[DB_NAME]',
+    'database'       => 'lab-inspect',
     // 用户名
-    'username'       => '[DB_USER]',
+    'username'       => 'root',
     // 密码
-    'password'       => '[DB_PWD]',
+    'password'       => '',
     // 端口
     'hostport'       => '3306',
     // 连接dsn
