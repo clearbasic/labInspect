@@ -56,7 +56,7 @@
                                     </td>
                                     <td class="center">
                                         <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button"><i class="ace-icon fa fa-search-plus bigger-100"></i></router-link>
-                                        <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id)"><i class="ace-icon fa fa-trash-o bigger-100"></i></button>
+                                        <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id)"><i class="ace-icon fa fa-trash-o bigger-100"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -96,6 +96,13 @@ export default {
                 }
             ]
         };
+    },
+    methods:{
+        deleteCheckPlan(){
+            if(confirm("删除后不可恢复，请谨慎操作，是否继续删除？？")){
+                //删除检查期次代码
+            }
+        }
     }
 };
 </script>

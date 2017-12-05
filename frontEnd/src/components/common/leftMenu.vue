@@ -1,13 +1,13 @@
 <template>
-    <div id="sidebar" class="sidebar responsive">
+    <div id="sidebars" class="sidebar responsive">
         <ul class="nav nav-list">
-            <li :class="{active:parentNode === index,open:active === index}"
+            <li :class="{active:parentNode === index}"
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
-                @click="toggleMenu(index)"
+                @click="toggleMenu($event)"
             >
-                <a :class="{'dropdown-toggle':first.child&&first.child.length>0}">
-                    <i :class="first.icon"></i>
+                <a :class="{red:index===leftMenuData.length-1}">
+                    <i :class="'menu-icon '+first.icon"></i>
                     <span class="menu-text">{{first.name}}</span>
                     <b class="arrow fa fa-angle-down" v-if="first.child&&first.child.length>0"></b>
                 </a>
@@ -24,6 +24,9 @@
                 </ul>
             </li>
         </ul>
+        <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+            <i class="ace-icon fa fa-angle-double-left"></i>
+        </div>
     </div>
 </template>
 <script>
@@ -37,8 +40,8 @@ export default {
         }
     },
     methods: {
-        toggleMenu(id){
-            this.active = id;
+        toggleMenu(event){
+            $(event.target).next(".submenu").slideToggle(300);
         }
     },
     mounted(){

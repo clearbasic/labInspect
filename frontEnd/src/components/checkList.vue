@@ -50,7 +50,7 @@
                                     </td>
                                     <td class="hidden-480">{{item.intro}}</td>
                                     <td class="center"><router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link></td>
-                                    <td class="center"><botton class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id)"><i class="ace-icon fa fa-trash-o bigger-130"></i></botton></td>
+                                    <td class="center"><button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id)"><i class="ace-icon fa fa-trash-o bigger-130"></i></button></td>
                                 </tr>
                             </tbody>
                         </table>

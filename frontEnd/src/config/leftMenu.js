@@ -4,7 +4,7 @@ export default [
     {
         name:"检查安排",
         url:pathName+"",
-        icon:"0",
+        icon:"ace-icon glyphicon glyphicon-home",
         child:[
             {
                 name:"检查指标",
@@ -21,7 +21,7 @@ export default [
     {
         name:"检查工作",
         url:pathName+"",
-        icon:"",
+        icon:"ace-icon fa fa-book",
         child:[
             {
                 name:"检查小组",
@@ -43,7 +43,7 @@ export default [
     {
         name:"统计总结",
         url:pathName+"",
-        icon:"",
+        icon:"ace-icon fa fa-bar-chart-o",
         child:[
             {
                 name:"安全责任人登录表",
@@ -65,6 +65,6 @@ export default [
     {
         name:"退出系统",
         url:pathName+"",
-        icon:""
+        icon:"ace-icon glyphicon glyphicon-off"
     }
 ]

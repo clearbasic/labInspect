@@ -5,6 +5,10 @@
                 <div class="modal-body">
                     <form action="" id="createItemForm">
                         <div class="form-group">
+                            <label for=""><h5>指标名称：</h5></label>
+                            <input type="text" class="form-control" v-model="item_name" placeholder="请输入指标名称">
+                        </div>
+                        <div class="form-group">
                             <label for=""><h5>指标类型：</h5></label>
                             <div class="radio">
                                 <label>
@@ -16,10 +20,6 @@
                                     <span class="lbl">普通指标</span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for=""><h5>指标名称：</h5></label>
-                            <input type="text" class="form-control" v-model="item_name" placeholder="请输入指标名称">
                         </div>
                         <div class="form-group">
                             <label for=""><h5>是否一票否决：</h5></label>

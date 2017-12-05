@@ -4,7 +4,7 @@ import Index from '../components/index'
 import CheckList from '../components/checkList';
 import CheckItem from '../components/checkItem/checkItem';
 import CheckPlan from '../components/checkPlan/checkPlan';
-import CheckPlanDetail from '../components/checkPlan/checkPlanDetail';
+import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 
 
 Vue.use(Router)

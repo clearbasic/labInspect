@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router';
+import BootstrapVue from 'bootstrap-vue'
 
+Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 Vue.prototype.pathName = "";
 //这是钩子进入页面之前,就修改title

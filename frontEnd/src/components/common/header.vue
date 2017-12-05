@@ -1,7 +1,7 @@
 <template>
     <div id="navbar" class="navbar navbar-default">
         <div id="navbar-container" class="navbar-container">
-            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebars">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
