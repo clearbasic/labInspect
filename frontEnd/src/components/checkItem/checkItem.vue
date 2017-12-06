@@ -13,10 +13,10 @@
                         <ul class="breadcrumb">
                             <li>
                                 <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link to="/">首页</router-link>
+                                <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link to="/checkList" class="active">检查指标类别管理</router-link>
+                                <router-link :to="pathName+'/checkList'" class="active">检查指标类别管理</router-link>
                             </li>
                         </ul>
                     </div>

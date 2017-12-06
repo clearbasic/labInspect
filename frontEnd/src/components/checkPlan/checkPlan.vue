@@ -26,7 +26,9 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">添加</button>
+                                    <router-link :to="{path:pathName+'/checkPlan/0'}" class="btn btn-primary btn-sm" tag="button">
+                                        添加
+                                    </router-link>
                                 </div>
                             </h1>
                         </div>

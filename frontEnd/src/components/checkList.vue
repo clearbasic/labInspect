@@ -13,10 +13,10 @@
                         <ul class="breadcrumb">
                             <li>
                                 <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link to="/">首页</router-link>
+                                <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link to="/checkList" class="active">{{title}}</router-link>
+                                <router-link :to="pathName+'/checkList'" class="active">{{title}}</router-link>
                             </li>
                         </ul>
                     </div>
@@ -36,6 +36,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr v-if="checkListDate.length ==0">
+                                    <td colspan="5" align="center">
+                                        数据加载中...
+                                    </td>
+                                </tr>
                                 <tr v-for="item in checkListDate" :key="item.id">
                                     <td class="center">{{item.id}}</td>
                                     <td @dblclick="showCheckListNameInput(item.id,item.name)">
@@ -64,6 +69,8 @@
 <script>
 import VueHead from "./common/header";
 import VueLeft from "./common/leftMenu";
+import {serverUrl} from '../config/server.js';
+import {emitAjax} from '../assets/common.js';
 
 export default {
     name: "checkList",
@@ -76,35 +83,7 @@ export default {
             title: "检查指标类别管理",
             isInput:0,
             checkListName:"", //当前指标分类修改的名字
-            checkListDate:[
-                {
-                    id:1,
-                    name:"教师检查指标库",
-                    intro:"描述",
-                    group_order:"",
-                    creator:"李四",
-                    dt_create:"2017-10-13",
-                    count:12
-                },
-                {
-                    id:2,
-                    name:"课桌检查指标库",
-                    intro:"描述",
-                    group_order:"",
-                    creator:"李四",
-                    dt_create:"2017-10-13",
-                    count:12
-                },
-                {
-                    id:3,
-                    name:"药品检查指标库",
-                    intro:"描述",
-                    group_order:"",
-                    creator:"李四",
-                    dt_create:"2017-10-13",
-                    count:12
-                }
-            ]
+            checkListDate:[]
         }
     },
     methods:{
@@ -123,5 +102,14 @@ export default {
             this.isInput = 0;
         }
     },
+    mounted(){
+        const URL = serverUrl+"/admin/checklist/index";
+        const _SELF = this;
+        emitAjax(URL,null,function(result){
+            
+            _SELF.checkListDate = result;
+            
+        })
+    }
 };
 </script>

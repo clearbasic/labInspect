@@ -13,10 +13,10 @@
                         <ul class="breadcrumb">
                             <li>
                                 <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link to="/">首页</router-link>
+                                <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link to="/checkPlan" class="active">检查期次管理</router-link>
+                                <router-link :to="pathName+'/checkPlan'" class="active">检查期次管理</router-link>
                             </li>
                         </ul>
                     </div>
@@ -25,20 +25,17 @@
                         <div class="page-header">
                             <h1>
                                 {{title}}
-                                <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">添加</button>
-                                </div>
                             </h1>
                         </div>
                         <div class="form-horizontal">
                             <div class="form-group">
                                 <label for="" class="col-sm-2 col-md-1 control-label">期次名称</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" v-model="checkPlan.plan_name">
+                                    <input type="text" class="form-control" v-model="checkPlan.plan_name" @blur="setCheckPlan">
                                 </div>
                                 <label for="" class="col-sm-1 control-label">总分</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" v-model="checkPlan.plan_score">
+                                    <input type="text" class="form-control" v-model="checkPlan.plan_score" @blur="setCheckPlan">
                                 </div>
                             </div>
                         </div>
@@ -50,13 +47,13 @@
                             </ul>
                             <div class="tab-content">
                                 <div id="checkPlan" class="tab-pane fade active in">
-                                    <CheckTask :checkPlanId = "$route.params.id" :taskList="checkPlan.task_list"></CheckTask>
+                                    <CheckTask></CheckTask>
                                 </div>
                                 <div id="checkRule" class="tab-pane fade">
-                                    <CheckRule :checkPlanId = "$route.params.id" :ruleList="checkPlan.rule_list"></CheckRule>
+                                    <CheckRule></CheckRule>
                                 </div>
                                 <div id="workDescription" class="tab-pane fade">
-                                    <CheckDescription :checkPlanId = "$route.params.id"></CheckDescription>
+                                    <CheckDescription></CheckDescription>
                                 </div>
                             </div>
                         </div>  
@@ -86,52 +83,21 @@ export default {
     data() {
         return {
             title: "检查期次管理编辑",
-            checkPlan:{
-                plan_id:1,
-                plan_name:"2018年实验室检查",
-                current:"no",
-                plan_score:100,
-                task_list:[
-                    {
-                        plan_id:1,
-                        task_id:1,
-                        task_name:"第一次",
-                        task_level:"school",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                    },
-                    {
-                        plan_id:1,
-                        task_id:2,
-                        task_name:"第二次",
-                        task_level:"school",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                    },
-                    {
-                        plan_id:1,
-                        task_id:3,
-                        task_name:"第一次",
-                        task_level:"college",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                    },
-                    {   
-                        plan_id:1,
-                        task_id:4,
-                        task_name:"第一次",
-                        task_level:"lab",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                    }
-                ],
-                rule_list:[]
-            }
         };
+    },
+    computed:{
+        checkPlan(){
+            return this.$store.state.checkPlan;
+        }
+    },
+    methods:{
+        setCheckPlan(){
+            this.$store.dispatch("setCheckPlan",this.checkPlan);
+        },
     },
     mounted(){
         //获取检测期次信息
-
+        this.$store.dispatch("setCheckPlan");
     }
 };
 </script>
