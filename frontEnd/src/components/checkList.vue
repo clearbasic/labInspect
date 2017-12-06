@@ -23,7 +23,12 @@
                     <!-- 左侧主要内容 -->
                     <div class="page-content">
                         <div class="page-header">
-                            <h1>{{title}}</h1>
+                            <h1>
+                                {{title}}
+                                <div class="pull-right">
+                                    <button class="btn btn-primary btn-sm" @click="isAppCheckList=true">添加</button>
+                                </div>
+                            </h1>
                         </div>
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
@@ -57,6 +62,18 @@
                                     <td class="center"><router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link></td>
                                     <td class="center"><button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id)"><i class="ace-icon fa fa-trash-o bigger-130"></i></button></td>
                                 </tr>
+                                <!-- 添加新指标库 -->
+                                <tr v-if="isAppCheckList">
+                                    <td class="center"></td>
+                                    <td>
+                                        <input autofocus="autofocus"  type="text" v-model="newCheckListName" class="inlineInput" />
+                                    </td>
+                                    <td class="hidden-480">
+                                        <input type="text" name="name" v-model="newCheckListIntro" class="inlineInput" />
+                                    </td>
+                                    <td class="center"></td>
+                                    <td class="center"><button class="btn btn-xs btn-success" @click="addCheckList"><i class="ace-icon glyphicon glyphicon-ok bigger-130"></i></button></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -83,7 +100,10 @@ export default {
             title: "检查指标类别管理",
             isInput:0,
             checkListName:"", //当前指标分类修改的名字
-            checkListDate:[]
+            checkListDate:[],
+            isAppCheckList:false,
+            newCheckListName:"",
+            newCheckListIntro:"",
         }
     },
     methods:{
@@ -100,16 +120,38 @@ export default {
             //发送ajax修改名称 
             console.log("ID为"+this.isInput+"的指标类别名字改成了"+this.checkListName);
             this.isInput = 0;
+        },
+        getCheckList(){
+            const URL = serverUrl+"/admin/checklist/index";
+            const _SELF = this;
+            emitAjax(URL,null,function(result){
+                _SELF.checkListDate = result;
+            })
+        },  
+        addCheckList(){
+            //添加指标库
+            if(this.newCheckListName ==""){
+                alert("请填写指标库名称!!");
+            }else{
+                const URL = serverUrl+"/admin/checklist/add";
+                const _SELF = this;
+                const data = {
+                    name:this.newCheckListName,
+                    intro:this.newCheckListIntro,
+                    group_order:"1",
+                }
+                emitAjax(URL,data,function(result){
+                    _SELF.checkListDate = result;
+                    _SELF.isAppCheckList = false;
+                    _SELF.newCheckListName = "";
+                    _SELF.newCheckListIntro = "";
+                    _SELF.getCheckList();
+                })
+            }
         }
     },
     mounted(){
-        const URL = serverUrl+"/admin/checklist/index";
-        const _SELF = this;
-        emitAjax(URL,null,function(result){
-            
-            _SELF.checkListDate = result;
-            
-        })
+        this.getCheckList();
     }
 };
 </script>

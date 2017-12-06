@@ -25,7 +25,7 @@ export default [
         child:[
             {
                 name:"检查小组",
-                url:pathName+"",
+                url:pathName+"/checkGroup",
                 icon:"",
             },
             {

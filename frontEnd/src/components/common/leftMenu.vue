@@ -1,12 +1,11 @@
 <template>
     <div id="sidebars" class="sidebar responsive">
         <ul class="nav nav-list">
-            <li :class="{active:parentNode === index}"
+            <li :class="{active:parentNode === index,open:parentNode === index,firstNav:true}"
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
-                @click="toggleMenu($event)"
             >
-                <a :class="{red:index===leftMenuData.length-1}">
+                <a :class="{red:index===leftMenuData.length-1}" @click="toggleMenu($event)">
                     <i :class="'menu-icon '+first.icon"></i>
                     <span class="menu-text">{{first.name}}</span>
                     <b class="arrow fa fa-angle-down" v-if="first.child&&first.child.length>0"></b>
@@ -36,12 +35,18 @@ export default {
         return {
             leftMenuData:leftMenuData, //菜单数据
             parentNode:0,//第一级左厕栏高亮索引
-            active:0
+            active:0,
+            isOpen:true
         }
     },
     methods: {
         toggleMenu(event){
-            $(event.target).next(".submenu").slideToggle(300);
+            if(event.target.nodeName == "A"){
+                $(event.target).next(".submenu").slideToggle(300);
+            }else{
+                $(event.target).parents("a").next(".submenu").slideToggle(300);
+            }
+            $(event.target).parents(".firstNav").toggleClass("open");
         }
     },
     mounted(){

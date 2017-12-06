@@ -12,7 +12,6 @@ function emitAjax(url,opt,success){
         timestamp,
         sign
     },opt)
-    console.log(data)
     $.post(url,data,function(result){
         let resultObj = result;
         if(typeof result == "string"){

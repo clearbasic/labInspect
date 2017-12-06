@@ -5,6 +5,7 @@ import CheckList from '../components/checkList';
 import CheckItem from '../components/checkItem/checkItem';
 import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
+import CheckGroup from "../components/checkGroup/checkGroup";
 
 
 Vue.use(Router)
@@ -15,7 +16,7 @@ export default new Router({
 	routes: [
 		{
 			path: pathName+'/',
-			name: 'index.vue',
+			name: 'index',
 			component: Index,
 			meta:{
 				title:"首页 - "+title,
@@ -24,7 +25,7 @@ export default new Router({
 		},
 		{
 			path:pathName+"/checkList",
-			name:"checkList.vue",
+			name:"checkList",
 			component:CheckList,
 			meta:{
 				title:"检查指标类别管理 - "+title,
@@ -33,7 +34,7 @@ export default new Router({
 		},
 		{
 			path:pathName+"/checkList/:id",
-			name:"checkItem.vue",
+			name:"checkItem",
 			component:CheckItem,
 			meta:{
 				title:"检查指标管理 - "+title,
@@ -42,7 +43,7 @@ export default new Router({
 		},
 		{
 			path:pathName+"/checkPlan",
-			name:"checkPlan.vue",
+			name:"checkPlan",
 			component:CheckPlan,
 			meta:{
 				title:"检查期次 - "+title,
@@ -51,11 +52,20 @@ export default new Router({
 		},
 		{
 			path:pathName+"/checkPlan/:id",
-			name:"checkPlanDetail.vue",
+			name:"checkPlanDetail",
 			component:CheckPlanDetail,
 			meta:{
 				title:"检查期次 - "+title,
 				active:pathName+"/checkPlan"
+			}
+		},
+		{
+			path:pathName+"/checkGroup",
+			name:"checkGroup",
+			component:CheckGroup,
+			meta:{
+				title:"检查小组 - "+title,
+				active:pathName+"/checkGroup"
 			}
 		}
 	]
