@@ -30,7 +30,7 @@ export default [
             },
             {
                 name:"检查工作",
-                url:pathName+"",
+                url:pathName+"/checkWork",
                 icon:"",
             },
             {

@@ -35,11 +35,11 @@
                         <table class="table table-striped table-bordered table-hover">
                             <thead> 
                                 <tr>
-                                    <th class="center lettle">期次ID</th>
+                                    <th class="center little">期次ID</th>
                                     <th>名称</th>
-                                    <th class="center lettle">当前期次</th>
-                                    <th class="center lettle">总分</th>
-                                    <th class="center lettle">操作</th>
+                                    <th class="center little">当前期次</th>
+                                    <th class="center little">总分</th>
+                                    <th class="center little">操作</th>
                                 </tr>
                             </thead>
                             <tbody>

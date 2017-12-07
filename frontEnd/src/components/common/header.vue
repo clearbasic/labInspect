@@ -14,7 +14,7 @@
                     </small>
                 </a>
             </div>
-            <div class="sysSelect pull-left">
+            <div class="sysSelect pull-right">
                 <a href="" data-toggle="dropdown" class="dropdown-toggle">
                     <span><small>实验室安全检查</small></span>
                     <b class="ace-icon fa fa-caret-down"></b>

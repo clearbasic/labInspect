@@ -36,9 +36,9 @@
                                     <th class="center" width="60px">类别ID</th>
                                     <th>指标类别名称</th>
                                     <th>描述</th>
-                                    <th class="center lettle">排序</th>
-                                    <th class="center lettle">指标数量</th>
-                                    <th class="center lettle">操作</th>
+                                    <th class="center little">排序</th>
+                                    <th class="center little">指标数量</th>
+                                    <th class="center little">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,7 +47,7 @@
                                     <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Name')">
                                         <span v-if="isName != item.id">{{item.name}}</span>
                                         <input v-if="isName == item.id" 
-                                            autofocus="autofocus" 
+                                            autofocus 
                                             type="text"
                                             v-model="checkListName"
                                             @blur="setCheckListInfo"
@@ -58,7 +58,7 @@
                                     <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Intro')">
                                         <span v-if="isIntro != item.id">{{item.intro}}</span>
                                         <input v-if="isIntro == item.id"
-                                            autofocus="autofocus" 
+                                            autofocus 
                                             type="text"
                                             v-model="checkListIntro"
                                             @blur="setCheckListInfo"
@@ -66,10 +66,10 @@
                                             class="inlineInput"
                                         >
                                     </td>
-                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Order')" class="center lettle">
+                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Order')" class="center little">
                                         <span v-if="isOrder != item.id">{{item.group_order}}</span>
                                         <input v-if="isOrder == item.id"
-                                            autofocus="autofocus"
+                                            autofocus
                                             type="text"
                                             v-model="checkListOrder"
                                             @blur="setCheckListInfo"
@@ -90,8 +90,9 @@
                                 <!-- 添加新指标库 -->
                                 <tr v-if="isAppCheckList">
                                     <td class="center"></td>
-                                    <td>
-                                        <input autofocus="autofocus"  type="text" v-model="newCheckListName" class="inlineInput" />
+                                    <td :class="{'has-error':!newCheckListName}">
+                                        <input autofocus  type="text" v-model="newCheckListName" class="inlineInput" />
+                                        <span class="red">*</span>
                                     </td>
                                     <td>
                                         <input type="text" name="name" v-model="newCheckListIntro" class="inlineInput" />

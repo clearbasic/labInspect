@@ -35,10 +35,11 @@ export default {
 a:hover {
     cursor: pointer;
 }
-.lettle {
+.little {
     width:80px;
 }
 .inlineInput {
+    display: inline-block;
     width:100%;
     max-width: 160px;
 }
@@ -46,8 +47,11 @@ a:hover {
     padding-left:0;
     padding-right:0;
 }
+.has-error input[type=text],.has-error input[type=password] {
+    border-color:#f00;
+}
 @media screen and (max-width:767px){
-    .lettle {
+    .little {
         width:auto;
     }  
 }

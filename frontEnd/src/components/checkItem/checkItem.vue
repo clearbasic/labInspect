@@ -39,11 +39,11 @@
                             <thead>
                                 <tr>
                                     <th class="center" width="60px">指标ID</th>
-                                    <th class="center lettle hidden-480">类别</th>
+                                    <th class="center little hidden-480">类别</th>
                                     <th>名称</th>
-                                    <th class="center lettle">一票否决</th>
-                                    <th class="center lettle">排序</th>
-                                    <th class="center lettle">操作</th>
+                                    <th class="center little">一票否决</th>
+                                    <th class="center little">排序</th>
+                                    <th class="center little">操作</th>
                                 </tr>
                             </thead>
                             <tbody>

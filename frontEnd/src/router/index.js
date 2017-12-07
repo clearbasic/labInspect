@@ -6,6 +6,7 @@ import CheckItem from '../components/checkItem/checkItem';
 import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 import CheckGroup from "../components/checkGroup/checkGroup";
+import CheckWork from "../components/checkWork/checkWork";
 
 
 Vue.use(Router)
@@ -66,6 +67,15 @@ export default new Router({
 			meta:{
 				title:"检查小组 - "+title,
 				active:pathName+"/checkGroup"
+			}
+		},
+		{
+			path:pathName+"/checkWork",
+			name:"checkWork",
+			component:CheckWork,
+			meta:{
+				title:"检查工作 - "+title,
+				active:pathName+"/checkWork"
 			}
 		}
 	]

@@ -5,7 +5,7 @@
   "author": "liuwusong",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --host 192.168.240.85 --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
@@ -17,7 +17,6 @@
     "style-loader": "^0.19.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vue-strap": "^1.1.40",
     "vue-ueditor": "^0.1.3",
     "vue2-datepicker": "^1.7.0",
     "vuex": "^3.0.1"

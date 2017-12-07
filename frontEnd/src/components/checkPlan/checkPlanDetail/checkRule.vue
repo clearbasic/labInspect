@@ -45,6 +45,7 @@
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:30px;"
                                             @blur="changeScore(checkList.id,index,'school',$event)"
+                                            @keyup="changeScore(checkList.id,index,'school',$event)"
                                         />
                                    </td>
                                    <td v-html="computeTotalScore(index,'school')"></td>
@@ -91,6 +92,7 @@
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:30px;"
                                             @blur="changeScore(checkList.id,index,'college',$event)"
+                                            @keyup="changeScore(checkList.id,index,'college',$event)"
                                         />
                                    </td>
                                    <td v-html="computeTotalScore(index,'college')"></td>
@@ -137,6 +139,7 @@
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:30px;"
                                             @blur="changeScore(checkList.id,index,'lab',$event)"
+                                            @keyup="changeScore(checkList.id,index,'lab',$event)"
                                         />
                                    </td>
                                    <td v-html="computeTotalScore(index,'lab')"></td>
@@ -192,6 +195,7 @@
                 schoolRule:[], //自查规则列表数组
                 collegeRule:[],//复查规则列表数组
                 labRule:[],//抽查规则列表数组
+                isKeyUp:false,//是否按键了
             }
         },
         methods:{
@@ -238,17 +242,29 @@
                 }
             },
             changeScore(checkListId,index,type,event){
-                let rule = this[type+"Rule"][index];
-                let {checklist} = rule;
-                let value = event.target.value?event.target.value:0;
-                if(checklist[checkListId]){
-                    checklist[checkListId].score = value;
-                }else{
-                    checklist[checkListId] = {
-                        score:value
-                    }
+                if(event.type === "keyup" && event.key!="Enter"){
+                    return false;
                 }
-                this.$store.dispatch("setCheckPlan",this.checkPlan);
+                if(!this.isKeyUp){
+                    let rule = this[type+"Rule"][index];
+                    let {checklist} = rule;
+                    let value = event.target.value?event.target.value:0;
+                    if(checklist[checkListId]){
+                        checklist[checkListId].score = value;
+                    }else{
+                        checklist[checkListId] = {
+                            score:value
+                        }
+                    }
+                    this.$store.dispatch("setCheckPlan",this.checkPlan);
+                    console.log("zhixingle ")
+                }
+                if(event.type === "blur"){
+                    this.isKeyUp = false;
+                }
+                if(event.type === "keyup"){
+                    this.isKeyUp = true;
+                }
             }   
         },
         computed:{

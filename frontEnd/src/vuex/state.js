@@ -1,3 +1,4 @@
 export default {
-    checkPlan:{}
+    checkPlan:{},
+    checkWork:{},
 }
