@@ -13,6 +13,7 @@ function emitAjax(url,opt,success){
         sign
     },opt)
     $.post(url,data,function(result){
+        console.log(result)
         let resultObj = result;
         if(typeof result == "string"){
             resultObj = JSON.parse(resultObj);

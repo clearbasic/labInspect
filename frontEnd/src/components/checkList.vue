@@ -26,7 +26,7 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" @click="isAppCheckList=true">添加</button>
+                                    <button class="btn btn-primary btn-sm" @click="showAdd">添加</button>
                                 </div>
                             </h1>
                         </div>
@@ -69,7 +69,7 @@
                                     <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Order')" class="center lettle">
                                         <span v-if="isOrder != item.id">{{item.group_order}}</span>
                                         <input v-if="isOrder == item.id"
-                                            autofocus="autofocus" 
+                                            autofocus="autofocus"
                                             type="text"
                                             v-model="checkListOrder"
                                             @blur="setCheckListInfo"
@@ -82,7 +82,7 @@
                                         <router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link>
                                     </td>
                                     <td class="center">
-                                        <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name)">
+                                        <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name,item.count)">
                                             <i class="ace-icon fa fa-trash-o bigger-130"></i>
                                         </button>
                                     </td>
@@ -136,66 +136,71 @@ export default {
         return {
             title: "检查指标类别管理",
             isName: 0,
-            isIntro:0,
-            isOrder:0,
-            checkListid:0,
+            isIntro: 0,
+            isOrder: 0,
+            checkListid: 0,
             checkListName: "", //当前指标分类修改的名字
-            checkListIntro:"",//修改描述
-            checkListOrder:"",//修改序号
+            checkListIntro: "", //修改描述
+            checkListOrder: "", //修改序号
             checkListDate: [],
             isAppCheckList: false,
             newCheckListName: "",
             newCheckListIntro: "",
-            newCheckListOrder:""
+            newCheckListOrder: ""
         };
     },
     methods: {
-        deleteCheckItem(id,name) {
-
+        deleteCheckItem(id, name, count) {
             //删除指标库
-            if (window.confirm("是否要删除<"+name+">,此操作不可逆，请慎重！！")) {
-                const URL = serverUrl + "/admin/checklist/del";
-                const _SELF = this;
-                const data = {id};
-                emitAjax(URL, data, function(result) {
-                    _SELF.getCheckList();
-                });
+            if (count > 0) {
+                alert("不可删除<" + name + ">，此指标类库内含有指标项，请移除后在删除！！")
+            } else {
+                if (window.confirm("是否要删除<" + name + ">,此操作不可逆，请慎重！！")) {
+                    const URL = serverUrl + "/admin/checklist/del";
+                    const _SELF = this;
+                    const data = { id };
+                    emitAjax(URL, data, function(result) {
+                        _SELF.getCheckList();
+                    });
+                }
             }
         },
-        showCheckListInput(id,name,intro,group_order,type) {
-            
+        showCheckListInput(id, name, intro, group_order, type) {
             //双击显示输入框修改指标库
-            this['is'+type] = id;
+            this["is" + type] = id;
             this.checkListid = id;
             this.checkListName = name;
             this.checkListIntro = intro;
             this.checkListOrder = group_order;
         },
         setCheckListInfo(event) {
-
-            //两种方法触发此时间  keyup and blur  如果keyup先执行 checkListid会清0 blur就不执行了
-            if(event.type=="keyup" && event.key=="Enter"){
+            //按enter触发
+            if (event.type == "keyup" && event.key == "Enter") {
                 this.setCheckList();
                 return false;
             }
-            if(event.type =="blur" && this.checkListid){
+            //输入框失去焦点触发
+            if (event.type == "blur" && this.checkListid) {
                 this.setCheckList();
             }
         },
-        setCheckList(){
-            
+        setCheckList() {
             //修改指标库信息
-            if(this.checkListName === "" || this.checkListIntro === "" || this.checkListOrder === ""){
+            if (
+                this.checkListName === "" ||
+                this.checkListIntro === "" ||
+                this.checkListOrder === ""
+            ) {
                 alert("修改信息不能为空！！");
-            }else{
+            } else {
                 const URL = serverUrl + "/admin/checklist/edit";
                 const _SELF = this;
                 const data = {
-                    id:this.checkListid,
-                    name:this.checkListName,
-                    intro:this.checkListIntro,
-                    group_order:this.checkListOrder
-                }
+                    id: this.checkListid,
+                    name: this.checkListName,
+                    intro: this.checkListIntro,
+                    group_order: this.checkListOrder
+                };
                 _SELF.isName = 0;
                 _SELF.isIntro = 0;
                 _SELF.isOrder = 0;
@@ -216,6 +221,10 @@ export default {
                 _SELF.checkListDate = result;
             });
         },
+        showAdd() {
+            this.isAppCheckList = !this.isAppCheckList;
+            this.newCheckListOrder = this.checkListDate.length + 1;
+        },
         addCheckList() {
             //添加指标库
             if (this.newCheckListName == "") {
@@ -228,7 +237,6 @@ export default {
                     intro: this.newCheckListIntro,
                     group_order: this.newCheckListOrder
                 };
-                _SELF.checkListDate = result;
                 _SELF.isAppCheckList = false;
                 _SELF.newCheckListName = "";
                 _SELF.newCheckListIntro = "";

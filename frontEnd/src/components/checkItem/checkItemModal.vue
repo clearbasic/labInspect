@@ -34,40 +34,54 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for=""><h5>排序：</h5></label>
+                            <input type="text" class="form-control" v-model="length" placeholder="请输入指标名称">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary btn-sm" @click="createNewIetm">保存指标</button>
+                    <button type="button" class="btn btn-primary btn-sm" @click="createNewIetm" data-dismiss="modal">保存指标</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
+import { serverUrl } from "../../config/server.js";
+import { emitAjax } from "../../assets/common.js";
 export default {
     name: "checkItemModal",
     data() {
         return {
-            item_type:"common",
-            item_name:"",
-            item_level:"common"
+            item_type: "common",
+            item_name: "",
+            item_level: "common",
         };
     },
-    props:[
-        "getCheckItemList"
-    ],
-    methods:{
-        createNewIetm(){
+    props: ["getCheckItemList", "length"],
+    methods: {
+        createNewIetm() {
             //创建新指标
-           let data = {
-               checklist_id:this.$route.params.id,
-               item_type:this.item_type,
-               item_name:this.item_name,
-               item_level:this.item_level,
-           }
-           //刷新指标列表
-           this.getCheckItemList();
+            if(this.item_name == "" || this.item_order == ""){
+                alert("信息填写不完整");
+            }else{
+                const URL = serverUrl + "/admin/item/add";
+                const _SELF = this;
+                let data = {
+                    checklist_id: this.$route.params.id,
+                    item_type: this.item_type,
+                    item_name: this.item_name,
+                    item_level: this.item_level,
+                    item_order: this.length
+                };
+                emitAjax(URL, data, function(result) {
+                    _SELF.checkListDate = result;
+                    //刷新指标列表
+                    _SELF.getCheckItemList();
+                });
+            }
         }
     }
 };
