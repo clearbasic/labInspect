@@ -35,32 +35,57 @@
                                 <tr>
                                     <th class="center" width="60px">类别ID</th>
                                     <th>指标类别名称</th>
-                                    <th class="hidden-480">描述</th>
+                                    <th>描述</th>
+                                    <th class="center lettle">排序</th>
                                     <th class="center lettle">指标数量</th>
                                     <th class="center lettle">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="checkListDate.length ==0">
-                                    <td colspan="5" align="center">
-                                        数据加载中...
-                                    </td>
-                                </tr>
                                 <tr v-for="item in checkListDate" :key="item.id">
                                     <td class="center">{{item.id}}</td>
-                                    <td @dblclick="showCheckListNameInput(item.id,item.name)">
-                                        <span v-if="isInput != item.id">{{item.name}}</span>
-                                        <input v-if="isInput == item.id" 
+                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Name')">
+                                        <span v-if="isName != item.id">{{item.name}}</span>
+                                        <input v-if="isName == item.id" 
                                             autofocus="autofocus" 
-                                            type="text" name="name" 
+                                            type="text"
                                             v-model="checkListName"
-                                            @blur="setCheckListName"
+                                            @blur="setCheckListInfo"
+                                            @keyup="setCheckListInfo($event)"
                                             class="inlineInput"
                                         >
                                     </td>
-                                    <td class="hidden-480">{{item.intro}}</td>
-                                    <td class="center"><router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link></td>
-                                    <td class="center"><button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id)"><i class="ace-icon fa fa-trash-o bigger-130"></i></button></td>
+                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Intro')">
+                                        <span v-if="isIntro != item.id">{{item.intro}}</span>
+                                        <input v-if="isIntro == item.id"
+                                            autofocus="autofocus" 
+                                            type="text"
+                                            v-model="checkListIntro"
+                                            @blur="setCheckListInfo"
+                                            @keyup="setCheckListInfo($event)"
+                                            class="inlineInput"
+                                        >
+                                    </td>
+                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Order')" class="center lettle">
+                                        <span v-if="isOrder != item.id">{{item.group_order}}</span>
+                                        <input v-if="isOrder == item.id"
+                                            autofocus="autofocus" 
+                                            type="text"
+                                            v-model="checkListOrder"
+                                            @blur="setCheckListInfo"
+                                            @keyup="setCheckListInfo($event)"
+                                            class="inlineInput"
+                                            style="width:30px;"
+                                        >
+                                    </td>
+                                    <td class="center">
+                                        <router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link>
+                                    </td>
+                                    <td class="center">
+                                        <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <!-- 添加新指标库 -->
                                 <tr v-if="isAppCheckList">
@@ -68,11 +93,23 @@
                                     <td>
                                         <input autofocus="autofocus"  type="text" v-model="newCheckListName" class="inlineInput" />
                                     </td>
-                                    <td class="hidden-480">
+                                    <td>
                                         <input type="text" name="name" v-model="newCheckListIntro" class="inlineInput" />
                                     </td>
+                                    <td class="center">
+                                        <input type="text" name="name" v-model="newCheckListOrder" class="inlineInput" style="width:30px;" />
+                                    </td>
                                     <td class="center"></td>
-                                    <td class="center"><button class="btn btn-xs btn-success" @click="addCheckList"><i class="ace-icon glyphicon glyphicon-ok bigger-130"></i></button></td>
+                                    <td class="center">
+                                        <button class="btn btn-xs btn-success" @click="addCheckList">
+                                            <i class="ace-icon glyphicon glyphicon-ok bigger-130"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr v-if="checkListDate.length ==0">
+                                    <td colspan="6" align="center">
+                                        暂无数据
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -86,8 +123,8 @@
 <script>
 import VueHead from "./common/header";
 import VueLeft from "./common/leftMenu";
-import {serverUrl} from '../config/server.js';
-import {emitAjax} from '../assets/common.js';
+import { serverUrl } from "../config/server.js";
+import { emitAjax } from "../assets/common.js";
 
 export default {
     name: "checkList",
@@ -98,59 +135,111 @@ export default {
     data() {
         return {
             title: "检查指标类别管理",
-            isInput:0,
-            checkListName:"", //当前指标分类修改的名字
-            checkListDate:[],
-            isAppCheckList:false,
-            newCheckListName:"",
-            newCheckListIntro:"",
-        }
+            isName: 0,
+            isIntro:0,
+            isOrder:0,
+            checkListid:0,
+            checkListName: "", //当前指标分类修改的名字
+            checkListIntro:"",//修改描述
+            checkListOrder:"",//修改序号
+            checkListDate: [],
+            isAppCheckList: false,
+            newCheckListName: "",
+            newCheckListIntro: "",
+            newCheckListOrder:""
+        };
     },
-    methods:{
-        deleteCheckItem(id){
-            if(window.confirm("删除后不可恢复，请谨慎操作，是否继续删除？？")){
-                //删除代码
+    methods: {
+        deleteCheckItem(id,name) {
+
+            //删除指标库
+            if (window.confirm("是否要删除<"+name+">,此操作不可逆，请慎重！！")) {
+                const URL = serverUrl + "/admin/checklist/del";
+                const _SELF = this;
+                const data = {id};
+                emitAjax(URL, data, function(result) {
+                    _SELF.getCheckList();
+                });
             }
         },
-        showCheckListNameInput(id,name){
-            this.isInput = id;
+        showCheckListInput(id,name,intro,group_order,type) {
+            
+            //双击显示输入框修改指标库
+            this['is'+type] = id;
+            this.checkListid = id;
             this.checkListName = name;
+            this.checkListIntro = intro;
+            this.checkListOrder = group_order;
         },
-        setCheckListName(){
-            //发送ajax修改名称 
-            console.log("ID为"+this.isInput+"的指标类别名字改成了"+this.checkListName);
-            this.isInput = 0;
+        setCheckListInfo(event) {
+
+            //两种方法触发此时间  keyup and blur  如果keyup先执行 checkListid会清0 blur就不执行了
+            if(event.type=="keyup" && event.key=="Enter"){
+                this.setCheckList();
+                return false;
+            }
+            if(event.type =="blur" && this.checkListid){
+                this.setCheckList();
+            }
         },
-        getCheckList(){
-            const URL = serverUrl+"/admin/checklist/index";
-            const _SELF = this;
-            emitAjax(URL,null,function(result){
-                _SELF.checkListDate = result;
-            })
-        },  
-        addCheckList(){
-            //添加指标库
-            if(this.newCheckListName ==""){
-                alert("请填写指标库名称!!");
+        setCheckList(){
+            
+            //修改指标库信息
+            if(this.checkListName === "" || this.checkListIntro === "" || this.checkListOrder === ""){
+                alert("修改信息不能为空！！");
             }else{
-                const URL = serverUrl+"/admin/checklist/add";
+                const URL = serverUrl + "/admin/checklist/edit";
                 const _SELF = this;
                 const data = {
-                    name:this.newCheckListName,
-                    intro:this.newCheckListIntro,
-                    group_order:"1",
+                    id:this.checkListid,
+                    name:this.checkListName,
+                    intro:this.checkListIntro,
+                    group_order:this.checkListOrder
                 }
-                emitAjax(URL,data,function(result){
-                    _SELF.checkListDate = result;
-                    _SELF.isAppCheckList = false;
-                    _SELF.newCheckListName = "";
-                    _SELF.newCheckListIntro = "";
+                _SELF.isName = 0;
+                _SELF.isIntro = 0;
+                _SELF.isOrder = 0;
+                _SELF.checkListid = 0;
+                _SELF.checkListName = "";
+                _SELF.checkListIntro = "";
+                _SELF.checkListOrder = "";
+                emitAjax(URL, data, function(result) {
                     _SELF.getCheckList();
-                })
+                });
+            }
+        },
+        getCheckList() {
+            //刷新指标库列表
+            const URL = serverUrl + "/admin/checklist/index";
+            const _SELF = this;
+            emitAjax(URL, null, function(result) {
+                _SELF.checkListDate = result;
+            });
+        },
+        addCheckList() {
+            //添加指标库
+            if (this.newCheckListName == "") {
+                alert("请填写指标库名称!!");
+            } else {
+                const URL = serverUrl + "/admin/checklist/add";
+                const _SELF = this;
+                const data = {
+                    name: this.newCheckListName,
+                    intro: this.newCheckListIntro,
+                    group_order: this.newCheckListOrder
+                };
+                _SELF.checkListDate = result;
+                _SELF.isAppCheckList = false;
+                _SELF.newCheckListName = "";
+                _SELF.newCheckListIntro = "";
+                _SELF.newCheckListOrder = "";
+                emitAjax(URL, data, function(result) {
+                    _SELF.getCheckList();
+                });
             }
         }
     },
-    mounted(){
+    mounted() {
         this.getCheckList();
     }
 };
