@@ -7,6 +7,9 @@ import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 import CheckGroup from "../components/checkGroup/checkGroup";
 import CheckWork from "../components/checkWork/checkWork";
+import WorkSetting from "../components/checkWork/workSetting.vue";
+import WorkPending from "../components/checkWork/workPending.vue";
+import WorkFinished from "../components/checkWork/workFinished.vue";
 
 
 Vue.use(Router)
@@ -75,6 +78,33 @@ export default new Router({
 			component:CheckWork,
 			meta:{
 				title:"检查工作 - "+title,
+				active:pathName+"/checkWork"
+			}
+		},
+		{
+			path:pathName+"/checkWork/setting",
+			name:"checkWorksetting",
+			component:WorkSetting,
+			meta:{
+				title:"任务安排 - "+title,
+				active:pathName+"/checkWork"
+			}
+		},
+		{
+			path:pathName+"/checkWork/pending",
+			name:"checkWorkpending",
+			component:WorkPending,
+			meta:{
+				title:"进度检查 - "+title,
+				active:pathName+"/checkWork"
+			}
+		},
+		{
+			path:pathName+"/checkWork/finished",
+			name:"checkWorkfinished",
+			component:WorkFinished,
+			meta:{
+				title:"检查结果 - "+title,
 				active:pathName+"/checkWork"
 			}
 		}

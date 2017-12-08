@@ -25,10 +25,8 @@
                         <div class="page-header">
                             <h1>
                                 {{title}}
-                                <div class="pull-right">
-                                    <router-link :to="{path:pathName+'/checkPlan/0'}" class="btn btn-primary btn-sm" tag="button">
-                                        添加
-                                    </router-link>
+                                <div class="pull-right" @click="addPlan">
+                                    <button class="btn btn-primary btn-sm">添加</button>
                                 </div>
                             </h1>
                         </div>
@@ -48,7 +46,7 @@
                                         {{item.plan_id}}
                                     </td>
                                     <td>
-                                        {{item.plan_name}}
+                                        <router-link :to="pathName+'/checkPlan/'+item.plan_id">{{item.plan_name}}</router-link>
                                     </td>
                                     <td class="center">
                                         {{item.current === "yes"?'是':'否'}}
@@ -57,8 +55,32 @@
                                         {{item.plan_score}}
                                     </td>
                                     <td class="center">
-                                        <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button"><i class="ace-icon fa fa-search-plus bigger-100"></i></router-link>
-                                        <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id)"><i class="ace-icon fa fa-trash-o bigger-100"></i></button>
+                                        <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button">
+                                            <i class="ace-icon fa fa-search-plus bigger-100"></i>
+                                        </router-link>
+                                        <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id,item.plan_name)"><i class="ace-icon fa fa-trash-o bigger-100"></i></button>
+                                    </td>
+                                </tr>
+                                <tr v-if="isAdd">
+                                    <td class="center"></td>
+                                    <td :class="{'has-error':newPlanName==''}">
+                                        <input type="text" v-model="newPlanName">
+                                    </td>
+                                    <td class="center">
+                                        <label>
+                                            <input type="radio" class="ace" v-model="newCurrent" value="yes">
+                                            <span class="lbl">是</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" class="ace" v-model="newCurrent" value="no">
+                                            <span class="lbl">否</span>
+                                        </label>
+                                    </td>
+                                    <td class="center">
+                                        <input type="text" v-model="newPlanScore" style="width:44px;" class="text-center">
+                                    </td>
+                                    <td class="center">
+                                        <button class="btn btn-xs btn-success" @click="originAddPlan"><i class="ace-icon glyphicon glyphicon-ok bigger-130"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -73,6 +95,8 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
+import { serverUrl } from "../../config/server.js";
+import { emitAjax } from "../../assets/common.js";
 
 export default {
     name: "checkPlan",
@@ -83,28 +107,58 @@ export default {
     data() {
         return {
             title: "检查期次管理",
-            checkPlan:[
-                {
-                    plan_id:1,
-                    plan_name:"2018年实验室检查",
-                    current:"no",
-                    plan_score:100
-                },
-                {
-                    plan_id:2,
-                    plan_name:"2017年实验室检查",
-                    current:"yes",
-                    plan_score:100
-                }
-            ]
+            checkPlan:[],
+            isAdd:false,
+            newCurrent:"no",
+            newPlanName:"",
+            newPlanScore:100,
         };
     },
     methods:{
-        deleteCheckPlan(){
-            if(confirm("删除后不可恢复，请谨慎操作，是否继续删除？？")){
-                //删除检查期次代码
+        addPlan(){
+            this.isAdd = !this.isAdd;
+        },
+        originAddPlan(){
+            if(this.newPlanName == ""){
+                alert("期次名字不能为空！！");
+                return false;
             }
+            const URL = serverUrl + "/admin/plan/add";
+            const _SELF = this;
+            const data = {
+                plan_name:this.newPlanName,
+                plan_score:this.newPlanScore,
+                current:this.newCurrent
+            }
+            emitAjax(URL, data,function(){
+                _SELF.newPlanName = "";
+                _SELF.newPlanScore = 100;
+                _SELF.newCurrent = "no";
+                _SELF.isAdd=false;
+                _SELF.getPlanData();
+            });
+        },
+        deleteCheckPlan(plan_id,name){
+            if(confirm("是否删除期次<"+name+">，此操作不可逆，请慎重！")){
+                //删除检查期次代码
+                const URL = serverUrl + "/admin/plan/del";
+                const _SELF = this;
+
+                emitAjax(URL, {plan_id}, function(result) {
+                    _SELF.getPlanData();
+                });
+            }
+        },
+        getPlanData(){
+            const URL = serverUrl + "/admin/plan/index";
+            const _SELF = this;
+            emitAjax(URL, null, function(result) {
+                _SELF.checkPlan = Object.assign({},result);
+            });
         }
+    },
+    mounted(){
+        this.getPlanData();
     }
 };
 </script>

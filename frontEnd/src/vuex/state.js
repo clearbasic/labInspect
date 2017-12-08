@@ -1,4 +1,8 @@
 export default {
-    checkPlan:{},
+    checkPlan:{
+        plan:{},
+        task_list:[],
+        rule_list:[],
+    },
     checkWork:{},
 }

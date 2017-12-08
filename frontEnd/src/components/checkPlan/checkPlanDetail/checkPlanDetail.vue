@@ -29,13 +29,30 @@
                         </div>
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label for="" class="col-sm-2 col-md-1 control-label">期次名称</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" v-model="checkPlan.plan_name" @blur="setCheckPlan">
+                                <label for="" class="col-sm-2 col-md-1 control-label" style="white-space:nowrap;">期次名称</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" 
+                                        v-model="checkPlan.plan.plan_name" 
+                                        @blur="editCheckPlan('期次名称')" 
+                                        @focus="setFlag(checkPlan.plan.plan_name)">
                                 </div>
                                 <label for="" class="col-sm-1 control-label">总分</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" v-model="checkPlan.plan_score" @blur="setCheckPlan">
+                                    <input type="text" class="form-control" 
+                                        v-model="checkPlan.plan.plan_score" 
+                                        @blur="editCheckPlan('期次总分')" 
+                                        @focus="setFlag(checkPlan.plan.plan_score)">
+                                </div>
+                                <div class="col-sm-3" style="line-height:29px;">
+                                    是否当前期次
+                                    <label>
+                                        <input type="radio" class="ace" v-model="checkPlan.plan.current" value="yes" @click="editCheckPlanCurrent('yes')">
+                                        <span class="lbl">是</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="ace" v-model="checkPlan.plan.current" value="no" @click="editCheckPlanCurrent('no')">
+                                        <span class="lbl">否</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -70,6 +87,8 @@ import VueLeft from "../../common/leftMenu";
 import CheckTask from './checkTask';
 import CheckRule from './checkRule';
 import CheckDescription from './checkDescription';
+import { serverUrl } from "../../../config/server.js";
+import { emitAjax } from "../../../assets/common.js";
 
 export default {
     name: "checkPlanDetail",
@@ -78,7 +97,13 @@ export default {
         VueLeft,
         CheckTask,
         CheckRule,
-        CheckDescription
+        CheckDescription,
+        checkPlan:{
+            plan:{},
+            task_list:[],
+            rule_list:[],
+        },
+        flag:"",
     },
     data() {
         return {
@@ -92,12 +117,54 @@ export default {
     },
     methods:{
         setCheckPlan(){
-            this.$store.dispatch("setCheckPlan",this.checkPlan);
+            
         },
+        editCheckPlan(type){
+            //修改期次信息
+            let isAjax = false;
+            //如果信息为空则 不提交
+            if(this.checkPlan.plan.plan_name == "" || this.checkPlan.plan.plan_score ==""){
+                type && alert(type+"不能为空！");
+                return false;
+            }
+            //如果输入框值没有改变
+            if(type == "期次名称" && this.flag == this.checkPlan.plan.plan_name){
+               return false;
+            }
+            if(type == "期次总分" && this.flag == this.checkPlan.plan.plan_score){
+               return false;
+            }
+            const URL = serverUrl + "/admin/plan/edit";
+            const _SELF = this;
+            const data ={
+                plan_id:this.$route.params.id,
+                plan_name:this.checkPlan.plan.plan_name,
+                current:this.checkPlan.plan.current,
+                plan_score:this.checkPlan.plan.plan_score,
+                intro:this.checkPlan.plan.intro,
+            }
+            this.flag = "";
+            emitAjax(URL, data, null,function(){
+                //修改失败刷新页面
+                _SELF.$router.push(pathName+'/checkPlan/'+this.$route.params.id);
+            });
+        },
+        editCheckPlanCurrent(value){
+            if(this.checkPlan.plan.current !== value){
+                this.checkPlan.plan.current = value;
+                this.editCheckPlan();
+            }
+        },
+        getCheckPlan(){
+            //获取期次信息
+            this.$store.dispatch("setCheckPlan",{plan_id:this.$route.params.id});
+        },
+        setFlag(value){
+            this.flag = value;
+        }
     },
     mounted(){
-        //获取检测期次信息
-        this.$store.dispatch("setCheckPlan");
+        this.getCheckPlan();
     }
 };
 </script>

@@ -2,7 +2,7 @@
 import md5 from "crypto-js/md5";
 
 //发起网络请求
-function emitAjax(url,opt,success){
+function emitAjax(url,opt,success,error){
     let app_secret="c6d9622fdc385b26129fc8a4c7a30c2a";
     let app_key=2347508144;
     let timestamp = Date.parse(new Date());
@@ -19,9 +19,10 @@ function emitAjax(url,opt,success){
             resultObj = JSON.parse(resultObj);
         }
         if(resultObj.code == 200){
-            success(resultObj.data);
+            success && success(resultObj.data);
         }else{
-            console.log(resultObj.error);
+            alert(resultObj.error);
+            error&&error(resultObj)
         }
     })
 }
