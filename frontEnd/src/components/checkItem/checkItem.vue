@@ -70,6 +70,7 @@
                                                 v-model="checkItemName" 
                                                 @blur="setcheckItemInfo"
                                                 @keyup="setcheckItemInfo"
+                                                @focus="setFlag('Name',item.item_name)"
                                                 class="inlineInput"
                                         >
                                     </td>
@@ -97,6 +98,7 @@
                                             v-model="checkItemOrder" 
                                             @blur="setcheckItemInfo"
                                             @keyup="setcheckItemInfo"
+                                            @focus="setFlag('Order',item.item_order)"
                                             style="width:30px"
                                             class="text-center"
                                         >
@@ -147,6 +149,10 @@ export default {
             isOrderInput:0,
             isTypeInput:0,
             checkListDate:[],
+            flag:{
+                type:"",
+                msg:"",
+            }
         }
     },
     methods:{
@@ -169,39 +175,50 @@ export default {
             }
             //点击单选按钮触发
             if(event.type=="click" && type && value){
+                this.setFlag(type,this['checkItem'+type]);
                 this['checkItem'+type] = value;
                 this.setcheckItem();
             }
+        },
+        setFlag(type,msg){
+            this.flag.type=type;
+            this.flag.msg=msg;
         },
         setcheckItem(){
             //修改指标
             if(this.checkItemName == "" || this.checkItemOrder==""){
                 alert("指标信息不能为空");
-            }else{
-                const URL = serverUrl + "/admin/item/edit";
-                const _SELF = this;
-                const data = {
-                    id:this.id,
-                    item_name:this.checkItemName,
-                    item_order:this.checkItemOrder,
-                    item_level:this.checkItemLevel,
-                    item_type:this.checkItemType
-                }
-                //还原各类信息
-                this.id = 0;
-                this.checkItemName="";
-                this.checkItemOrder=0;
-                this.checkItemType="common";
-                this.checkItemLevel="common";
-                this.isLevelInput=0;
-                this.isNameInput=0;
-                this.isOrderInput=0;
-                this.isTypeInput=0;
-                emitAjax(URL, data, function(result) {
-                    _SELF.getCheckItemList();
-                });
+                return false;
             }
-            
+
+            const URL = serverUrl + "/admin/item/edit";
+            const _SELF = this;
+            const data = {
+                id:this.id,
+                item_name:this.checkItemName,
+                item_order:this.checkItemOrder,
+                item_level:this.checkItemLevel,
+                item_type:this.checkItemType
+            }
+            //还原各类信息
+            this.id = 0;
+            this.isLevelInput=0;
+            this.isNameInput=0;
+            this.isOrderInput=0;
+            this.isTypeInput=0;
+            //值不变不提交ajax
+            if(this.flag.type=="Name"&&this.flag.msg == this.checkItemName){return false}
+            if(this.flag.type=="Order"&&this.flag.msg == this.checkItemOrder){return false}
+            if(this.flag.type=="Type"&&this.flag.msg == this.checkItemType){return false}
+            if(this.flag.type=="Level"&&this.flag.msg == this.checkItemLevel){return false}
+            this.checkItemName="";
+            this.checkItemOrder=0;
+            this.checkItemType="common";
+            this.checkItemLevel="common";
+            this.flag = {type:"",msg:""};
+            emitAjax(URL, data, function(result) {
+                _SELF.getCheckItemList();
+            });
         },
         deleteCheckItem(id,name){
             if(window.confirm("是否删除<"+name+">，此操作为不可逆操作，请慎重！！")){

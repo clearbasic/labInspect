@@ -52,6 +52,7 @@
                                             v-model="checkListName"
                                             @blur="setCheckListInfo"
                                             @keyup="setCheckListInfo($event)"
+                                            @focus="setFlag('Name',item.name)"
                                             class="inlineInput"
                                         >
                                     </td>
@@ -63,6 +64,7 @@
                                             v-model="checkListIntro"
                                             @blur="setCheckListInfo"
                                             @keyup="setCheckListInfo($event)"
+                                            @focus="setFlag('Intro',item.intro)"
                                             class="inlineInput"
                                         >
                                     </td>
@@ -74,6 +76,7 @@
                                             v-model="checkListOrder"
                                             @blur="setCheckListInfo"
                                             @keyup="setCheckListInfo($event)"
+                                            @focus="setFlag('Order',item.group_order)"
                                             class="inlineInput"
                                             style="width:30px;"
                                         >
@@ -147,7 +150,11 @@ export default {
             isAppCheckList: false,
             newCheckListName: "",
             newCheckListIntro: "",
-            newCheckListOrder: ""
+            newCheckListOrder: "",
+            flag:{
+                type:"",
+                msg:"",
+            },
         };
     },
     methods: {
@@ -185,6 +192,10 @@ export default {
                 this.setCheckList();
             }
         },
+        setFlag(type,msg){
+            this.flag.type = type;
+            this.flag.msg = msg;
+        },
         setCheckList() {
             //修改指标库信息
             if (
@@ -193,26 +204,36 @@ export default {
                 this.checkListOrder === ""
             ) {
                 alert("修改信息不能为空！！");
-            } else {
-                const URL = serverUrl + "/admin/checklist/edit";
-                const _SELF = this;
-                const data = {
-                    id: this.checkListid,
-                    name: this.checkListName,
-                    intro: this.checkListIntro,
-                    group_order: this.checkListOrder
-                };
-                _SELF.isName = 0;
-                _SELF.isIntro = 0;
-                _SELF.isOrder = 0;
-                _SELF.checkListid = 0;
-                _SELF.checkListName = "";
-                _SELF.checkListIntro = "";
-                _SELF.checkListOrder = "";
-                emitAjax(URL, data, function(result) {
-                    _SELF.getCheckList();
-                });
+                return false;
             }
+            
+            const URL = serverUrl + "/admin/checklist/edit";
+            const _SELF = this;
+            const data = {
+                id: this.checkListid,
+                name: this.checkListName,
+                intro: this.checkListIntro,
+                group_order: this.checkListOrder
+            };
+            //信息没有修改 不提交
+            _SELF.isName = 0;
+            _SELF.isIntro = 0;
+            _SELF.isOrder = 0;
+            _SELF.checkListid = 0;
+            if(this.flag.type=="Name" && this.flag.msg == this.checkListName){return false}
+            if(this.flag.type=="Intro" && this.flag.msg == this.checkListIntro){return false}
+            if(this.flag.type=="Order" && this.flag.msg == this.checkListOrder){return false}
+            _SELF.checkListName = "";
+            _SELF.checkListIntro = "";
+            _SELF.checkListOrder = "";
+            this.flag = {
+                type:"",
+                msg:""
+            }
+            emitAjax(URL, data, function(result) {
+                _SELF.getCheckList();
+            });
+            
         },
         getCheckList() {
             //刷新指标库列表
