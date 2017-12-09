@@ -9,9 +9,13 @@
             </div>
             <li class="list-group-item" v-for="(item,index) in schoolArray" :key="'zicha'+index" v-if="item.task_level === 'school'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
+                自 <datepicker v-model="item.dt_begin" width="140" 
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                至 <datepicker v-model="item.dt_end" width="140" 
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs">
+                    <i class="ace-icon glyphicon glyphicon-minus"></i>
+                </button>
                 <button v-if="index === schoolArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('school',1)">增加下一个月</button>
             </li>
             <li v-show="newTaskLevel==='school'" class="list-group-item">
@@ -31,8 +35,10 @@
             </div>
             <li class="list-group-item" v-for="(item,index) in collegeArray" :key="'zicha'+index" v-if="item.task_level === 'college'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140"></datepicker>
+                自 <datepicker v-model="item.dt_begin" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                至 <datepicker v-model="item.dt_end" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
                 <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
                 <button v-if="index === collegeArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('college',4)">增加下一季度</button>
             </li>
@@ -53,8 +59,10 @@
             </div>
             <li class="list-group-item" v-for="(item,index) in labArray" :key="'zicha'+index" v-if="item.task_level === 'lab'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140"></datepicker>
+                自 <datepicker v-model="item.dt_begin" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                至 <datepicker v-model="item.dt_end" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
                 <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
             </li>
             <li v-show="newTaskLevel==='lab'" class="list-group-item">
@@ -92,7 +100,8 @@ export default {
         }
     },
     methods:{
-        addTask(type){//显示添加计划输入框
+        addTask(type){
+            //显示添加计划输入框
             this.newTaskLevel = type;
             
             if(type === ''){
@@ -104,55 +113,85 @@ export default {
                 this.newTaskName = "第"+(this[type+'Array'].length+1)+"次";
             }
         },
-        createNewTask(){//创建新计划
+        createNewTask(){
+            //创建新计划
             if(this.newTaskName === '' || this.newTaskLevel === '' || this.newTaskDtBegin === '' || this.newTaskDtEnd === ''){
                 alert("请填写完整的信息");
+                return false
+            }
+            if(this.newTaskDtBegin > this.newTaskDtEnd){
+                alert("结束时间不能小于开始时间");
                 return false
             }
             const URL = this.serverUrl + "/admin/task/add";
             const _SELF = this;
             const data = {
-                plan_id:this.checkPlan.plan.plan_id,
+                plan_id:this.$route.params.id,
                 task_name:this.newTaskName,
                 task_level:this.newTaskLevel,
-                dt_begin:this.newTaskDtBegin,
-                dt_end:this.newTaskDtEnd,
+                dt_begin:moment(this.newTaskDtBegin).format("YYYY-MM-DD"),
+                dt_end:moment(this.newTaskDtEnd).format("YYYY-MM-DD"),
             }
             this.emitAjax(URL, data, function(result) {
-                this.getCheckPlanData();
+                _SELF.getCheckPlanData();
             });
             this.addTask("")
             
         },
-        delTask(id){
-            var _this = this;
-            if(confirm("删除后不可恢复，请谨慎操作！！"))
-            for (let index = 0; index < this.checkPlan.task_list.length; index++) {
-                const item = _this.checkPlan.task_list[index];
-                if(item.task_id === id){
-                    _this.checkPlan.task_list.splice(index,1);
-                    this.$store.dispatch("getCheckPlan",_this.checkPlan);
-                    break;
-                };
-            }
-        },
-        autoAddTask(type,space){//自动添加一条
+        autoAddTask(type,space){
+            //自动添加一条
             let length = this[type+"Array"].length;
             let {dt_begin,dt_end} = this[type+"Array"][length-1];
             let changedBegin = moment(dt_begin).add(space,"months").format("YYYY-MM-DD");
             let changedEnd = moment(dt_end).add(space,"months").format("YYYY-MM-DD");
+            const URL = this.serverUrl + "/admin/task/add";
             let _this = this;
-            let newTask = {
+            const data = {
                 plan_id:this.$route.params.id,
                 task_name:"第"+(length+1)+"次",
                 task_level:type,
                 dt_begin:changedBegin,
                 dt_end:changedEnd
             }
-            this.checkPlan.task_list.push(newTask);
-            this.$store.dispatch("getCheckPlan",this.checkPlan);
+            this.emitAjax(URL, data, function(result) {
+                _this.getCheckPlanData();
+            });
         },
-        setCount(){//计划分类
+        delTask(id){
+            //删除
+            var _this = this;
+            if(confirm("删除后不可恢复，请谨慎操作！！")){
+                const URL = this.serverUrl + "/admin/task/del";
+                this.emitAjax(URL, {task_id:id}, function(result) {
+                    _this.getCheckPlanData();
+                });
+            }
+                
+        },
+        editTask(task){
+            //修改
+            const begin = moment(task.dt_begin).format("YYYY-MM-DD");
+            const end = moment(task.dt_end).format("YYYY-MM-DD");
+            const URL = this.serverUrl + "/admin/task/edit";
+            let _this = this;
+            if(begin>end){
+                alert('结束时间不能小于开始时间！');
+                return false;
+            }
+            const data = {
+                task_id:task.task_id,
+                plan_id:this.$route.params.id,
+                task_name:task.task_name,
+                task_level:task.task_level,
+                dt_begin:begin,
+                dt_end:end
+            }
+            this.emitAjax(URL, data, function(result) {
+                _this.getCheckPlanData();
+            });
+        },
+        setCount(){
+            //计划分类
             const _this = this;
             _this.schoolArray = [];
             _this.collegeArray = [];
@@ -177,6 +216,7 @@ export default {
             }
         },
         getCheckPlanData(){
+            //更新数据
             this.$store.dispatch("getCheckPlan",{plan_id:this.checkPlan.plan.plan_id});
         }
     },
