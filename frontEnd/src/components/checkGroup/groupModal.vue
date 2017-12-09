@@ -12,7 +12,7 @@
                             <label><h5>实验室小组类型：</h5></label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" class="ace" v-model="level" value="school">
+                                    <input type="radio" class="ace" v-model="level" value="lab">
                                     <span class="lbl">自查小组</span>
                                 </label>
                                 <label>
@@ -20,7 +20,7 @@
                                     <span class="lbl">复查小组</span>
                                 </label>
                                 <label>
-                                    <input type="radio" class="ace" v-model="level" value="lab">
+                                    <input type="radio" class="ace" v-model="level" value="school">
                                     <span class="lbl">抽查小组</span>
                                 </label>
                             </div>
@@ -63,7 +63,7 @@ export default {
     data() {
         return {
             group_name: "",
-            level: "school",
+            level: "lab",
             leader_name: "",
             leader_id: "",
             phone: "",
@@ -111,7 +111,7 @@ export default {
                 this.members= this.changeObj.members;
             }else{
                 this.group_name = "";
-                this.level= "school";
+                this.level= "lab";
                 this.leader_name= "";
                 this.leader_id="";
                 this.phone= "";

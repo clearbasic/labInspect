@@ -2,13 +2,13 @@
     <div class="checkRule">
         <div class="tabbable">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#schoolRule" data-toggle="tab">自查规则</a></li>
+                <li class="active"><a href="#labRule" data-toggle="tab">自查规则</a></li>
                 <li><a href="#collegeRule" data-toggle="tab">复查规则</a></li>
-                <li><a href="#labRule" data-toggle="tab">抽查规则</a></li>
+                <li><a href="#schoolRule" data-toggle="tab">抽查规则</a></li>
             </ul>
             <div class="tab-content">
                 <!-- 自查规则 -->
-                <div id="schoolRule" class="tab-pane fade active in">
+                <div id="labRule" class="tab-pane fade active in">
                     <div class="clearfix">
                         <p class="pull-right">
                             从
@@ -31,7 +31,7 @@
                             </tr>
                            </thead>
                            <tbody>
-                               <tr v-for="(rule,index) in schoolRule" :key="'schoolRule'+index">
+                               <tr v-for="(rule,index) in labRule" :key="'labRule'+index">
                                    <td style="text-align:left;">
                                        <select name="" id="">
                                            <option :value="rule.college_id">{{rule.college_id}}</option>
@@ -44,11 +44,11 @@
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:30px;"
-                                            @blur="changeScore(checkList.id,index,'school',$event)"
-                                            @keyup="changeScore(checkList.id,index,'school',$event)"
+                                            @blur="changeScore(checkList.id,index,'lab',$event)"
+                                            @keyup="changeScore(checkList.id,index,'lab',$event)"
                                         />
                                    </td>
-                                   <td v-html="computeTotalScore(index,'school')"></td>
+                                   <td v-html="computeTotalScore(index,'lab')"></td>
                                </tr>
                            </tbody>
                        </table>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
                 <!-- 抽查规则 -->
-                <div id="labRule" class="tab-pane fade">
+                <div id="schoolRule" class="tab-pane fade">
                     <div class="clearfix">
                         <p class="pull-right">
                             从
@@ -125,7 +125,7 @@
                             </tr>
                            </thead>
                            <tbody>
-                               <tr v-for="(rule,index) in labRule" :key="'labRule'+index">
+                               <tr v-for="(rule,index) in schoolRule" :key="'schoolRule'+index">
                                    <td style="text-align:left;">
                                        <select name="" id="">
                                            <option :value="rule.college_id">{{rule.college_id}}</option>
@@ -138,11 +138,11 @@
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:30px;"
-                                            @blur="changeScore(checkList.id,index,'lab',$event)"
-                                            @keyup="changeScore(checkList.id,index,'lab',$event)"
+                                            @blur="changeScore(checkList.id,index,'school',$event)"
+                                            @keyup="changeScore(checkList.id,index,'school',$event)"
                                         />
                                    </td>
-                                   <td v-html="computeTotalScore(index,'lab')"></td>
+                                   <td v-html="computeTotalScore(index,'school')"></td>
                                </tr>
                            </tbody>
                        </table>

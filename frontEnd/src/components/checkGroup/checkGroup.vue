@@ -95,8 +95,7 @@
                     {
                         group_id:1,
                         group_name:"实验室小组",
-                        level:"college",
-                        org_id:"11",
+                        level:"lab",
                         leader_name:"程兴华",
                         leader_id:"1104857839",
                         phone:"1875637897",

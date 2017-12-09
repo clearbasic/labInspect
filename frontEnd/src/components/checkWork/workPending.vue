@@ -35,9 +35,9 @@
                         </div>
                         <h3 class="text-center">
                             {{checkWork.plan&&checkWork.plan.plan_name}} {{checkWorkTask&&checkWorkTask.task_name}} 
-                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'school'">自查</span>
+                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'lab'">自查</span>
                             <span v-if="checkWorkTask&&checkWorkTask.task_level === 'college'">复查</span>
-                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'lab'">抽查</span>
+                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'school'">抽查</span>
                         </h3>
                         <div class="row">
                             <div class="col-xs-12">
@@ -109,7 +109,7 @@ export default {
     },
     mounted() {
         //获取检测期次信息
-        this.$store.dispatch("setCheckWork");
+        this.$store.dispatch("getCheckWork");
     }
 };
 </script>

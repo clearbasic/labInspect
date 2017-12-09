@@ -119,39 +119,6 @@ const checkWork = {
                 org_level:"school"
             },
             tasks:{
-                school:[
-                    {   
-                        task_id:1,
-                        check_id:1,
-                        task_name:"第1次",
-                        task_level:"school",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                        college_dt_begin:"2017-12-04",
-                        college_dt_end:"2018-01-30",
-                        check_state:"no-start",
-                        check_score:65,
-                        problem_fatal:10,
-                        problem_common:19,
-                        review_state:"no-need",
-                        review:"",
-                    }],
-                college:[{   
-                        task_id:2,
-                        check_id:2,
-                        task_name:"第2次",
-                        task_level:"college",
-                        dt_begin:"2017-12-04",
-                        dt_end:"2018-01-30",
-                        college_dt_begin:"2017-12-04",
-                        college_dt_end:"2018-01-30",
-                        check_state:"pending",
-                        check_score:65,
-                        problem_fatal:10,
-                        problem_common:19,
-                        review_state:"no-start",
-                        review:"",
-                    }],
                 lab:[{   
                         task_id:3,
                         check_id:3,
@@ -168,7 +135,40 @@ const checkWork = {
                         review_state:"no-start",
                         review:"",
                     }
-                ]
+                ],
+                college:[{   
+                        task_id:2,
+                        check_id:2,
+                        task_name:"第2次",
+                        task_level:"college",
+                        dt_begin:"2017-12-04",
+                        dt_end:"2018-01-30",
+                        college_dt_begin:"2017-12-04",
+                        college_dt_end:"2018-01-30",
+                        check_state:"pending",
+                        check_score:65,
+                        problem_fatal:10,
+                        problem_common:19,
+                        review_state:"no-start",
+                        review:"",
+                    }],
+                school:[
+                    {   
+                        task_id:1,
+                        check_id:1,
+                        task_name:"第1次",
+                        task_level:"school",
+                        dt_begin:"2017-12-04",
+                        dt_end:"2018-01-30",
+                        college_dt_begin:"2017-12-04",
+                        college_dt_end:"2018-01-30",
+                        check_state:"no-start",
+                        check_score:65,
+                        problem_fatal:10,
+                        problem_common:19,
+                        review_state:"no-need",
+                        review:"",
+                    }]
             }
         },
         {   
@@ -179,12 +179,12 @@ const checkWork = {
                 org_level:"lab"
             },
             tasks:{
-                school:[
+                lab:[
                     {   
                         task_id:1,
                         check_id:1,
                         task_name:"第1次",
-                        task_level:"school",
+                        task_level:"lab",
                         dt_begin:"2017-12-04",
                         dt_end:"2018-01-30",
                         college_dt_begin:"2017-12-04",
@@ -212,11 +212,11 @@ const checkWork = {
                         review_state:"no-start",
                         review:"",
                     }],
-                lab:[{   
+                school:[{   
                         task_id:3,
                         check_id:3,
                         task_name:"第2次",
-                        task_level:"lab",
+                        task_level:"school",
                         dt_begin:"2017-12-04",
                         dt_end:"2018-01-30",
                         college_dt_begin:"2017-12-04",

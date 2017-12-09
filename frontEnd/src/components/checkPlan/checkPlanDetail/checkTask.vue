@@ -2,23 +2,21 @@
     <div class="checkTask">
         <ul class="list-group">
             <div class="list-group-item list-group-item-info">
-                <h4 style="margin:0;" class="clearfix">
-                    自查计划 <small>共{{schoolArray.length}}次</small>
-                    <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('school')"></i>
+                <h4 style="margin:0;">
+                    自查计划 <small>共{{labArray.length}}次</small>
+                    <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('lab')"></i>
                 </h4>
             </div>
-            <li class="list-group-item" v-for="(item,index) in schoolArray" :key="'zicha'+index" v-if="item.task_level === 'school'">
+            <li class="list-group-item" v-for="(item,index) in labArray" :key="'zicha'+index" v-if="item.task_level === 'lab'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140" 
+                自 <datepicker v-model="item.dt_begin" width="140"
                     :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140" 
+                至 <datepicker v-model="item.dt_end" width="140"
                     :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs">
-                    <i class="ace-icon glyphicon glyphicon-minus"></i>
-                </button>
-                <button v-if="index === schoolArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('school',1)">增加下一个月</button>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
+                <button v-if="index === labArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('lab',1)">增加下一个月</button>
             </li>
-            <li v-show="newTaskLevel==='school'" class="list-group-item">
+            <li v-show="newTaskLevel==='lab'" class="list-group-item">
                 {{newTaskName}}，
                 自 <datepicker v-model="newTaskDtBegin"  placeholder="输入计划开始时间" width="140"></datepicker>
                 至 <datepicker v-model="newTaskDtEnd"  placeholder="输入计划结束时间" width="140"></datepicker>
@@ -52,20 +50,22 @@
         </ul>
         <ul class="list-group">
             <div class="list-group-item list-group-item-info">
-                <h4 style="margin:0;">
-                    抽查计划 <small>共{{labArray.length}}次</small>
-                    <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('lab')"></i>
+                <h4 style="margin:0;" class="clearfix">
+                    抽查计划 <small>共{{schoolArray.length}}次</small>
+                    <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('school')"></i>
                 </h4>
             </div>
-            <li class="list-group-item" v-for="(item,index) in labArray" :key="'zicha'+index" v-if="item.task_level === 'lab'">
+            <li class="list-group-item" v-for="(item,index) in schoolArray" :key="'zicha'+index" v-if="item.task_level === 'school'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140"
+                自 <datepicker v-model="item.dt_begin" width="140" 
                     :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140"
+                至 <datepicker v-model="item.dt_end" width="140" 
                     :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs">
+                    <i class="ace-icon glyphicon glyphicon-minus"></i>
+                </button>
             </li>
-            <li v-show="newTaskLevel==='lab'" class="list-group-item">
+            <li v-show="newTaskLevel==='school'" class="list-group-item">
                 {{newTaskName}}，
                 自 <datepicker v-model="newTaskDtBegin"  placeholder="输入计划开始时间" width="140"></datepicker>
                 至 <datepicker v-model="newTaskDtEnd"  placeholder="输入计划结束时间" width="140"></datepicker>
@@ -110,7 +110,14 @@ export default {
                 this.newTaskDtBegin = '';
                 this.newTaskDtEnd = '';
             }else{
-                this.newTaskName = "第"+(this[type+'Array'].length+1)+"次";
+                if(this[type+'Array'].lengt > 0){
+                    const lastTaskName = this[type+'Array'][this[type+'Array'].length-1].task_name;
+                    const lastTaskNameCount = lastTaskName.match(/\d+/)[0];
+                    this.newTaskName = "第"+(parseInt(lastTaskNameCount)+1)+"次";
+                }else{
+                    this.newTaskName = "第1次";
+                }
+                
             }
         },
         createNewTask(){
@@ -140,15 +147,18 @@ export default {
         },
         autoAddTask(type,space){
             //自动添加一条
+            const URL = this.serverUrl + "/admin/task/add";
+            let _this = this;
             let length = this[type+"Array"].length;
             let {dt_begin,dt_end} = this[type+"Array"][length-1];
             let changedBegin = moment(dt_begin).add(space,"months").format("YYYY-MM-DD");
             let changedEnd = moment(dt_end).add(space,"months").format("YYYY-MM-DD");
-            const URL = this.serverUrl + "/admin/task/add";
-            let _this = this;
+            const lastTaskName = this[type+'Array'][this[type+'Array'].length-1].task_name;
+            const lastTaskNameCount = lastTaskName.match(/\d+/)[0];
+
             const data = {
                 plan_id:this.$route.params.id,
-                task_name:"第"+(length+1)+"次",
+                task_name:"第"+(parseInt(lastTaskNameCount)+1)+"次",
                 task_level:type,
                 dt_begin:changedBegin,
                 dt_end:changedEnd

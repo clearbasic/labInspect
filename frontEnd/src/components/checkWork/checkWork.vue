@@ -49,7 +49,7 @@
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 <h5 class="text-center">
-                                                    共有自查{{checkWorkItem.tasks.school.length}}次，复查{{checkWorkItem.tasks.college.length}}次，抽查{{checkWorkItem.tasks.lab.length}}次。
+                                                    共有自查{{checkWorkItem.tasks.lab.length}}次，复查{{checkWorkItem.tasks.college.length}}次，抽查{{checkWorkItem.tasks.school.length}}次。
                                                     满分{{checkWork.plan.plan_score}}分
                                                     <router-link to=''>工作说明</router-link>
                                                 </h5>
@@ -58,9 +58,9 @@
                                         <!-- 循环实验室三种任务 -->
                                         <div class="widget-box  widget-color-blue" v-for="(tasks,key) in checkWorkItem.tasks" :key="'taskItem'+key">
                                             <div class="widget-header">
-                                                <h5 v-if="key == 'school'">自查</h5>
+                                                <h5 v-if="key == 'lab'">自查</h5>
                                                 <h5 v-if="key == 'college'">复查</h5>
-                                                <h5 v-if="key == 'lab'">抽查</h5>
+                                                <h5 v-if="key == 'school'">抽查</h5>
                                             </div>
                                             <div class="widget-body">
                                                 <div class="widget-main no-padding table-responsive">
@@ -132,7 +132,7 @@ export default {
     },
     mounted() {
         //获取检测期次信息
-        this.$store.dispatch("setCheckWork");
+        this.$store.dispatch("getCheckWork");
     }
 };
 </script>

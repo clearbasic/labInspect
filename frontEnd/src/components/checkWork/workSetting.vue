@@ -35,15 +35,16 @@
                         </div>
                         <h3 class="text-center">
                             {{checkWork.plan&&checkWork.plan.plan_name}} {{checkWorkTask&&checkWorkTask.task_name}} 
-                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'school'">自查</span>
+                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'lab'">自查</span>
                             <span v-if="checkWorkTask&&checkWorkTask.task_level === 'college'">复查</span>
-                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'lab'">抽查</span>
+                            <span v-if="checkWorkTask&&checkWorkTask.task_level === 'school'">抽查</span>
                         </h3>
                         <div class="row">
                             <div class="col-xs-12">
                                 <h5 class="text-center">
+                                    {{checkWorkOrg&&checkWorkOrg.org.org_name}} 
                                     学校要求时间：{{checkWorkTask&&checkWorkTask.dt_begin}}到{{checkWorkTask&&checkWorkTask.dt_end}}
-                                    满分{{checkWork.plan_score}}分
+                                    满分{{checkWork.plan.plan_score}}分
                                     <router-link to=''>工作说明</router-link>
                                 </h5>
                             </div>
@@ -63,7 +64,8 @@ export default {
     data() {
         return {
             title: "检查安排",
-            checkWorkTask:null
+            checkWorkTask:null,
+            checkWorkOrg:null,
         };
     },
     computed: {
@@ -78,11 +80,10 @@ export default {
             const taskList = this.checkWork.task_list;
             if (taskList) {
                 for (let index = 0; index < taskList.length; index++) {
-                    
                     const element = taskList[index];
-
                     if(element.org.org_id === _this.$route.query.org_id){
                         let tasks = null;
+                        _this.checkWorkOrg = element; 
                         if(_this.$route.query.type == "school"){
                             tasks = element.tasks.school;
                         }else if(_this.$route.query.type == "college"){
@@ -90,7 +91,6 @@ export default {
                         }else if(_this.$route.query.type == "lab"){
                             tasks = element.tasks.lab;
                         }
-                        console.log(tasks)
                         for (let i = 0; i < tasks.length; i++) {
                             const task = tasks[i];
                             if(task.check_id == _this.$route.query.check_id){
@@ -98,7 +98,6 @@ export default {
                             }
                         }
                     }
-                    
                 }
             }
         }
@@ -110,7 +109,7 @@ export default {
     },
     mounted() {
         //获取检测期次信息
-        this.$store.dispatch("setCheckWork");
+        this.$store.dispatch("getCheckWork");
     }
 };
 </script>
