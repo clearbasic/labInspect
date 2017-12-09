@@ -17,7 +17,12 @@ function resultArray($array)
     } elseif (isset($array['error'])) {
         $code = 400;
         $array['data'] = '';
+    }else{
+        $code = 200;
+        $array['data'] = '';
     }
+
+
     return [
         'code'  => $code,
         'data'  => $array['data'],

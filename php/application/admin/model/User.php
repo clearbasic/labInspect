@@ -175,7 +175,6 @@ class User extends Common
 			return false;
 		}
 	}
-
 	/**
 	 * [login 登录]
 	 * @AuthorHTL

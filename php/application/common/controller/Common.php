@@ -21,7 +21,16 @@ class Common extends Controller
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, authKey, sessionId");
-        $param =  Request::instance()->param();            
+        $param =  Request::instance()->param();
+        $app_key = !empty($param['app_key']) ? $param['app_key']: '';
+        $timestamp = !empty($param['timestamp']) ? $param['timestamp']: '';
+        $sign = !empty($param['sign']) ? $param['sign']: '';
+        $app_secret = config('app_secret');
+        $sign_token = md5($app_secret.$app_key.$timestamp.$app_secret);
+        if ($sign !== $sign_token){
+            echo json_encode(resultArray(['error' => '认证不通过']));
+            die();
+        }
         $this->param = $param;
     }
 

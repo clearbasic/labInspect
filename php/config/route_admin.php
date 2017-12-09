@@ -14,7 +14,12 @@ return [
         'admin/menus'		   =>'admin/menus',
         'admin/structures'	   =>'admin/structures',
         'admin/posts'          =>'admin/posts',
+
         'admin/checklist'      =>'admin/checklist',
+        'admin/item'      =>    'admin/item',
+        'admin/plan'      =>    'admin/plan',
+        'admin/task'      =>    'admin/task',
+        'admin/org'      =>    'admin/org',
     ],
 
 	// 【基础】登录
@@ -57,9 +62,55 @@ return [
 	'admin/posts/deletes' => ['admin/posts/deletes', ['method' => 'POST']],
 	// 【部门】批量启用/禁用
     'admin/posts/enables' => ['admin/posts/enables', ['method' => 'POST']],
-    // 【部门】批量启用/禁用
-    'admin/checklist/index' => ['admin/checklist/index', ['method' => 'GET']],
-	
+
+    // 【检查指标体系】类别列表
+    'admin/checklist/index' => ['admin/checklist/index', ['method' => 'POST']],
+    // 【检查指标体系】类别添加
+    'admin/checklist/add' => ['admin/checklist/add', ['method' => 'POST']],
+    // 【检查指标体系】类别修改
+    'admin/checklist/edit' => ['admin/checklist/edit', ['method' => 'POST']],
+    // 【检查指标体系】类别修改
+    'admin/checklist/del' => ['admin/checklist/del', ['method' => 'POST']],
+
+    // 【检查指标体系】指标项列表
+    'admin/item/index' => ['admin/item/index', ['method' => 'POST']],
+    // 【检查指标体系】指标项添加
+    'admin/item/add' => ['admin/item/add', ['method' => 'POST']],
+    // 【检查指标体系】指标项修改
+    'admin/item/edit' => ['admin/item/edit', ['method' => 'POST']],
+    // 【检查指标体系】指标项修改
+    'admin/item/del' => ['admin/item/del', ['method' => 'POST']],
+
+    // 【检查期次】
+    'admin/plan/index' => ['admin/plan/index', ['method' => 'POST']],
+    // 【检查期次】
+    'admin/plan/add' => ['admin/plan/add', ['method' => 'POST']],
+    // 【检查期次】
+    'admin/plan/edit' => ['admin/plan/edit', ['method' => 'POST']],
+    // 【检查期次】
+    'admin/plan/del' => ['admin/plan/del', ['method' => 'POST']],
+    // 【检查期次】
+    'admin/plan/getdata' => ['admin/plan/getdata', ['method' => 'POST']],
+
+    // 【检查安排】安排列表
+    'admin/task/index' => ['admin/task/index', ['method' => 'POST']],
+    // 【检查安排】安排添加
+    'admin/task/add' => ['admin/task/add', ['method' => 'POST']],
+    // 【检查安排】安排修改
+    'admin/task/edit' => ['admin/task/edit', ['method' => 'POST']],
+    // 【检查安排】安排修改
+    'admin/task/del' => ['admin/task/del', ['method' => 'POST']],
+
+    // 【组织机构】组织机构列表
+    'admin/org/index' => ['admin/org/index', ['method' => 'POST']],
+    // 【组织机构】组织机构添加
+    'admin/org/add' => ['admin/org/add', ['method' => 'POST']],
+    // 【组织机构】组织机构修改
+    'admin/org/edit' => ['admin/org/edit', ['method' => 'POST']],
+    // 【组织机构】组织机构修改
+    'admin/org/del' => ['admin/org/del', ['method' => 'POST']],
+
+
 	// MISS路由
 	'__miss__'  => 'admin/base/miss',
 ];

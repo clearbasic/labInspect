@@ -7,9 +7,13 @@
 
 namespace app\admin\controller;
 
-class Users extends ApiCommon
-{
+use think\Request;
+use think\Db;
+use app\common\adapter\AuthAdapter;
+use app\common\controller\Common;
 
+class Users extends Common
+{
     public function index()
     {
         $userModel = model('User');
@@ -24,11 +28,13 @@ class Users extends ApiCommon
     public function read()
     {   
         $userModel = model('User');
+
         $param = $this->param;
         $data = $userModel->getDataById($param['id']);
+
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
-        } 
+        }
         return resultArray(['data' => $data]);
     }
 
