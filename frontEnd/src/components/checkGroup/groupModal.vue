@@ -58,8 +58,6 @@
     </div>
 </template>
 <script>
-import { serverUrl } from "../../config/server.js";
-import { emitAjax } from "../../assets/common.js";
 export default {
     name: "groupModal",
     data() {
@@ -80,7 +78,7 @@ export default {
                 alert("信息填写不完整");
             }else{
                 const _SELF = this;
-                let URL = serverUrl + "/admin/add";
+                let URL = this.serverUrl + "/admin/add";
                 let data = {
                     group_name: this.group_name,
                     level: this.level,

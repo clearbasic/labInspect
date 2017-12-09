@@ -49,8 +49,6 @@
     </div>
 </template>
 <script>
-import { serverUrl } from "../../config/server.js";
-import { emitAjax } from "../../assets/common.js";
 export default {
     name: "checkItemModal",
     data() {
@@ -67,7 +65,7 @@ export default {
             if(this.item_name == "" || this.item_order == ""){
                 alert("信息填写不完整");
             }else{
-                const URL = serverUrl + "/admin/item/add";
+                const URL = this.serverUrl + "/admin/item/add";
                 const _SELF = this;
                 let data = {
                     checklist_id: this.$route.params.id,
@@ -76,7 +74,7 @@ export default {
                     item_level: this.item_level,
                     item_order: this.length
                 };
-                emitAjax(URL, data, function(result) {
+                this.emitAjax(URL, data, function(result) {
                     $('#myModal').modal('hide');
                     _SELF.getCheckItemList();
                 });

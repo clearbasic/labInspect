@@ -242,6 +242,7 @@
                 }
             },
             changeScore(checkListId,index,type,event){
+                //修改分数
                 if(event.type === "keyup" && event.key!="Enter"){
                     return false;
                 }
@@ -256,7 +257,7 @@
                             score:value
                         }
                     }
-                    this.$store.dispatch("setCheckPlan",this.checkPlan);
+                    this.$store.dispatch("getCheckPlan",this.checkPlan);
                     console.log("zhixingle ")
                 }
                 if(event.type === "blur"){

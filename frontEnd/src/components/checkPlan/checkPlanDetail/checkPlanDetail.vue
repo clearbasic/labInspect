@@ -87,8 +87,6 @@ import VueLeft from "../../common/leftMenu";
 import CheckTask from './checkTask';
 import CheckRule from './checkRule';
 import CheckDescription from './checkDescription';
-import { serverUrl } from "../../../config/server.js";
-import { emitAjax } from "../../../assets/common.js";
 
 export default {
     name: "checkPlanDetail",
@@ -116,9 +114,6 @@ export default {
         }
     },
     methods:{
-        setCheckPlan(){
-            
-        },
         editCheckPlan(type){
             //修改期次信息
             let isAjax = false;
@@ -134,7 +129,7 @@ export default {
             if(type == "期次总分" && this.flag == this.checkPlan.plan.plan_score){
                return false;
             }
-            const URL = serverUrl + "/admin/plan/edit";
+            const URL = this.serverUrl + "/admin/plan/edit";
             const _SELF = this;
             const data ={
                 plan_id:this.$route.params.id,
@@ -144,7 +139,7 @@ export default {
                 intro:this.checkPlan.plan.intro,
             }
             this.flag = "";
-            emitAjax(URL, data, null,function(){
+            this.emitAjax(URL, data, null,function(){
                 //修改失败刷新页面
                 _SELF.$router.push(pathName+'/checkPlan/'+this.$route.params.id);
             });
@@ -157,7 +152,7 @@ export default {
         },
         getCheckPlan(){
             //获取期次信息
-            this.$store.dispatch("setCheckPlan",{plan_id:this.$route.params.id});
+            this.$store.dispatch("getCheckPlan",{plan_id:this.$route.params.id});
         },
         setFlag(value){
             this.flag = value;

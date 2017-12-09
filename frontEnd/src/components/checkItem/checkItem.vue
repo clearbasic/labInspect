@@ -126,8 +126,6 @@
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
 import CheckItemModal from "./checkItemModal";
-import { serverUrl } from "../../config/server.js";
-import { emitAjax } from "../../assets/common.js";
 
 export default {
     name: "checkItem",
@@ -191,7 +189,7 @@ export default {
                 return false;
             }
 
-            const URL = serverUrl + "/admin/item/edit";
+            const URL = this.serverUrl + "/admin/item/edit";
             const _SELF = this;
             const data = {
                 id:this.id,
@@ -216,31 +214,31 @@ export default {
             this.checkItemType="common";
             this.checkItemLevel="common";
             this.flag = {type:"",msg:""};
-            emitAjax(URL, data, function(result) {
+            this.emitAjax(URL, data, function(result) {
                 _SELF.getCheckItemList();
             });
         },
         deleteCheckItem(id,name){
             if(window.confirm("是否删除<"+name+">，此操作为不可逆操作，请慎重！！")){
                 //删除代码
-                const URL = serverUrl + "/admin/item/del";
+                const URL = this.serverUrl + "/admin/item/del";
                 const _SELF = this;
                 const data = {
                     id
                 }
-                emitAjax(URL, data, function(result) {
+                this.emitAjax(URL, data, function(result) {
                     _SELF.getCheckItemList();
                 });
             }
         },
         getCheckItemList(){
             //获取指标库指标列表
-            const URL = serverUrl + "/admin/item/index";
+            const URL = this.serverUrl + "/admin/item/index";
             const _SELF = this;
             const data = {
                 checklist_id:this.$route.params.id
             }
-            emitAjax(URL, data, function(result) {
+            this.emitAjax(URL, data, function(result) {
                 _SELF.checkListDate = result;
             });
         }

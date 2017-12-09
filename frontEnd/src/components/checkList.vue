@@ -127,8 +127,6 @@
 <script>
 import VueHead from "./common/header";
 import VueLeft from "./common/leftMenu";
-import { serverUrl } from "../config/server.js";
-import { emitAjax } from "../assets/common.js";
 
 export default {
     name: "checkList",
@@ -164,10 +162,10 @@ export default {
                 alert("不可删除<" + name + ">，此指标类库内含有指标项，请移除后在删除！！")
             } else {
                 if (window.confirm("是否要删除<" + name + ">,此操作不可逆，请慎重！！")) {
-                    const URL = serverUrl + "/admin/checklist/del";
+                    const URL = this.serverUrl + "/admin/checklist/del";
                     const _SELF = this;
                     const data = { id };
-                    emitAjax(URL, data, function(result) {
+                    this.emitAjax(URL, data, function(result) {
                         _SELF.getCheckList();
                     });
                 }
@@ -207,7 +205,7 @@ export default {
                 return false;
             }
             
-            const URL = serverUrl + "/admin/checklist/edit";
+            const URL = this.serverUrl + "/admin/checklist/edit";
             const _SELF = this;
             const data = {
                 id: this.checkListid,
@@ -230,16 +228,16 @@ export default {
                 type:"",
                 msg:""
             }
-            emitAjax(URL, data, function(result) {
+            this.emitAjax(URL, data, function(result) {
                 _SELF.getCheckList();
             });
             
         },
         getCheckList() {
             //刷新指标库列表
-            const URL = serverUrl + "/admin/checklist/index";
+            const URL = this.serverUrl + "/admin/checklist/index";
             const _SELF = this;
-            emitAjax(URL, null, function(result) {
+            this.emitAjax(URL, null, function(result) {
                 _SELF.checkListDate = result;
             });
         },
@@ -252,7 +250,7 @@ export default {
             if (this.newCheckListName == "") {
                 alert("请填写指标库名称!!");
             } else {
-                const URL = serverUrl + "/admin/checklist/add";
+                const URL = this.serverUrl + "/admin/checklist/add";
                 const _SELF = this;
                 const data = {
                     name: this.newCheckListName,
@@ -263,7 +261,7 @@ export default {
                 _SELF.newCheckListName = "";
                 _SELF.newCheckListIntro = "";
                 _SELF.newCheckListOrder = "";
-                emitAjax(URL, data, function(result) {
+                this.emitAjax(URL, data, function(result) {
                     _SELF.getCheckList();
                 });
             }

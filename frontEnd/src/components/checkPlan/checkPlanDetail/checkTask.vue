@@ -106,17 +106,23 @@ export default {
         },
         createNewTask(){//创建新计划
             if(this.newTaskName === '' || this.newTaskLevel === '' || this.newTaskDtBegin === '' || this.newTaskDtEnd === ''){
-                alert("请填写完整的信息")
-            }else{
-                this.checkPlan.task_list.push({
-                    task_name:this.newTaskName,
-                    task_level:this.newTaskLevel,
-                    dt_begin:this.newTaskDtBegin,
-                    dt_end:this.newTaskDtEnd,
-                })
-                this.$store.dispatch("setCheckPlan",this.checkPlan);
-                this.addTask("")
+                alert("请填写完整的信息");
+                return false
             }
+            const URL = this.serverUrl + "/admin/task/add";
+            const _SELF = this;
+            const data = {
+                plan_id:this.checkPlan.plan.plan_id,
+                task_name:this.newTaskName,
+                task_level:this.newTaskLevel,
+                dt_begin:this.newTaskDtBegin,
+                dt_end:this.newTaskDtEnd,
+            }
+            this.emitAjax(URL, data, function(result) {
+                this.getCheckPlanData();
+            });
+            this.addTask("")
+            
         },
         delTask(id){
             var _this = this;
@@ -125,7 +131,7 @@ export default {
                 const item = _this.checkPlan.task_list[index];
                 if(item.task_id === id){
                     _this.checkPlan.task_list.splice(index,1);
-                    this.$store.dispatch("setCheckPlan",_this.checkPlan);
+                    this.$store.dispatch("getCheckPlan",_this.checkPlan);
                     break;
                 };
             }
@@ -144,7 +150,7 @@ export default {
                 dt_end:changedEnd
             }
             this.checkPlan.task_list.push(newTask);
-            this.$store.dispatch("setCheckPlan",this.checkPlan);
+            this.$store.dispatch("getCheckPlan",this.checkPlan);
         },
         setCount(){//计划分类
             const _this = this;
@@ -170,6 +176,9 @@ export default {
                 }
             }
         },
+        getCheckPlanData(){
+            this.$store.dispatch("getCheckPlan",{plan_id:this.checkPlan.plan.plan_id});
+        }
     },
     watch:{
         checkPlan:function(){

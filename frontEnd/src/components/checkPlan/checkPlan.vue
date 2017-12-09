@@ -95,8 +95,6 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
-import { serverUrl } from "../../config/server.js";
-import { emitAjax } from "../../assets/common.js";
 
 export default {
     name: "checkPlan",
@@ -123,14 +121,14 @@ export default {
                 alert("期次名字不能为空！！");
                 return false;
             }
-            const URL = serverUrl + "/admin/plan/add";
+            const URL = this.serverUrl + "/admin/plan/add";
             const _SELF = this;
             const data = {
                 plan_name:this.newPlanName,
                 plan_score:this.newPlanScore,
                 current:this.newCurrent
             }
-            emitAjax(URL, data,function(){
+            this.emitAjax(URL, data,function(){
                 _SELF.newPlanName = "";
                 _SELF.newPlanScore = 100;
                 _SELF.newCurrent = "no";
@@ -141,18 +139,18 @@ export default {
         deleteCheckPlan(plan_id,name){
             if(confirm("是否删除期次<"+name+">，此操作不可逆，请慎重！")){
                 //删除检查期次代码
-                const URL = serverUrl + "/admin/plan/del";
+                const URL = this.serverUrl + "/admin/plan/del";
                 const _SELF = this;
 
-                emitAjax(URL, {plan_id}, function(result) {
+                this.emitAjax(URL, {plan_id}, function(result) {
                     _SELF.getPlanData();
                 });
             }
         },
         getPlanData(){
-            const URL = serverUrl + "/admin/plan/index";
+            const URL = this.serverUrl + "/admin/plan/index";
             const _SELF = this;
-            emitAjax(URL, null, function(result) {
+            this.emitAjax(URL, null, function(result) {
                 _SELF.checkPlan = Object.assign({},result);
             });
         }

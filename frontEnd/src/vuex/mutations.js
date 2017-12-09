@@ -1,8 +1,8 @@
 export default {
-    setCheckPlan(state,data){
+    getCheckPlan(state,data){
         state.checkPlan = Object.assign({},data);
     },
-    setCheckWork(state,data){
+    getCheckWork(state,data){
         state.checkWork = Object.assign({},data);
     }
 }

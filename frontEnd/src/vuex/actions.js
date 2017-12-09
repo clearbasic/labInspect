@@ -1,20 +1,19 @@
-import {serverUrl} from "../config/server.js";
-import { checkWork,checkPlan } from "../config/data";
+import { serverUrl } from "../config/server.js";
 import { emitAjax } from "../assets/common.js";
+import { checkWork,checkPlan } from "../config/data";
 
 export default {
-    setCheckPlan(context,data){
-        console.log(data)
+    getCheckPlan(context,data){
         const url = serverUrl + "/admin/plan/getdata";
         emitAjax(url,data,function(checkPlan){
-            context.commit("setCheckPlan",checkPlan);
+            context.commit("getCheckPlan",checkPlan);
         })
     },
-    setCheckWork(context,data){
+    getCheckWork(context,data){
         if(data){
-            context.commit("setCheckWork",data);
+            context.commit("getCheckWork",data);
         }else{
-            context.commit("setCheckWork",checkWork);
+            context.commit("getCheckWork",checkWork);
         }
     }
 }
