@@ -42,7 +42,7 @@ export default {
     },
     data() {
         return {
-            msg: "欢迎使用实验室安全检查系统"
+            msg: "欢迎使用实验室安全检查管理系统"
         }
     }
 };

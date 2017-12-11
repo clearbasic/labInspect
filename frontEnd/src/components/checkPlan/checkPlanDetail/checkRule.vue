@@ -51,7 +51,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             @blur="changeScore(checkList.id,index,'lab',$event)"
                                             @keyup="changeScore(checkList.id,index,'lab',$event)"
                                         />
@@ -82,7 +82,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id" class="newRuleScore">
                                         <input type="text" 
                                             :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             :data-checkList="checkList.id"
                                         />
                                    </td>
@@ -141,7 +141,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             @blur="changeScore(checkList.id,index,'college',$event)"
                                             @keyup="changeScore(checkList.id,index,'college',$event)"
                                         />
@@ -172,7 +172,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id" class="newRuleScore">
                                         <input type="text" 
                                             :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             :data-checkList="checkList.id"
                                         />
                                    </td>
@@ -231,7 +231,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             @blur="changeScore(checkList.id,index,'school',$event)"
                                             @keyup="changeScore(checkList.id,index,'school',$event)"
                                         />
@@ -262,7 +262,7 @@
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id" class="newRuleScore">
                                         <input type="text" 
                                             :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
-                                            style="width:30px;"
+                                            style="width:50px;"
                                             :data-checkList="checkList.id"
                                         />
                                    </td>
@@ -339,7 +339,7 @@ export default {
                     score += parseFloat(element.score);
                 }
             }
-            if (this.$store.state.checkPlan.plan_score == score) {
+            if (parseFloat(this.$store.state.checkPlan.plan.plan_score) == score) {
                 return "<span class='green'>" + score + "</span>";
             } else {
                 return "<span class='red'>" + score + "</span>";
@@ -361,8 +361,7 @@ export default {
                         score: value
                     };
                 }
-                this.$store.dispatch("getCheckPlan", this.checkPlan);
-                console.log("zhixingle ");
+                //修改规则
             }
             if (event.type === "blur") {
                 this.isKeyUp = false;

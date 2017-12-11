@@ -10,7 +10,7 @@
                 <a href="index.html" class="navbar-brand">
                     <small>
                         <i class="fa fa-leaf"></i>
-                        实验室安全检查系统
+                        实验室安全检查管理系统
                     </small>
                 </a>
             </div>

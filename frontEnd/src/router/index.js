@@ -15,7 +15,7 @@ import OrgEdit from "../components/org/orgEdit.vue";
 
 
 Vue.use(Router)
-let title = "安全检查系统";
+let title = "实验室安全检查管理系统";
 let pathName = "";
 export default new Router({
 	mode:"history",
