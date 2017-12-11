@@ -112,6 +112,13 @@
             },
             delOrg(org){
                 //删除单位
+                const _this = this;
+                const URL = this.serverUrl+'/admin/org/del';
+                if(window.confirm("是否要删除单位<"+org.org_name+">,此操作不可逆，请慎重！")){
+                    this.emitAjax(URL,{org_id:org.org_id},function(result){
+                        _this.getOrgList();
+                    })
+                }
             }
         },
         mounted(){

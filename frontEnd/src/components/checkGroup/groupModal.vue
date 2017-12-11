@@ -4,9 +4,10 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <form action="" id="createItemForm">
-                        <div :class="['form-group',{'has-error':!group_name}]">
-                            <label><h5>实验室小组名称：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!group_name}]">
+                            <label><h5>实验室小组名称：</h5></label>
                             <input type="text" class="form-control" v-model="group_name" placeholder="实验室小组名称">
+                            <span class="form-control-feedback red">*</span>
                         </div>
                         <div class="form-group">
                             <label><h5>实验室小组类型：</h5></label>
@@ -31,17 +32,20 @@
                                 <option value="org_id">机构</option>
                             </select>
                         </div>
-                        <div :class="['form-group',{'has-error':!leader_name}]">
-                            <label><h5>组长名称：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!leader_name}]">
+                            <label><h5>组长名称：</h5></label>
                             <input type="text" class="form-control" v-model="leader_name" placeholder="组长名称">
+                            <span class="form-control-feedback red">*</span>
                         </div>
-                        <div :class="['form-group',{'has-error':!leader_id}]">
-                            <label><h5>组长工号/学号：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!leader_id}]">
+                            <label><h5>组长工号/学号：</h5></label>
                             <input type="text" class="form-control" v-model="leader_id" placeholder="组长工号/学号">
+                            <span class="form-control-feedback red">*</span>
                         </div>
-                        <div :class="['form-group',{'has-error':!phone}]">
-                            <label><h5>组长电话：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!phone}]">
+                            <label><h5>组长电话：</h5></label>
                             <input type="text" class="form-control" v-model="phone" placeholder="组长电话">
+                            <span class="form-control-feedback red">*</span>
                         </div>
                         <div class="form-group">
                             <label><h5>小组成员：</h5></label>

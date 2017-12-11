@@ -50,6 +50,9 @@ a:hover {
 .has-error input[type=text],.has-error input[type=password] {
     border-color:#f00;
 }
+.form-group h5 {
+    margin:0;
+}
 @media screen and (max-width:767px){
     .little {
         width:auto;

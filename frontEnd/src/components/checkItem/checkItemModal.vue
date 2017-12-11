@@ -4,9 +4,10 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <form action="" id="createItemForm">
-                        <div :class="['form-group',{'has-error':!item_name}]" >
-                            <label><h5>指标名称：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!item_name}]" >
+                            <label><h5>指标名称：</h5></label>
                             <input type="text" class="form-control" v-model="item_name" placeholder="请输入指标名称">
+                            <span class="form-control-feedback red">*</span>
                         </div>
                         <div class="form-group">
                             <label><h5>指标类型：</h5></label>
@@ -34,9 +35,10 @@
                                 </label>
                             </div>
                         </div>
-                        <div :class="['form-group',{'has-error':!length}]">
-                            <label><h5>排序：<span class="red">*</span></h5></label>
+                        <div :class="['form-group','has-feedback',{'has-error':!length}]">
+                            <label><h5>排序：</h5></label>
                             <input type="text" class="form-control" v-model="length" placeholder="请输入排序">
+                            <span class="form-control-feedback red">*</span>
                         </div>
                     </form>
                 </div>
