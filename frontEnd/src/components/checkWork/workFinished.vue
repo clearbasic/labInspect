@@ -23,7 +23,7 @@
                             </li>
                         </ul>
                     </div>
-                    <!-- 左侧主要内容 -->
+                    <!-- 右侧主要内容 -->
                     <div class="page-content">
                         <div class="page-header">
                             <h1>

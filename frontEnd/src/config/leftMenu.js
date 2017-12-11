@@ -15,6 +15,11 @@ export default [
                 name:"检查期次",
                 url:pathName+"/checkPlan",
                 icon:"",
+            },
+            {
+                name:"实验室单位设置",
+                url:pathName+"/OrgList",
+                icon:'',
             }
         ]
     },

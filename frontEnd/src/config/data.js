@@ -233,8 +233,23 @@ const checkWork = {
         }
     ]
 }
-
+const orgList = [{
+    org_id:1,
+    parent_id:0,
+    org_name:"浙江大学",
+    org_level:"school",
+    org_alias:"浙江大学别名",
+    org_address:"浙江大学地址",
+},{
+    org_id:2,
+    parent_id:0,
+    org_name:"杭州师范大学",
+    org_level:"school",
+    org_alias:"杭州师范大学别名",
+    org_address:"杭州师范大学地址",
+}];
 export {
     checkWork,
-    checkPlan
+    checkPlan,
+    orgList,
 };

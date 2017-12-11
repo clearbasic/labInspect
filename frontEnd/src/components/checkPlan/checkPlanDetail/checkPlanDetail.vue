@@ -16,7 +16,10 @@
                                 <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link :to="pathName+'/checkPlan'" class="active">检查期次管理</router-link>
+                                <router-link :to="pathName+'/checkPlan'">检查期次管理</router-link>
+                            </li>
+                            <li>
+                                <a class="active">{{checkPlan.plan.plan_name}}</a>
                             </li>
                         </ul>
                     </div>

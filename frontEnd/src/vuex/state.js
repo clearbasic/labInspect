@@ -5,4 +5,5 @@ export default {
         rule_list:[],
     },
     checkWork:{},
+    orgList:[],
 }

@@ -10,6 +10,8 @@ import CheckWork from "../components/checkWork/checkWork";
 import WorkSetting from "../components/checkWork/workSetting.vue";
 import WorkPending from "../components/checkWork/workPending.vue";
 import WorkFinished from "../components/checkWork/workFinished.vue";
+import OrgList from "../components/org/orgList.vue";
+import OrgEdit from "../components/org/orgEdit.vue";
 
 
 Vue.use(Router)
@@ -61,6 +63,24 @@ export default new Router({
 			meta:{
 				title:"检查期次 - "+title,
 				active:pathName+"/checkPlan"
+			}
+		},
+		{
+			path:pathName+"/orgList",
+			name:"OrgList",
+			component:OrgList,
+			meta:{
+				title:"实验室单位列表 - "+title,
+				active:pathName+"/orgList"
+			}
+		},
+		{
+			path:pathName+"/orgEdit",
+			name:"orgEdit",
+			component:OrgEdit,
+			meta:{
+				title:"实验室单位编辑 - "+title,
+				active:pathName+"/orgList"
 			}
 		},
 		{
