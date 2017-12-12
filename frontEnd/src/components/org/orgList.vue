@@ -32,42 +32,54 @@
                             </h1>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th class="center" width="60px">单位ID</th>
-                                        <th>单位名称</th>
-                                        <th class="center">单位地址</th>
-                                        <th>所属单位</th>
-                                        <th class="center little">单位级别</th>
-                                        <th class="center little">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(org,index) in orgList" :key="'orgList'+index">
-                                        <td class="center">{{org.org_id}}</td>
-                                        <td>
-                                            <router-link :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">{{org.org_name}}</router-link>
-                                        </td>
-                                        <td>{{org.org_address}}</td>
-                                        <td>{{getParentName(org.parent_id)}}</td>
-                                        <td class="center">
-                                            <span v-if="org.org_level === 'school'">学校</span>
-                                            <span v-if="org.org_level === 'college'">院系</span>
-                                            <span v-if="org.org_level === 'lab'">实验室</span>
-                                        </td>
-                                        <td class="center">
-                                            <router-link class="btn btn-success btn-xs" tag="button" 
-                                                :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">
-                                                <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>    
-                                            </router-link>
-                                            <button class="btn btn-danger btn-xs" @click="delOrg(org)">
-                                                <i class="ace-icon fa fa-trash-o bigger-110"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="dataTables_wrapper form-inline no-footer">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <select @change="filterList" v-model="orgType">
+                                            <option value="all">全部</option>
+                                            <option value="school">显示学校</option>
+                                            <option value="college">显示院系</option>
+                                            <option value="lab">显示实验室</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="center" width="60px">单位ID</th>
+                                            <th>单位名称</th>
+                                            <th class="center">单位地址</th>
+                                            <th>所属单位</th>
+                                            <th class="center little">单位级别</th>
+                                            <th class="center little">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(org,index) in orgList" :key="'orgList'+index">
+                                            <td class="center">{{org.org_id}}</td>
+                                            <td>
+                                                <router-link :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">{{org.org_name}}</router-link>
+                                            </td>
+                                            <td>{{org.org_address}}</td>
+                                            <td>{{getParentName(org.pid)}}</td>
+                                            <td class="center">
+                                                <span v-if="org.org_level === 'school'">学校</span>
+                                                <span v-if="org.org_level === 'college'">院系</span>
+                                                <span v-if="org.org_level === 'lab'">实验室</span>
+                                            </td>
+                                            <td class="center">
+                                                <router-link class="btn btn-success btn-xs" tag="button" 
+                                                    :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">
+                                                    <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>    
+                                                </router-link>
+                                                <button class="btn btn-danger btn-xs" @click="delOrg(org)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-110"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,6 +97,7 @@
             return {
                 title:"单位列表",
                 changeObj:null,
+                orgType:"all"
             }
         },
         components:{VueHead,VueLeft},
@@ -94,9 +107,9 @@
             }
         },
         methods:{
-            getOrgList(){
+            getOrgList(data){
                 //获取单位列表
-                this.$store.dispatch("getOrgList");
+                this.$store.dispatch("getOrgList",data);
             },
             getParentName(id){
                 //获取所属单位名称
@@ -118,6 +131,13 @@
                     this.emitAjax(URL,{org_id:org.org_id},function(result){
                         _this.getOrgList();
                     })
+                }
+            },
+            filterList(){
+                if(this.orgType == 'all'){
+                    this.getOrgList();
+                }else{
+                    this.getOrgList({org_level:this.orgType});
                 }
             }
         },

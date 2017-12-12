@@ -25,6 +25,12 @@ function emitAjax(url,opt,success,error){
             error&&error(resultObj)
         }
     })
+    .error(function(error){
+        console.log(error);
+        if(error.readyStatus !=4 || error.status != 200){
+            alert("连接不到服务器，网络请求失败");
+        }
+    })
 }
 //生存密钥
 function setSign(a,b,c){

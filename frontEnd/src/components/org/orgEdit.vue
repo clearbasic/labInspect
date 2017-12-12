@@ -347,7 +347,6 @@
                         const element = this.orgList[index];
                         if(element.org_id==this.$route.query.org_id){
                             _this.orgInfo = Object.assign({},element);
-                            console.log(element)
                         }
                         _this[element.org_level+"Array"].push(Object.assign({},element));
                     }

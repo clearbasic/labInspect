@@ -83,6 +83,9 @@
                                         <button class="btn btn-xs btn-success" @click="originAddPlan"><i class="ace-icon glyphicon glyphicon-ok bigger-130"></i></button>
                                     </td>
                                 </tr>
+                                <tr v-if="checkPlan.length == 0">
+                                    <td colspan="5" align="center">暂无数据..</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

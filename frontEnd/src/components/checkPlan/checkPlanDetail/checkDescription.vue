@@ -3,6 +3,7 @@
         <vueUeditor
             :ueditorConfig="ueditorConfig"
             @ready="editorReady"
+            ueditorPath="/static/ueditor/"
         ></vueUeditor>
     </div>
 </template>
@@ -17,18 +18,40 @@
             return {
                 ueditorConfig:{
                     toolbars:[
-                        ['fullscreen', 'source', 'undo', 'redo','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc',"|",'link',"simpleupload","insertimage","|",'justifyleft', 'justifyright','justifycenter','justifyjustify',"|","inserttable"]
+                        ['fullscreen', 'source', 'undo', 'redo','bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat',
+                         'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall',
+                          'cleardoc',"|",'link',"simpleupload","insertimage","|",'justifyleft', 'justifyright','justifycenter','justifyjustify',"|","inserttable"]
                     ],
                     initialFrameHeight:400,
-                }
+                },
+                ueditor:null,
+                content:"",
             }
         },
         methods:{
             editorReady(ueditor){
-                const content = this.checkPlan.intro;
-                if(content){
-                    ueditor.setContent(content)
-                }
+                const _SELF = this;
+                this.ueditor = ueditor;
+                ueditor.addListener("blur",()=>{
+                    const newContent = ueditor.getContent();
+                    if(newContent != _SELF.content){
+                        let data = Object.assign({},_SELF.checkPlan.plan,{
+                            intro:newContent,
+                        })
+                        const URL = _SELF.serverUrl + "/admin/plan/edit";
+                        _SELF.emitAjax(URL, data, null,function(){
+                            //修改失败刷新页面
+                            _SELF.$router.push(pathName+'/checkPlan/'+_SELF.$route.params.id);
+                        });
+                    }
+                })
+                ueditor.addListener("focus",()=>{
+                    _SELF.content = ueditor.getContent();
+                })
+            },
+            setIntroContent(){
+                const content = this.checkPlan.plan.intro?this.checkPlan.plan.intro:"";
+                this.ueditor && this.ueditor.setContent(content);
             }
         },
         computed:{
@@ -37,8 +60,11 @@
             }
         },
         watch:{
-            checkPlan:function(){
-                
+            checkPlan(){
+                this.setIntroContent();
+            },
+            ueditor(){
+                this.setIntroContent();
             }
         }
     };

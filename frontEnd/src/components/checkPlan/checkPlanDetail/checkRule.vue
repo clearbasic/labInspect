@@ -8,14 +8,14 @@
             </ul>
             <div class="tab-content">
                 <!-- 自查规则 -->
-                <div id="labRule" class="tab-pane fade active in">
+                <div :id="ruleConfig.type+'Rule'" :class="['tab-pane', 'fade', {active:ruleConfig.type == 'lab'},{in:ruleConfig.type == 'lab'}]" 
+                        v-for="(ruleConfig,ruleIndex) in ruleTemplateConfig" :key="'ruleconfig'+ruleIndex">
                     <div class="clearfix">
-                        <button class="btn btn-primary btn-sm" @click="showAddRule('lab')">添加自查规则</button>
+                        <button class="btn btn-primary btn-sm" @click="showAddRule(ruleConfig.type)">添加{{ruleConfig.name}}</button>
                         <p class="pull-right">
                             从
                             <select name="" id="">
-                                <option value="">复查规则</option>
-                                <option value="">抽查规则</option>
+                                <option :value="copy.value" v-for="copy in ruleConfig.other" :key="'copy'+copy.value">{{copy.name}}</option>
                             </select>
                             拷贝
                         </p>
@@ -33,30 +33,23 @@
                             </tr>
                            </thead>
                            <tbody>
-                                <tr v-for="(rule,index) in labRule" :key="'labRule'+index">
+                                <tr v-for="(rule,index) in ruleConfig.dataArray" :key="ruleConfig.type+'Rule'+index">
                                     <td style="text-align:left;">
-                                       <select v-model="rule.college_id">
-                                           <option value="0">全部</option>
-                                           <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
-                                                :value="college.org_id"
-                                           >{{college.org_name}}</option>
-                                       </select>
-                                       <select v-model="rule.lab_id">
-                                            <option value="0">全部</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
-                                                :value="lab.org_id"
-                                           >{{lab.org_name}}</option>
-                                       </select>
+                                        <span v-for="(college,index) in orgList" :key="'collegeArray'+index" v-if="college.org_id == rule.college_id">{{college.org_name}}</span>
+                                        <span v-if="!rule.college_id">全部</span>
+                                        - 
+                                        <span v-for="(lab,index) in orgList" :key="'collegeArray'+index"  v-if="lab.org_id == rule.lab_id">{{lab.org_name}}</span>
+                                        <span v-if="!rule.lab_id">全部</span>
                                    </td>
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:50px;"
-                                            @blur="changeScore(checkList.id,index,'lab',$event)"
-                                            @keyup="changeScore(checkList.id,index,'lab',$event)"
+                                            @blur="changeScore(checkList.id,index,ruleConfig.type,$event)"
+                                            @keyup="changeScore(checkList.id,index,ruleConfig.type,$event)"
                                         />
                                    </td>
-                                   <td v-html="computeTotalScore(index,'lab')"></td>
+                                   <td v-html="computeTotalScore(index,ruleConfig.type)"></td>
                                    <td class="center little">
                                        <button class="btn btn-danger btn-xs" @click="delRule(rule)">
                                            <i class="ace-icon fa fa-trash-o bigger-110"></i>
@@ -64,9 +57,9 @@
                                    </td>
                                 </tr>
                                 <!-- 添加新规则 -->
-                                <tr v-if="addRule && addRuleType == 'lab'">
+                                <tr v-if="addRule && addRuleType == ruleConfig.type">
                                     <td style="text-align:left;">
-                                       <select v-model="newRule.college_id">
+                                       <select v-model="newRule.college_id" @change="getLabList(newRule.college_id)">
                                            <option value="0">全部</option>
                                            <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
                                                 :value="college.org_id"
@@ -84,9 +77,11 @@
                                             :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
                                             style="width:50px;"
                                             :data-checkList="checkList.id"
+                                            @blur="changeScore(checkList.id,null,null,$event)"
+                                            @keyup="changeScore(checkList.id,null,null,$event)"
                                         />
                                    </td>
-                                   <td></td>
+                                   <td id="totalScore"></td>
                                    <td class="center little">
                                        <button class="btn btn-success btn-xs" @click="sureAddRule">
                                            <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
@@ -96,186 +91,6 @@
                            </tbody>
                        </table>
                    </div>
-                </div>
-                <!-- 复查规则 -->
-                <div id="collegeRule" class="tab-pane fade">
-                    <div class="clearfix">
-                        <button class="btn btn-primary btn-sm" @click="showAddRule('college')">添加复查规则</button>
-                        <p class="pull-right">
-                            从
-                            <select name="" id="">
-                                <option value="">自查规则</option>
-                                <option value="">抽查规则</option>
-                            </select>
-                            拷贝
-                        </p>
-                    </div>
-                    <div class="table-responsive">
-                       <table class="table table-striped table-bordered table-hover cutomize_table">
-                           <thead>  
-                            <tr>
-                                <th style="text-align:left;">适用单位</th>
-                                <th v-for="(checkList,index) in checkListArray" :key="'checklist'+index" style="text-align:center">
-                                    {{checkList.name}}
-                                </th>
-                                <th width="50px">合计</th>
-                                <th class="center little">操作</th>
-                            </tr>
-                           </thead>
-                           <tbody>
-                                <tr v-for="(rule,index) in collegeRule" :key="'collegeRule'+index">
-                                   <td style="text-align:left;">
-                                       <select v-model="rule.college_id">
-                                           <option value="0">全部</option>
-                                           <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
-                                                :value="college.org_id"
-                                           >{{college.org_name}}</option>
-                                       </select>
-                                       <select v-model="rule.lab_id">
-                                            <option value="0">全部</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
-                                                :value="lab.org_id"
-                                           >{{lab.org_name}}</option>
-                                       </select>
-                                   </td>
-                                   <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
-                                        <input type="text" 
-                                            :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
-                                            style="width:50px;"
-                                            @blur="changeScore(checkList.id,index,'college',$event)"
-                                            @keyup="changeScore(checkList.id,index,'college',$event)"
-                                        />
-                                   </td>
-                                   <td v-html="computeTotalScore(index,'college')"></td>
-                                   <td class="center little">
-                                       <button class="btn btn-danger btn-xs" @click="delRule(rule)">
-                                           <i class="ace-icon fa fa-trash-o bigger-110"></i>
-                                       </button>
-                                   </td>
-                                </tr>
-                                <!-- 添加新规则 -->
-                                <tr v-if="addRule && addRuleType == 'college'">
-                                    <td style="text-align:left;">
-                                       <select v-model="newRule.college_id">
-                                           <option value="0">全部</option>
-                                           <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
-                                                :value="college.org_id"
-                                           >{{college.org_name}}</option>
-                                       </select>
-                                       <select v-model="newRule.lab_id">
-                                           <option value="0">全部</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
-                                                :value="lab.org_id"
-                                           >{{lab.org_name}}</option>
-                                       </select>
-                                   </td>
-                                   <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id" class="newRuleScore">
-                                        <input type="text" 
-                                            :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
-                                            style="width:50px;"
-                                            :data-checkList="checkList.id"
-                                        />
-                                   </td>
-                                   <td></td>
-                                   <td class="center little">
-                                       <button class="btn btn-success btn-xs" @click="sureAddRule">
-                                           <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
-                                       </button>
-                                   </td>
-                                </tr>
-                           </tbody>
-                       </table>
-                    </div>
-                </div>
-                <!-- 抽查规则 -->
-                <div id="schoolRule" class="tab-pane fade">
-                    <div class="clearfix">
-                        <button class="btn btn-primary btn-sm" @click="showAddRule('school')">添加抽查规则</button>
-                        <p class="pull-right">
-                            从
-                            <select name="" id="">
-                                <option value="">自查规则</option>
-                                <option value="">复查规则</option>
-                            </select>
-                            拷贝
-                        </p>
-                    </div>
-                    <div class="table-responsive">
-                       <table class="table table-striped table-bordered table-hover cutomize_table">
-                           <thead>  
-                            <tr>
-                                <th style="text-align:left;">适用单位</th>
-                                <th v-for="(checkList,index) in checkListArray" :key="'checklist'+index" style="text-align:center">
-                                    {{checkList.name}}
-                                </th>
-                                <th width="50px">合计</th>
-                                <th class="center little">操作</th>
-                            </tr>
-                           </thead>
-                           <tbody>
-                                <tr v-for="(rule,index) in schoolRule" :key="'schoolRule'+index">
-                                   <td style="text-align:left;">
-                                       <select v-model="rule.college_id">
-                                           <option value="0">全部</option>
-                                           <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
-                                                :value="college.org_id"
-                                           >{{college.org_name}}</option>
-                                       </select>
-                                       <select v-model="rule.lab_id">
-                                            <option value="0">全部</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
-                                                :value="lab.org_id"
-                                           >{{lab.org_name}}</option>
-                                       </select>
-                                   </td>
-                                   <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
-                                        <input type="text" 
-                                            :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
-                                            style="width:50px;"
-                                            @blur="changeScore(checkList.id,index,'school',$event)"
-                                            @keyup="changeScore(checkList.id,index,'school',$event)"
-                                        />
-                                   </td>
-                                   <td v-html="computeTotalScore(index,'school')"></td>
-                                   <td class="center little">
-                                       <button class="btn btn-danger btn-xs" @click="delRule(rule)">
-                                           <i class="ace-icon fa fa-trash-o bigger-110"></i>
-                                       </button>
-                                   </td>
-                               </tr>
-                               <!-- 添加新规则 -->
-                                <tr v-if="addRule && addRuleType == 'school'">
-                                    <td style="text-align:left;">
-                                       <select v-model="newRule.college_id">
-                                           <option value="0">全部</option>
-                                           <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
-                                                :value="college.org_id"
-                                           >{{college.org_name}}</option>
-                                       </select>
-                                       <select v-model="newRule.lab_id">
-                                           <option value="0">全部</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
-                                                :value="lab.org_id"
-                                           >{{lab.org_name}}</option>
-                                       </select>
-                                   </td>
-                                   <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id" class="newRuleScore">
-                                        <input type="text" 
-                                            :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
-                                            style="width:50px;"
-                                            :data-checkList="checkList.id"
-                                        />
-                                   </td>
-                                   <td></td>
-                                   <td class="center little">
-                                       <button class="btn btn-success btn-xs" @click="sureAddRule">
-                                           <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
-                                       </button>
-                                   </td>
-                                </tr>
-                           </tbody>
-                       </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -294,7 +109,7 @@ export default {
     },
     watch: {
         checkPlan: function() {
-            this.setCount();
+           this.setCount();
         },
         orgList(){
             this.getOrgInfo();
@@ -310,27 +125,83 @@ export default {
             schoolArray:[], //学校列表
             collegeArray:[],//院系列表
             labArray:[],//实验室列表
-            schoolRule: [], //自查规则列表数组
-            collegeRule: [], //复查规则列表数组
-            labRule: [], //抽查规则列表数组
             isKeyUp: false, //是否按键了
             addRule:false,
             addRuleType:"",
             newRule:{
-                rule_id:0,
                 plan_id:0,
                 level:"lab",
                 college_id:0,
                 lab_id:0,
                 checklist:{},
-            }
+            },
+            ruleTemplateConfig:[
+                {
+                    type:"lab",
+                    dataArray:[],
+                    name:"自查规则",
+                    other:[
+                        {
+                            name:"复查规则",
+                            value:"college",
+                        },
+                        {
+                            name:"抽查规则",
+                            value:"school",
+                        }
+                    ]
+                },
+                {
+                    type:"college",
+                    dataArray:[],
+                    name:"复查规则",
+                    other:[
+                        {
+                            name:"自查规则",
+                            value:"lab",
+                        },
+                        {
+                            name:"抽查规则",
+                            value:"school",
+                        }
+                    ]
+                },
+                {
+                    type:"school",
+                    dataArray:[],
+                    name:"抽查规则",
+                    other:[
+                        {
+                            name:"自查规则",
+                            value:"lab",
+                        },
+                        {
+                            name:"复查规则",
+                            value:"college",
+                        }
+                    ]
+                }
+            ]
         };
     },
     methods: {
         computeTotalScore(index, type) {
             //计算总分
-            let ruleArry = this[type + "Rule"];
-            let rule = ruleArry[index];
+            let ruleArry = [];
+            const _this = this;
+            if(type == "lab"){
+                ruleArry = _this.ruleTemplateConfig[0].dataArray
+            }else if(type == "college"){
+                ruleArry = _this.ruleTemplateConfig[1].dataArray
+            }else if(type == "school"){
+                ruleArry = _this.ruleTemplateConfig[2].dataArray
+            }
+            let rule = null;
+            if(!type){
+                rule = _this.newRule;
+            }else{
+                rule = ruleArry[index];
+            }
             let { checklist } = rule;
             let score = 0;
             for (const key in checklist) {
@@ -340,8 +211,10 @@ export default {
                 }
             }
             if (parseFloat(this.$store.state.checkPlan.plan.plan_score) == score) {
+                !type && $("#totalScore").html("<span class='green'>" + score + "</span>");
                 return "<span class='green'>" + score + "</span>";
             } else {
+                !type && $("#totalScore").html("<span class='red'>" + score + "</span>");
                 return "<span class='red'>" + score + "</span>";
             }
         },
@@ -350,9 +223,24 @@ export default {
             if (event.type === "keyup" && event.key != "Enter") {
                 return false;
             }
+            const _this= this;
+            let ruleArry = [];
+            if(type == "lab"){
+                ruleArry = _this.ruleTemplateConfig[0].dataArray
+            }else if(type == "college"){
+                ruleArry = _this.ruleTemplateConfig[1].dataArray
+            }else if(type == "school"){
+                ruleArry = _this.ruleTemplateConfig[2].dataArray
+            }
             if (!this.isKeyUp) {
-                let rule = this[type + "Rule"][index];
+                let rule = null;
+                if(!type){
+                    rule = _this.newRule;
+                }else{
+                    rule = ruleArry[index];
+                }
                 let { checklist } = rule;
+                
                 let value = event.target.value ? event.target.value : 0;
                 if (checklist[checkListId]) {
                     checklist[checkListId].score = value;
@@ -362,11 +250,18 @@ export default {
                     };
                 }
                 //修改规则
+                if(type){
+                    const URL = _this.serverUrl + "/admin/rule/edit";
+                    _this.emitAjax(URL, rule, null,function(result) {
+                        _this.getCheckPlan();
+                    });
+                }else {
+                    _this.computeTotalScore();
+                }
             }
             if (event.type === "blur") {
                 this.isKeyUp = false;
-            }
-            if (event.type === "keyup") {
+            }else if(event.type === "keyup"){
                 this.isKeyUp = true;
             }
         },
@@ -379,25 +274,13 @@ export default {
             //添加规则
             const URL = this.serverUrl + "/admin/rule/add";
             const _SELF = this;
-            const data = {
+            const data = Object.assign({},this.newRule,{
                 plan_id:this.$route.params.id,
                 level:this.addRuleType,
-                college_id:this.newRule.college_id,
-                lab_id:this.newRule.lab_id,
-                checklist:{},
-            }
-            $(".newRuleScore").each(function(){
-                let score = parseFloat($(this).find("input").val());
-                let checklist = $(this).find("input").attr("data-checkList");
-                if (score>0){
-                    data.checklist[checklist] = Object.assign({},{
-                        score
-                    });
-                }
             })
+            
             this.emitAjax(URL, data, function(result) {
                 _SELF.newRule={
-                    rule_id:0,
                     plan_id:0,
                     level:"lab",
                     college_id:0,
@@ -409,6 +292,22 @@ export default {
                 _SELF.getCheckPlan();
             });
             
+        },
+        delRule(rule){
+            //删除规则
+            if(window.confirm("是否要删除这条规则，此操作不可逆，请慎重！")){
+                const URL = this.serverUrl + "/admin/rule/del";
+                const _SELF = this;
+                const data = {
+                    plan_id:rule.plan_id,
+                    college_id:rule.college_id,
+                    lab_id:rule.lab_id,
+                    level:rule.level,
+                }
+                this.emitAjax(URL, data, function(result) {
+                    _SELF.getCheckPlan();
+                });
+            }
         },
         getCheckPlan(){
             //获取期次信息
@@ -435,29 +334,50 @@ export default {
             if(this.orgList.length>0){
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];
-                    _this[element.org_level+"Array"].push(Object.assign({},element));
+                    if(element.org_state == "yes"){
+                        _this[element.org_level+"Array"].push(Object.assign({},element));
+                    }
+                }
+            }
+        },
+        getLabList(id){
+            const _this = this;
+            this.labArray = [];
+            if(this.orgList.length>0){
+                for (let index = 0; index < _this.orgList.length; index++) {
+                    const element = _this.orgList[index];
+                    
+                    if(element.org_level == "lab" && element.org_state == "yes"){
+                        if(id != 0 ){
+                            if(element.pid == id){
+                                _this.labArray.push(element);
+                            }
+                        }else{
+                            _this.labArray.push(element);
+                        }
+                    }
                 }
             }
         },
         setCount() {
             //规则分类
             const _this = this;
-            this.schoolRule = [];
-            this.collegeRule = [];
-            this.labRule = [];
             const ruleList = this.checkPlan.rule_list;
+            this.ruleTemplateConfig[0].dataArray = [];
+            this.ruleTemplateConfig[1].dataArray = [];
+            this.ruleTemplateConfig[2].dataArray = [];
             if (ruleList) {
                 for (let index = 0; index < ruleList.length; index++) {
                     const ruleListItem = ruleList[index];
                     switch (ruleListItem.level) {
                         case "school":
-                            _this.schoolRule.push(ruleListItem);
+                            _this.ruleTemplateConfig[2].dataArray.push(ruleListItem);
                             break;
                         case "college":
-                            _this.collegeRule.push(ruleListItem);
+                            _this.ruleTemplateConfig[1].dataArray.push(ruleListItem);
                             break;
                         case "lab":
-                            _this.labRule.push(ruleListItem);
+                            _this.ruleTemplateConfig[0].dataArray.push(ruleListItem);
                         default:
                             break;
                     }
