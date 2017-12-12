@@ -1,5 +1,9 @@
 <?php
-
+// +----------------------------------------------------------------------
+// | Description: 检查规则
+// +----------------------------------------------------------------------
+// | Author: chenkq <chenkq@chingo.cn>
+// +----------------------------------------------------------------------
 
 namespace app\admin\controller;
 
@@ -11,23 +15,9 @@ use app\common\controller\Common;
 class Rule extends Common
 {
 
-    public function index()
-    {
-        $rule = model('rule');
-        $param = $this->param;
-        $cklist_id = !empty($param['checklist_id']) ? $param['checklist_id']: '';
-        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        $page = !empty($param['page']) ? $param['page']: '';
-        $limit = !empty($param['limit']) ? $param['limit']: '';
-        $data = $rule->getDataList($cklist_id,$keywords, $page, $limit);
-        if (!$data) {
-            return resultArray(['error' => $rule->getError()]);
-        }
-        return resultArray(['data' => $data]);
-    }
     public function add()
     {
-        $rule = model('rule');
+        $rule = model('CkRule');
         $param = $this->param;
         $data = $rule->createData($param);
         if (!$data) {
@@ -37,9 +27,9 @@ class Rule extends Common
     }
     public function del()
     {
-        $rule = model('rule');
+        $rule = model('CkRule');
         $param = $this->param;
-        $data = $rule->delDataById($param['id']);
+        $data = $rule->delData($param);
         if (!$data) {
             return resultArray(['error' => $rule->getError()]);
         }
@@ -47,9 +37,9 @@ class Rule extends Common
     }
     public function edit()
     {
-        $rule = model('rule');
+        $rule = model('CkRule');
         $param = $this->param;
-        $data = $rule->updateDataById($param, $param['id']);
+        $data = $rule->updateData($param);
         if (!$data) {
             return resultArray(['error' => $rule->getError()]);
         }

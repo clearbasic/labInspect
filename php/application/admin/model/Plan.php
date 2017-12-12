@@ -135,6 +135,7 @@ class Plan extends Common
             ->join('ck_task task', 'task.plan_id=plan.plan_id', 'LEFT')
             ->where('plan.plan_id',$plan_id)
             ->field('task.*')
+            ->order('task.dt_begin,task.task_name,task.task_level')
             ->select();
 
         $data['rule_list'] = $this
@@ -147,9 +148,19 @@ class Plan extends Common
         foreach ($data['rule_list'] as $k=>$v){
             $v['checklist'] = db::name('ck_rule')
                 //字段排除
-                //->field(['plan_id','rule_id','level','college_id','lab_id','creator','dt_create'],true)
-                ->where(array('level'=>$v['level'],'college_id'=>$v['college_id'],'lab_id'=>$v['lab_id']))
+                ->field(['plan_id','rule_id','level','college_id','lab_id','creator','dt_create'],true)
+                ->where(array('level'=>$v['level'],'college_id'=>$v['college_id'],'lab_id'=>$v['lab_id'],'plan_id'=>$plan_id))
                 ->select();
+            $arr = [];
+           foreach ($v['checklist'] as $key => $val){
+               $arr[$val['checklist_id']] = $val;
+
+           }
+           unset($v['rule_id']);
+           unset($v['checklist_id']);
+           unset($v['score']);
+            $arr = array_to_object($arr);
+            $v['checklist'] = $arr;
         }
         return $data;
     }
