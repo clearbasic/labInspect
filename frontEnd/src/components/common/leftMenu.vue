@@ -1,7 +1,7 @@
 <template>
     <div id="sidebars" class="sidebar responsive">
         <ul class="nav nav-list">
-            <li :class="{active:parentNode === index,open:parentNode === index,firstNav:true}"
+            <li :class="['firstNav',{active:parentNode === index,open:parentNode === index}]"
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
             >

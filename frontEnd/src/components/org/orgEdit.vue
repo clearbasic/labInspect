@@ -30,7 +30,7 @@
                                 {{$route.query.org_id?orgInfo.org_name:"新建单位"}}
                             </h1>
                         </div>
-                        <ul class="list-group form-horizontal">
+                        <ul class="list-group form-horizontal nomargin">
                             <li class="list-group-item active">
                                 基础信息
                             </li>
@@ -168,7 +168,8 @@
                                         <div class="form-group">
                                             <label for="contacts" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生联系人：</label>
                                             <div class="col-sm-10 col-lg-8 col-md-7">
-                                                <input type="text" v-model="orgInfo.contacts" id="contacts" class="form-control">
+                                                <input type="text" v-model="orgInfo.contacts" id="contacts" @focus="currentKey('contacts')"
+                                                    class="form-control" data-toggle="modal" data-target="#userModal" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +177,8 @@
                                         <div class="form-group">
                                             <label for="responsible" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生责任人：</label>
                                             <div class="col-sm-10 col-lg-8 col-md-7">
-                                                <input type="text" v-model="orgInfo.responsible" id="responsible" class="form-control">
+                                                <input type="text" v-model="orgInfo.responsible" id="responsible" @focus="currentKey('responsible')"
+                                                    class="form-control" data-toggle="modal" data-target="#userModal" readonly />
                                             </div>
                                         </div>
                                     </div>
@@ -306,11 +308,27 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">  
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">用户管理</h4>
+                    </div>
+                    <div class="modal-body">
+                        <UserList 
+                            :sure="selectUser"
+                        ></UserList>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import VueHead from "../common/header";
     import VueLeft from "../common/leftMenu";
+    import UserList from '../user/userList';
 
     export default {
         name:"checkorg",
@@ -323,10 +341,11 @@
                 showCollege:false,
                 schoolArray:[],
                 collegeArray:[],
-                labArray:[]
+                labArray:[],
+                key:"",//保存当前要改变的字段
             }
         },
-        components:{VueHead,VueLeft},
+        components:{VueHead,VueLeft,UserList},
         computed:{
             orgList(){
                 return this.$store.state.orgList;
@@ -405,6 +424,14 @@
                     default:
                         break;
                 }
+            },
+            currentKey(type){
+                this.key = type;
+            },
+            selectUser(user){
+                this.orgInfo[this.key] = user.name+"("+user.username+")";
+                this.key = "";
+                $("#userModal").modal("hide")
             }
         },
         watch:{
@@ -420,7 +447,7 @@
 </script>
 <style>
 @media screen and (min-width:992px) {
-    .checkorg .form-horizontal .form-group {
+    .nomargin .form-group {
         margin-bottom:0; 
     } 
 }

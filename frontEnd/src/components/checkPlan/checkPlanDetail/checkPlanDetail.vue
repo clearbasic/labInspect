@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="checkPlanDetail">
         <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
@@ -137,8 +137,8 @@ export default {
             const data ={
                 plan_id:this.$route.params.id,
                 plan_name:this.checkPlan.plan.plan_name,
-                current:this.checkPlan.plan.current,
                 plan_score:this.checkPlan.plan.plan_score,
+                current:this.checkPlan.plan.current,
                 intro:this.checkPlan.plan.intro,
             }
             this.flag = "";

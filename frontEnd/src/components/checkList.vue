@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="checkList">
         <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
@@ -86,7 +86,7 @@
                                     </td>
                                     <td class="center">
                                         <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name,item.count)">
-                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            <i class="ace-icon fa fa-trash-o bigger-110"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -106,7 +106,7 @@
                                     <td class="center"></td>
                                     <td class="center">
                                         <button class="btn btn-xs btn-success" @click="addCheckList">
-                                            <i class="ace-icon glyphicon glyphicon-ok bigger-130"></i>
+                                            <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
                                         </button>
                                     </td>
                                 </tr>

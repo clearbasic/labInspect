@@ -4,7 +4,7 @@ export default [
     {
         name:"检查安排",
         url:pathName+"",
-        icon:"ace-icon glyphicon glyphicon-home",
+        icon:"ace-icon fa fa-book",
         child:[
             {
                 name:"检查指标",
@@ -15,18 +15,13 @@ export default [
                 name:"检查期次",
                 url:pathName+"/checkPlan",
                 icon:"",
-            },
-            {
-                name:"实验室单位设置",
-                url:pathName+"/OrgList",
-                icon:'',
             }
         ]
     },
     {
         name:"检查工作",
         url:pathName+"",
-        icon:"ace-icon fa fa-book",
+        icon:"ace-icon glyphicon glyphicon-check",
         child:[
             {
                 name:"检查小组",
@@ -64,6 +59,23 @@ export default [
                 name:"评奖评优",
                 url:pathName+"",
                 icon:"",
+            }
+        ]
+    },
+    {
+        name:"系统设置",
+        url:pathName+"",
+        icon:"ace-icon fa fa-cog",
+        child:[
+            {
+                name:"实验室单位设置",
+                url:pathName+"/orgList",
+                icon:'',
+            },
+            {
+                name:"用户设置",
+                url:pathName+"/userList",
+                icon:'',
             }
         ]
     },

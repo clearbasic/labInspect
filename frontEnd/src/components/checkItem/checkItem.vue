@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="checkItem">
         <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
@@ -105,7 +105,7 @@
                                     </td>
                                     <td class="center">
                                         <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.item_name)">
-                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            <i class="ace-icon fa fa-trash-o bigger-110"></i>
                                         </button>
                                     </td>
                                 </tr>

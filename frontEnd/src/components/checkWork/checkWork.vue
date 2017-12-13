@@ -63,7 +63,7 @@
                                                 <h5 v-if="key == 'school'">抽查</h5>
                                             </div>
                                             <div class="widget-body">
-                                                <div class="widget-main no-padding table-responsive">
+                                                <div class="widget-main no-padding no-margin table-responsive">
                                                     <table class="table table-bordered table-striped table-hover">
                                                         <thead>
                                                             <tr>

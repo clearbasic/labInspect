@@ -1,5 +1,5 @@
 <template>
-    <div id="app" :class="{app:isApp,'no-skin':true}">
+    <div :class="{app:isApp,'no-skin':true}">
         <router-view/>
     </div>
 </template>
@@ -14,9 +14,12 @@ export default {
     },
     mounted(){
         //判断是不是手机app访问
-        const PATHNAME = window.location.search;
+        /* const PATHNAME = window.location.search;
         let isApp = PATHNAME.search("isApp");
         if(isApp>0){
+            this.isApp = true;
+        } */
+        if(app){
             this.isApp = true;
         }
     }
@@ -52,6 +55,9 @@ a:hover {
 }
 .form-group h5 {
     margin:0;
+}
+.table-responsive {
+    overflow-y: auto;
 }
 @media screen and (max-width:767px){
     .little {

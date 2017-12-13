@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
+  el: '#myApp',
   router,
   template: '<App/>',
   components: { App },

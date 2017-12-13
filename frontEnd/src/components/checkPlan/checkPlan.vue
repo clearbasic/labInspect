@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="checkPlan">
         <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
@@ -55,10 +55,33 @@
                                         {{item.plan_score}}
                                     </td>
                                     <td class="center">
-                                        <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button">
-                                            <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
-                                        </router-link>
-                                        <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id,item.plan_name)"><i class="ace-icon fa fa-trash-o bigger-100"></i></button>
+                                        <div class="hidden-xs btn-group">
+                                            <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button">
+                                                <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
+                                            </router-link>
+                                            <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id,item.plan_name)">
+                                                <i class="ace-icon fa fa-trash-o bigger-100"></i>
+                                            </button>
+                                        </div>
+                                        <div class="hidden-sm hidden-md hidden-lg">
+                                            <div class="inline pos-rel">
+                                                <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto" aria-expanded="false">
+                                                    <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                    <li>
+                                                        <router-link class="tooltip-info blue" :to="pathName+'/checkPlan/'+item.plan_id" data-rel="tooltip" data-original-title="View">
+                                                            <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
+                                                        </router-link>
+                                                    </li>
+                                                    <li>
+                                                        <a class="tooltip-info red" data-rel="tooltip" data-original-title="View"  @click="deleteCheckPlan(item.plan_id,item.plan_name)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-100"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr v-if="isAdd">
@@ -80,7 +103,7 @@
                                         <input type="text" v-model="newPlanScore" style="width:44px;" class="text-center">
                                     </td>
                                     <td class="center">
-                                        <button class="btn btn-xs btn-success" @click="originAddPlan"><i class="ace-icon glyphicon glyphicon-ok bigger-130"></i></button>
+                                        <button class="btn btn-xs btn-success" @click="originAddPlan"><i class="ace-icon glyphicon glyphicon-ok"></i></button>
                                     </td>
                                 </tr>
                                 <tr v-if="checkPlan.length == 0">

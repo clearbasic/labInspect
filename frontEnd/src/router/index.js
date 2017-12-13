@@ -12,6 +12,7 @@ import WorkPending from "../components/checkWork/workPending.vue";
 import WorkFinished from "../components/checkWork/workFinished.vue";
 import OrgList from "../components/org/orgList.vue";
 import OrgEdit from "../components/org/orgEdit.vue";
+import User from "../components/user/user.vue";
 
 
 Vue.use(Router)
@@ -81,6 +82,14 @@ export default new Router({
 			meta:{
 				title:"实验室单位编辑 - "+title,
 				active:pathName+"/orgList"
+			}
+		},{
+			path:pathName+"/userList",
+			name:"userList",
+			component:User,
+			meta:{
+				title:"实验室用户管理 - "+title,
+				active:pathName+"/userList"
 			}
 		},
 		{

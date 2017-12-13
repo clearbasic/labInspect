@@ -31,19 +31,20 @@
                                 </div>
                             </h1>
                         </div>
-                        <div class="table-responsive">
-                            <div class="dataTables_wrapper form-inline no-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <select @change="filterList" v-model="orgType">
-                                            <option value="all">全部</option>
-                                            <option value="school">显示学校</option>
-                                            <option value="college">显示院系</option>
-                                            <option value="lab">显示实验室</option>
-                                        </select>
-                                    </div>
+                        
+                        <div class="dataTables_wrapper form-inline no-footer">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <select @change="filterList" v-model="orgType">
+                                        <option value="all">全部</option>
+                                        <option value="school">显示学校</option>
+                                        <option value="college">显示院系</option>
+                                        <option value="lab">显示实验室</option>
+                                    </select>
                                 </div>
-                                <table class="table table-striped table-bordered table-hover">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTable">
                                     <thead>
                                         <tr>
                                             <th class="center" width="60px">单位ID</th>
@@ -68,13 +69,34 @@
                                                 <span v-if="org.org_level === 'lab'">实验室</span>
                                             </td>
                                             <td class="center">
-                                                <router-link class="btn btn-success btn-xs" tag="button" 
-                                                    :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">
-                                                    <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>    
-                                                </router-link>
-                                                <button class="btn btn-danger btn-xs" @click="delOrg(org)">
-                                                    <i class="ace-icon fa fa-trash-o bigger-110"></i>
-                                                </button>
+                                                <div class="hidden-xs btn-group">
+                                                    <router-link class="btn btn-success btn-xs" tag="button" 
+                                                        :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">
+                                                        <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>    
+                                                    </router-link>
+                                                    <button class="btn btn-danger btn-xs" @click="delOrg(org)">
+                                                        <i class="ace-icon fa fa-trash-o bigger-110"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="hidden-sm hidden-md hidden-lg">
+                                                    <div class="inline pos-rel">
+                                                        <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto" aria-expanded="false">
+                                                            <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                            <li>
+                                                                <router-link class="tooltip-info blue" :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}" data-rel="tooltip" data-original-title="View">
+                                                                    <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
+                                                                </router-link>
+                                                            </li>
+                                                            <li>
+                                                                <a class="tooltip-info red" data-rel="tooltip" data-original-title="View"  @click="delOrg(org)">
+                                                                    <i class="ace-icon fa fa-trash-o bigger-110"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
