@@ -5,10 +5,10 @@
                 <tr>
                     <th class="center little">房间ID</th>
                     <th>房间名</th>
-                    <th>责任人</th>
-                    <th class="center little">联系电话</th>
+                    <th class="hidden-640">责任人</th>
+                    <th class="center little hidden-640">联系电话</th>
                     <th class="center little">排序编号</th>
-                    <th class="center little">所属分组</th>
+                    <th class="center little hidden-640">所属分组</th>
                     <th class="center little">操作</th>
                 </tr>
             </thead>
@@ -18,8 +18,8 @@
                     <td>
                         <a @click="showRoomEdit(room)">{{room.room_name}}</a>
                     </td>
-                    <td>{{room.agent_name}}({{room.agent_id}})</td>
-                    <td class="center little">{{room.phone}}</td>
+                    <td class="hidden-640">{{room.agent_name}}({{room.agent_id}})</td>
+                    <td class="center little hidden-640">{{room.phone}}</td>
                     <td class="center little" @dblclick="isShowOrder=room.room_id">
                         <span v-if="isShowOrder != room.room_id">{{room.room_order}}</span>
                         <input type="text" 
@@ -31,7 +31,7 @@
                             autofocus="autofocus"
                         >
                     </td>
-                    <td class="center">
+                    <td class="center hidden-640">
                         <span v-for="zone in zoneList" :key="'zone'+zone.zone_id" v-if="room.zone_id == zone.zone_id">{{zone.zone_name}}</span>
                     </td>
                     <td class="center little">

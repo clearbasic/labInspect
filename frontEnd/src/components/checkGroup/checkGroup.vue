@@ -37,9 +37,9 @@
                                         <th class="center" width="60px">小组ID</th>
                                         <th>小组名称</th>
                                         <th class="center">单位级别</th>
-                                        <th class="center">组长名称</th>
-                                        <th class="center little">组长电话</th>
-                                        <th class="center">组员名称</th>
+                                        <th class="center hidden-640">组长名称</th>
+                                        <th class="center little hidden-640">组长电话</th>
+                                        <th class="center hidden-640">组员名称</th>
                                         <th class="center little">排序</th>
                                         <th class="center little">操作</th>
                                     </tr>
@@ -53,9 +53,9 @@
                                             <span v-if="group.level === 'college'">院系复查小组</span>
                                             <span v-if="group.level === 'lab'">实验室自查小组</span>
                                         </td>
-                                        <td class="center">{{group.leader_name}} ({{group.leader_id}})</td>
-                                        <td class="center">{{group.phone}}</td>
-                                        <td class="center">{{group.members}}</td>
+                                        <td class="center hidden-640">{{group.leader_name}} ({{group.leader_id}})</td>
+                                        <td class="center hidden-640">{{group.phone}}</td>
+                                        <td class="center hidden-640">{{group.members}}</td>
                                         <td class="center little">{{group.group_order}}</td>
                                         <td class="center">
                                             <button class="btn btn-success btn-xs" data-target="#groupModal" data-toggle="modal" @click="changeGroup(group)">

@@ -21,10 +21,10 @@
                     <tr>
                         <th>用户名</th>
                         <th class="center little">姓名</th>
-                        <th>单位名称</th>
+                        <th class="hidden-640">单位名称</th>
                         <th class="center little">移动电话</th>
-                        <th>电子邮箱</th>
-                        <th class="center little">状态</th>
+                        <th class="hidden-640">电子邮箱</th>
+                        <th class="center little hidden-640">状态</th>
                         <th class="center little">操作</th>
                     </tr>
                 </thead>
@@ -32,10 +32,10 @@
                     <tr v-for="(user,index) in userList" :key="'user'+index">
                         <td>{{user.username}}</td>
                         <td class="center little">{{user.name}}</td>
-                        <td>{{user.org_name}}</td>
+                        <td class="hidden-640">{{user.org_name}}</td>
                         <td class="center little">{{user.mobile}}</td>
-                        <td>{{user.email}}</td>
-                        <td class="center little">
+                        <td class="hidden-640">{{user.email}}</td>
+                        <td class="center little hidden-640">
                             {{user.person_state == 'yes'?"开启":"禁止"}}   
                         </td>
                         <td class="center little">

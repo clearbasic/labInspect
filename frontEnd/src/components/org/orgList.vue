@@ -49,7 +49,7 @@
                                         <tr>
                                             <th class="center" width="60px">单位ID</th>
                                             <th>单位名称</th>
-                                            <th class="center">单位地址</th>
+                                            <th class="hidden-640">单位地址</th>
                                             <th>所属单位</th>
                                             <th class="center little">单位级别</th>
                                             <th class="center little">操作</th>
@@ -61,7 +61,7 @@
                                             <td>
                                                 <router-link :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">{{org.org_name}}</router-link>
                                             </td>
-                                            <td>{{org.org_address}}</td>
+                                            <td class="hidden-640">{{org.org_address}}</td>
                                             <td>{{getParentName(org.pid)}}</td>
                                             <td class="center">
                                                 <span v-if="org.org_level === 'school'">学校</span>

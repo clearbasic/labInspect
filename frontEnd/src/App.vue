@@ -65,6 +65,7 @@ a:hover {
 input[readonly]:hover {
     cursor: pointer;
 }
+@media only screen and (max-width:640px){.hidden-640{display:none!important}}
 @media screen and (max-width:767px){
     .little {
         width:auto;

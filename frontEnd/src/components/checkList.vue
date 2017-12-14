@@ -35,7 +35,7 @@
                                 <tr>
                                     <th class="center" width="60px">类别ID</th>
                                     <th>指标类别名称</th>
-                                    <th>描述</th>
+                                    <th class="hidden-640">描述</th>
                                     <th class="center little">排序</th>
                                     <th class="center little">指标数量</th>
                                     <th class="center little">操作</th>
@@ -56,7 +56,7 @@
                                             class="inlineInput"
                                         >
                                     </td>
-                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Intro')">
+                                    <td @dblclick="showCheckListInput(item.id,item.name,item.intro,item.group_order,'Intro')" class="hidden-640">
                                         <span v-if="isIntro != item.id">{{item.intro}}</span>
                                         <input v-if="isIntro == item.id"
                                             autofocus 
