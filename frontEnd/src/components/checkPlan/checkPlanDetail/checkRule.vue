@@ -350,10 +350,10 @@ export default {
                     if(element.org_level == "lab" && element.org_state == "yes"){
                         if(id != 0 ){
                             if(element.pid == id){
-                                _this.labArray.push(element);
+                                _this.labArray.push(Object.assign({},element));
                             }
                         }else{
-                            _this.labArray.push(element);
+                            _this.labArray.push(Object.assign({},element));
                         }
                     }
                 }

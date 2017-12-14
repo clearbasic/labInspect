@@ -6,4 +6,6 @@ export default {
     },
     checkWork:{},
     orgList:[],
+    currentRoom:{},
+    currentZone:{},
 }

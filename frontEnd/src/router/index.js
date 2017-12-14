@@ -7,12 +7,14 @@ import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 import CheckGroup from "../components/checkGroup/checkGroup";
 import CheckWork from "../components/checkWork/checkWork";
-import WorkSetting from "../components/checkWork/workSetting.vue";
-import WorkPending from "../components/checkWork/workPending.vue";
-import WorkFinished from "../components/checkWork/workFinished.vue";
-import OrgList from "../components/org/orgList.vue";
-import OrgEdit from "../components/org/orgEdit.vue";
-import User from "../components/user/user.vue";
+import WorkSetting from "../components/checkWork/workSetting";
+import WorkPending from "../components/checkWork/workPending";
+import WorkFinished from "../components/checkWork/workFinished";
+import OrgList from "../components/org/orgList";
+import OrgEdit from "../components/org/orgEdit";
+import User from "../components/user/user";
+import Room from "../components/room/room";
+import Zone from "../components/room/zone";
 
 
 Vue.use(Router)
@@ -135,6 +137,24 @@ export default new Router({
 			meta:{
 				title:"检查结果 - "+title,
 				active:pathName+"/checkWork"
+			}
+		},
+		{
+			path:pathName+"/room",
+			name:"room",
+			component:Room,
+			meta:{
+				title:"房间列表 - "+title,
+				active:pathName+"/room"
+			}
+		},
+		{
+			path:pathName+"/zone",
+			name:"zone",
+			component:Zone,
+			meta:{
+				title:"房间分组列表 - "+title,
+				active:pathName+"/room"
 			}
 		}
 	]

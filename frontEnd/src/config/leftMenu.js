@@ -76,6 +76,11 @@ export default [
                 name:"用户设置",
                 url:pathName+"/userList",
                 icon:'',
+            },
+            {
+                name:"房间设置",
+                url:pathName+"/room",
+                icon:'',
             }
         ]
     },

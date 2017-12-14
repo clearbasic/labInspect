@@ -59,6 +59,12 @@ a:hover {
 .table-responsive {
     overflow-y: auto;
 }
+.control-label {
+    white-space: nowrap;
+}
+input[readonly]:hover {
+    cursor: pointer;
+}
 @media screen and (max-width:767px){
     .little {
         width:auto;
