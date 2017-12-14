@@ -81,7 +81,7 @@
                     <label class="control-label col-sm-4 col-md-4 col-lg-3">房间分组</label>
                     <div class="col-sm-8 col-md-8 col-lg-9">
                         <select class="form-control" v-model="room.zone_id">
-                            <option :value="0">全部</option>
+                            <option :value="0">无</option>
                             <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id">{{zone.zone_name}}</option>
                         </select>
                     </div>

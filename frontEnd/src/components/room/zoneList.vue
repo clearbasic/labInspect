@@ -17,7 +17,8 @@
                         <a @click="showZoneEdit(zone)">{{zone.zone_name}}</a>
                     </td>
                     <td>
-                        <span v-for="org in orgList" v-if="zone.org_id == org.org_id">{{org.org_name}}</span>
+                        <span v-if="zone.org_id == 0">全部</span>
+                        <span v-for="org in orgList" :key="'org'+org.org_id" v-if="zone.org_id == org.org_id">{{org.org_name}}</span>
                     </td>
                     <td class="center little" @dblclick="isShowOrder=zone.zone_id">
                         <span v-if="isShowOrder != zone.zone_id">{{zone.zone_order}}</span>

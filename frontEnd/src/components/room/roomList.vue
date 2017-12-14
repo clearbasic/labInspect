@@ -32,6 +32,7 @@
                         >
                     </td>
                     <td class="center hidden-640">
+                        <span v-if="room.zone_id == 0">无</span>
                         <span v-for="zone in zoneList" :key="'zone'+zone.zone_id" v-if="room.zone_id == zone.zone_id">{{zone.zone_name}}</span>
                     </td>
                     <td class="center little">
