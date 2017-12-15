@@ -10,11 +10,10 @@ export default {
         })
     },
     getCheckWork(context,data){
-        if(data){
-            context.commit("getCheckWork",data);
-        }else{
-            context.commit("getCheckWork",checkWork);
-        }
+        const url = serverUrl + "/admin/check/index";
+        emitAjax(url,data,function(result){
+            context.commit("getCheckWork",result);
+        })
     },
     getOrgList(context,data){
         const url = serverUrl +"/admin/org/index";

@@ -127,7 +127,6 @@
         },
         mounted(){
             this.getOrgList();
-            console.log(this.user)
             if(this.user){
                 this.userInfo = this.user;
             }

@@ -49,7 +49,7 @@
                                         <div class="row">
                                             <div class="col-xs-12">
                                                 <h5 class="text-center">
-                                                    共有自查{{checkWorkItem.tasks.lab.length}}次，复查{{checkWorkItem.tasks.college.length}}次，抽查{{checkWorkItem.tasks.school.length}}次。
+                                                    共有自查{{checkWorkItem.tasks.lab?checkWorkItem.tasks.lab.length:0}}次，复查{{checkWorkItem.tasks.college?checkWorkItem.tasks.college.length:0}}次，抽查{{checkWorkItem.tasks.school?checkWorkItem.tasks.school.length:0}}次。
                                                     满分{{checkWork.plan.plan_score}}分
                                                     <router-link to=''>工作说明</router-link>
                                                 </h5>
