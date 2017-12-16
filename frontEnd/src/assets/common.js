@@ -1,6 +1,6 @@
 //一些公用的方法
 import md5 from "crypto-js/md5";
-const pathName = "";
+import { pathName } from "../config/server";
 //发起网络请求
 function emitAjax(url,opt,success,error){
     let app_secret="c6d9622fdc385b26129fc8a4c7a30c2a";

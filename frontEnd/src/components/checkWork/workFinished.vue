@@ -90,7 +90,6 @@ export default {
                         }else if(_this.$route.query.type == "lab"){
                             tasks = element.tasks.lab;
                         }
-                        console.log(tasks)
                         for (let i = 0; i < tasks.length; i++) {
                             const task = tasks[i];
                             if(task.check_id == _this.$route.query.check_id){

@@ -3,12 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router';
-import { serverUrl } from "./config/server.js";
+import { serverUrl,pathName } from "./config/server.js";
 import { emitAjax,checkPermission } from "./assets/common.js";
 import store from './vuex';
 
 Vue.config.productionTip = false;
-Vue.prototype.pathName = "";
+Vue.prototype.pathName = pathName;
 Vue.prototype.serverUrl = serverUrl;
 Vue.prototype.emitAjax = emitAjax;
 Vue.prototype.checkPermission = checkPermission;

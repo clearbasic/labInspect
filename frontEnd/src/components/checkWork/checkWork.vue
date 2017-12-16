@@ -126,7 +126,6 @@ export default {
             const URl = this.serverUrl + "/admin/plan/index";
             this.emitAjax(URl,{current:1},function(result){
                 _this.currentPlan = result;
-                console.log(result.plan_id)
                 _this.getTaskList(result.plan_id);
             });
         },
@@ -135,7 +134,6 @@ export default {
             const _this = this;
             const URl = this.serverUrl + "/admin/task/index";
             this.emitAjax(URl,{plan_id},function(taskList){
-                console.log(taskList)
                 _this.setTaskType(taskList);
             });
         },

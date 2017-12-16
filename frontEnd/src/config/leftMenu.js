@@ -1,5 +1,5 @@
+import { pathName } from "./server";
 //左侧菜单配置
-let pathName = "";
 export default [
     {
         name:"检查安排",

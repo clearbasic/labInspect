@@ -1,4 +1,4 @@
-import { serverUrl } from "../config/server.js";
+import { serverUrl,pathName } from "../config/server.js";
 import { emitAjax,setLocalData,delLocalData } from "../assets/common.js";
 import { checkWork,checkPlan,orgList,orgInfo } from "../config/data";
 
@@ -24,7 +24,7 @@ export default {
     login(context,data){
         const url = serverUrl +"/admin/login/login";
         emitAjax(url,data.data,function(result){
-            data.router.push("/");
+            data.router.push(pathName+"/");
             setLocalData(result);
             context.commit("setCurrentUser",result.userInfo);
         },function(){
@@ -35,7 +35,7 @@ export default {
     logout(context,data){
         const url = serverUrl +"/admin/login/logout";
         emitAjax(url,null,function(result){
-            data.router.push("/login");
+            data.router.push(pathName+"/login");
             delLocalData();
             context.commit("logout");
         })

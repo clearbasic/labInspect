@@ -18,7 +18,7 @@
                                 请输入您的帐号密码
                             </h4>
                             <div class="space-6"></div>
-                            <form>
+                            <form  @keyup="enterLogin($event)">
                                 <fieldset>
                                     <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
@@ -57,7 +57,7 @@
                             </form>
                         </div>
                         <div class="toolbar clearfix white">
-                            <span class="col-xs-12">本地账号登录，如果没有帐号，请联系相关管理人员添加帐号。</span>
+                            <span class="col-xs-12"><h5>如果没有帐号，请联系相关管理人员添加帐号。</h5></span>
                         </div>
                     </div>
                 </div>
@@ -79,6 +79,7 @@
         methods:{
             login(){
                 //登录
+                if(!this.isNotEmpty()){return false};
                 let data = {
                     data:{
                         username:this.username,
@@ -115,6 +116,26 @@
                 if(authKey){
                     this.$router.push(this.pathName+"/");
                 }
+            },
+            enterLogin(event){
+                if(event.type == "keyup" && event.key=="Enter"){
+                    this.login();
+                }
+            },
+            isNotEmpty(){
+                if(this.username == ""){
+                    alert("请填写用户名！");
+                    return false;
+                }
+                if(this.password ==""){
+                    alert("请填写密码！");
+                    return false;
+                }
+                if(this.verifyCode==""){
+                    alert("请填写验证码！");
+                    return false;
+                }
+                return true;
             }
         },
         mounted(){

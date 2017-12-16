@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { pathName } from "../config/server";
 import Index from '../components/index'
 import CheckList from '../components/checkList';
 import CheckItem from '../components/checkItem/checkItem';
@@ -20,7 +21,7 @@ import Login from "../components/login/login";
 
 Vue.use(Router)
 let title = "实验室安全检查管理系统";
-let pathName = "";
+
 export default new Router({
 	mode:"history",
 	routes: [
