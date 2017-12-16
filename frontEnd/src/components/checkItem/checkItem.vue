@@ -244,7 +244,9 @@ export default {
         }
     },
     mounted(){
-        this.getCheckItemList();
+        if(this.checkPermission(this)){
+            this.getCheckItemList();
+        }
     }
 };
 </script>

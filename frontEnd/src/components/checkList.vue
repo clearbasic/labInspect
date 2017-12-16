@@ -152,7 +152,7 @@ export default {
             flag:{
                 type:"",
                 msg:"",
-            },
+            }
         };
     },
     methods: {
@@ -268,7 +268,9 @@ export default {
         }
     },
     mounted() {
-        this.getCheckList();
+        if(this.checkPermission(this)){
+            this.getCheckList();
+        }
     }
 };
 </script>

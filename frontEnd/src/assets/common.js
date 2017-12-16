@@ -1,6 +1,6 @@
 //一些公用的方法
 import md5 from "crypto-js/md5";
-
+const pathName = "";
 //发起网络请求
 function emitAjax(url,opt,success,error){
     let app_secret="c6d9622fdc385b26129fc8a4c7a30c2a";
@@ -70,4 +70,15 @@ function delLocalData(){
     localStorage.removeItem("sessionId");
     localStorage.removeItem("userInfo");
 }
-export {emitAjax,setLocalData,delLocalData};
+function checkPermission(obj){
+    const currentUser = JSON.parse(localStorage.getItem("userInfo"));
+    const user_per = obj.permission[currentUser.user_level];
+
+    if(user_per < obj.$route.meta.permission){
+        alert("您没有访问权限！");
+        obj.$router.push(pathName + "/");
+        return false;
+    }
+    return true;
+}
+export {emitAjax,setLocalData,delLocalData,checkPermission};

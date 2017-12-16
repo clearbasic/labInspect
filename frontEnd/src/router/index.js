@@ -25,75 +25,76 @@ export default new Router({
 	mode:"history",
 	routes: [
 		{
-			path: pathName+'/login',
-			name: 'login',
-			component: Login,
-			meta:{
-				title:"登录 - "+title,
-				active:pathName+"/login"
-			}
-		},
-		{
 			path: pathName+'/',
 			name: 'index',
 			component: Index,
 			meta:{
 				title:"首页 - "+title,
-				active:pathName+"/"
+				active:pathName+"/",
+				permission:0,
 			}
-		},
-		{
+		},{
+			path: pathName+'/login',
+			name: 'login',
+			component: Login,
+			meta:{
+				title:"登录 - "+title,
+				active:pathName+"/login",
+				permission:0,
+			}
+		},{
 			path:pathName+"/checkList",
 			name:"checkList",
 			component:CheckList,
 			meta:{
 				title:"检查指标类别管理 - "+title,
-				active:pathName+"/checkList"
+				active:pathName+"/checkList",
+				permission:9,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkList/:id",
 			name:"checkItem",
 			component:CheckItem,
 			meta:{
 				title:"检查指标管理 - "+title,
-				active:pathName+"/checkList"
+				active:pathName+"/checkList",
+				permission:9,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkPlan",
 			name:"checkPlan",
 			component:CheckPlan,
 			meta:{
 				title:"检查期次 - "+title,
-				active:pathName+"/checkPlan"
+				active:pathName+"/checkPlan",
+				permission:9,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkPlan/:id",
 			name:"checkPlanDetail",
 			component:CheckPlanDetail,
 			meta:{
 				title:"检查期次 - "+title,
-				active:pathName+"/checkPlan"
+				active:pathName+"/checkPlan",
+				permission:9,
 			}
-		},
-		{
+		},{
 			path:pathName+"/orgList",
 			name:"OrgList",
 			component:OrgList,
 			meta:{
 				title:"实验室单位列表 - "+title,
-				active:pathName+"/orgList"
+				active:pathName+"/orgList",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/orgEdit",
 			name:"orgEdit",
 			component:OrgEdit,
 			meta:{
 				title:"实验室单位编辑 - "+title,
-				active:pathName+"/orgList"
+				active:pathName+"/orgList",
+				permission:7,
 			}
 		},{
 			path:pathName+"/userList",
@@ -101,70 +102,71 @@ export default new Router({
 			component:User,
 			meta:{
 				title:"实验室用户管理 - "+title,
-				active:pathName+"/userList"
+				active:pathName+"/userList",
+				permission:7,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkGroup",
 			name:"checkGroup",
 			component:CheckGroup,
 			meta:{
 				title:"检查小组 - "+title,
-				active:pathName+"/checkGroup"
+				active:pathName+"/checkGroup",
+				permission:7,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkWork",
 			name:"checkWork",
 			component:CheckWork,
 			meta:{
 				title:"检查工作 - "+title,
-				active:pathName+"/checkWork"
+				active:pathName+"/checkWork",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkWork/setting",
 			name:"checkWorksetting",
 			component:WorkSetting,
 			meta:{
 				title:"任务安排 - "+title,
-				active:pathName+"/checkWork"
+				active:pathName+"/checkWork",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkWork/pending",
 			name:"checkWorkpending",
 			component:WorkPending,
 			meta:{
 				title:"进度检查 - "+title,
-				active:pathName+"/checkWork"
+				active:pathName+"/checkWork",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/checkWork/finished",
 			name:"checkWorkfinished",
 			component:WorkFinished,
 			meta:{
 				title:"检查结果 - "+title,
-				active:pathName+"/checkWork"
+				active:pathName+"/checkWork",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/room",
 			name:"room",
 			component:Room,
 			meta:{
 				title:"房间列表 - "+title,
-				active:pathName+"/room"
+				active:pathName+"/room",
+				permission:5,
 			}
-		},
-		{
+		},{
 			path:pathName+"/zone",
 			name:"zone",
 			component:Zone,
 			meta:{
 				title:"房间分组列表 - "+title,
-				active:pathName+"/room"
+				active:pathName+"/room",
+				permission:5,
 			}
 		}
 	]
