@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label for="email" class="control-label col-sm-2">单位</label>
                 <div class="col-sm-10">
-                    <select v-model="userInfo.org_id">
+                    <select v-model="userInfo.org_id" @change="setUserLevel">
                         <option value="0">全部</option>
                         <option :value="org.org_id" v-for="(org,index) in userOrgList" :key="'org'+index">{{org.org_name}}</option>
                     </select>
@@ -72,6 +72,7 @@
                     password:"",
                     org_id:0
                 },
+                user_level:"",
                 userOrgList:[],
             }
         },
@@ -101,7 +102,10 @@
                     alert("请填写您的姓名！");
                     return false;
                 }
-                this.emitAjax(URL,this.userInfo,function(){
+                const data = Object.assign({},this.userInfo,{
+                    user_level:this.user_level
+                })
+                this.emitAjax(URL,data,function(){
                     _this.getUserList();
                     _this.showUserList();
                 });
@@ -112,11 +116,19 @@
             },
             filterOrgList(){
                 this.userOrgList = [];
+                const _this = this;
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];
-                    if(element.org_level != "lab"){
-                        this.userOrgList.push(Object.assign({},element));
-                    }   
+                    _this.userOrgList.push(Object.assign({},element));
+                }
+            },
+            setUserLevel(){
+                const _this = this;
+                for (let index = 0; index < _this.userOrgList.length; index++) {
+                    const org = _this.userOrgList[index];
+                    if(org.org_id == _this.userInfo.org_id){
+                        _this.user_level = org.org_level;
+                    }
                 }
             }
         },
@@ -128,7 +140,7 @@
         mounted(){
             this.getOrgList();
             if(this.user){
-                this.userInfo = this.user;
+                this.userInfo = Object.assign({},this.user);
             }
         }
     };

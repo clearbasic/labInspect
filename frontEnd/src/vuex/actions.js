@@ -1,5 +1,5 @@
 import { serverUrl } from "../config/server.js";
-import { emitAjax } from "../assets/common.js";
+import { emitAjax,setLocalData,delLocalData } from "../assets/common.js";
 import { checkWork,checkPlan,orgList,orgInfo } from "../config/data";
 
 export default {
@@ -19,6 +19,25 @@ export default {
         const url = serverUrl +"/admin/org/index";
         emitAjax(url,data,function(result){
             context.commit("getOrgList",result);
+        })
+    },
+    login(context,data){
+        const url = serverUrl +"/admin/login/login";
+        emitAjax(url,data.data,function(result){
+            data.router.push("/");
+            setLocalData(result);
+            context.commit("setCurrentUser",result.userInfo);
+        },function(){
+            delLocalData();
+            data.refreshVerifyCode()
+        })
+    },
+    logout(context,data){
+        const url = serverUrl +"/admin/login/logout";
+        emitAjax(url,null,function(result){
+            data.router.push("/login");
+            delLocalData();
+            context.commit("logout");
         })
     }
 }

@@ -7,20 +7,38 @@
 <script>
 export default {
     name: "app",
-    data(){
+    data() {
         return {
-            isApp:false
+            isApp: false
+        };
+    },
+    methods: {
+        isAppWatch() {
+            //判断是不是手机app访问
+            /* const PATHNAME = window.location.search;
+            let isApp = PATHNAME.search("isApp");
+            if(isApp>0){
+                this.isApp = true;
+            } */
+            /* if(app){
+                this.isApp = true;
+            } */
+        },
+        isLogin(){
+            //验证登录
+            const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+            if(userInfo){
+                this.$store.commit("setCurrentUser",userInfo);
+            }else{
+                this.$router.push(this.pathName+"/login");
+            }
         }
     },
-    mounted(){
-        //判断是不是手机app访问
-        /* const PATHNAME = window.location.search;
-        let isApp = PATHNAME.search("isApp");
-        if(isApp>0){
-            this.isApp = true;
-        } */
-        if(app){
-            this.isApp = true;
+    mounted() {
+        this.isAppWatch();
+        //非登录页面都要验证登录
+        if(this.$route.name != "login"){
+            this.isLogin();
         }
     }
 };
@@ -39,22 +57,23 @@ a:hover {
     cursor: pointer;
 }
 .little {
-    width:80px;
+    width: 80px;
 }
 .inlineInput {
     display: inline-block;
-    width:100%;
+    width: 100%;
     max-width: 160px;
 }
 .app .page-content {
-    padding-left:0;
-    padding-right:0;
+    padding-left: 0;
+    padding-right: 0;
 }
-.has-error input[type=text],.has-error input[type=password] {
-    border-color:#f00;
+.has-error input[type="text"],
+.has-error input[type="password"] {
+    border-color: #f00;
 }
 .form-group h5 {
-    margin:0;
+    margin: 0;
 }
 .table-responsive {
     overflow-y: auto;
@@ -65,11 +84,15 @@ a:hover {
 input[readonly]:hover {
     cursor: pointer;
 }
-@media only screen and (max-width:640px){.hidden-640{display:none!important}}
-@media screen and (max-width:767px){
+@media only screen and (max-width: 640px) {
+    .hidden-640 {
+        display: none !important;
+    }
+}
+@media screen and (max-width: 767px) {
     .little {
-        width:auto;
-    }  
+        width: auto;
+    }
 }
 </style>
 

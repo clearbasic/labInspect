@@ -39,16 +39,28 @@
                             <span v-if="checkWorkTask&&checkWorkTask.task_level === 'college'">复查</span>
                             <span v-if="checkWorkTask&&checkWorkTask.task_level === 'school'">抽查</span>
                         </h3>
+                        <h4 class="text-center">{{checkWorkOrg&&checkWorkOrg.org.org_name}} </h4>
                         <div class="row">
                             <div class="col-xs-12">
                                 <h5 class="text-center">
-                                    {{checkWorkOrg&&checkWorkOrg.org.org_name}} 
-                                    学校要求时间：{{checkWorkTask&&checkWorkTask.dt_begin}}到{{checkWorkTask&&checkWorkTask.dt_end}}
+                                    学校要求时间：{{checkWorkTask&&checkWorkTask.dt_begin.substring(0,10)}}到{{checkWorkTask&&checkWorkTask.dt_end.substring(0,10)}}
                                     满分{{checkWork.plan.plan_score}}分
                                     <router-link to=''>工作说明</router-link>
                                 </h5>
                             </div>
                         </div>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -82,6 +94,7 @@ export default {
                 for (let index = 0; index < taskList.length; index++) {
                     const element = taskList[index];
                     if(element.org.org_id === _this.$route.query.org_id){
+                        
                         let tasks = null;
                         _this.checkWorkOrg = element; 
                         if(_this.$route.query.type == "school"){
@@ -95,8 +108,10 @@ export default {
                             const task = tasks[i];
                             if(task.check_id == _this.$route.query.check_id){
                                 _this.checkWorkTask = Object.assign({},task);
+                                return false;
                             }
                         }
+                        return false;
                     }
                 }
             }

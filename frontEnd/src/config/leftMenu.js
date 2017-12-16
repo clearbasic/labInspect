@@ -86,7 +86,7 @@ export default [
     },
     {
         name:"退出系统",
-        url:pathName+"",
+        url:pathName+"/logout",
         icon:"ace-icon glyphicon glyphicon-off"
     }
 ]

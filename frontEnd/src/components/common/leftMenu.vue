@@ -5,7 +5,12 @@
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
             >
-                <a :class="{red:index===leftMenuData.length-1}" @click="toggleMenu($event)">
+                <a :class="{red:index===leftMenuData.length-1}" @click="toggleMenu($event)" v-if="first.url != pathName+'/logout'">
+                    <i :class="'menu-icon '+first.icon"></i>
+                    <span class="menu-text">{{first.name}}</span>
+                    <b class="arrow fa fa-angle-down" v-if="first.child&&first.child.length>0"></b>
+                </a>
+                <a :class="{red:index===leftMenuData.length-1}" @click="logout" v-if="first.url == pathName+'/logout'">
                     <i :class="'menu-icon '+first.icon"></i>
                     <span class="menu-text">{{first.name}}</span>
                     <b class="arrow fa fa-angle-down" v-if="first.child&&first.child.length>0"></b>
@@ -47,6 +52,11 @@ export default {
                 $(event.target).parents("a").next(".submenu").slideToggle(300);
             }
             $(event.target).parents(".firstNav").toggleClass("open");
+        },
+        logout(){
+            if(window.confirm("是否要退出本系统！")){
+                this.$store.dispatch("logout",{router:this.$router});
+            }
         }
     },
     mounted(){

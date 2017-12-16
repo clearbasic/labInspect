@@ -14,7 +14,7 @@
                     </small>
                 </a>
             </div>
-            <div class="sysSelect pull-right">
+            <div class="sysSelect pull-left">
                 <a href="" data-toggle="dropdown" class="dropdown-toggle">
                     <span><small>实验室安全检查</small></span>
                     <b class="ace-icon fa fa-caret-down"></b>
@@ -26,6 +26,27 @@
                     <li><a href="">其他系统</a></li>
                 </ul>
             </div>
+            <div class="navbar-buttons navbar-header pull-right" v-if="$store.state.currentUser.username">
+                <ul class="nav ace-nav">
+                    <li class="light-blue">
+                        <a href="" data-toggle="dropdown" class="dropdown-toggle">
+                            <span class="user-info">
+                                <small>欢迎您，{{$store.state.currentUser.name}},</small>
+                                您可以
+                            </span>
+                            <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
+                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li>
+                                <a @click="logout">
+                                    <i class="ace-icon fa fa-power-off"></i>
+                                    退出
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </template>
@@ -33,6 +54,13 @@
 export default {
     data() {
         return {};
+    },
+    methods:{
+        logout(){
+            if(window.confirm("是否要退出本系统！")){
+                this.$store.dispatch("logout",{router:this.$router});
+            }
+        }
     }
 };
 </script>
@@ -47,5 +75,10 @@ export default {
     }
     .sysSelect a {
         color:#fff;
+    }
+    @media screen and (max-width:480px){
+        .sysSelect li {
+            text-align:right;
+        }
     }
 </style>

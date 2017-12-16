@@ -15,6 +15,7 @@ import OrgEdit from "../components/org/orgEdit";
 import User from "../components/user/user";
 import Room from "../components/room/room";
 import Zone from "../components/room/zone";
+import Login from "../components/login/login";
 
 
 Vue.use(Router)
@@ -23,6 +24,15 @@ let pathName = "";
 export default new Router({
 	mode:"history",
 	routes: [
+		{
+			path: pathName+'/login',
+			name: 'login',
+			component: Login,
+			meta:{
+				title:"登录 - "+title,
+				active:pathName+"/login"
+			}
+		},
 		{
 			path: pathName+'/',
 			name: 'index',
