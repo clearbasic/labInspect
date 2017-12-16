@@ -326,133 +326,144 @@
     </div>
 </template>
 <script>
-    import VueHead from "../common/header";
-    import VueLeft from "../common/leftMenu";
-    import UserList from '../user/userList';
+import VueHead from "../common/header";
+import VueLeft from "../common/leftMenu";
+import UserList from "../user/userList";
 
-    export default {
-        name:"checkorg",
-        data(){
-            return {
-                orgInfo:{
-                    org_level:"school",
-                },
-                showSchool:false,
-                showCollege:false,
-                schoolArray:[],
-                collegeArray:[],
-                labArray:[],
-                key:"",//保存当前要改变的字段
-            }
-        },
-        components:{VueHead,VueLeft,UserList},
-        computed:{
-            orgList(){
-                return this.$store.state.orgList;
-            }
-        },
-        methods:{
-            getOrgList(){
-                //获取单位列表
-                this.$store.dispatch("getOrgList");
+export default {
+    name: "checkorg",
+    data() {
+        return {
+            orgInfo: {
+                org_level: "school"
             },
-            getOrgInfo(){
-                const _this=this;
-                this.schoolArray=[];
-                this.collegeArray=[];
-                this.labArray=[];
-                if(this.orgList.length>0){
-                    for (let index = 0; index < this.orgList.length; index++) {
-                        const element = this.orgList[index];
-                        if(element.org_id==this.$route.query.org_id){
-                            _this.orgInfo = Object.assign({},element);
-                        }
-                        _this[element.org_level+"Array"].push(Object.assign({},element));
+            showSchool: false,
+            showCollege: false,
+            schoolArray: [],
+            collegeArray: [],
+            labArray: [],
+            key: "" //保存当前要改变的字段
+        };
+    },
+    components: { VueHead, VueLeft, UserList },
+    computed: {
+        orgList() {
+            return this.$store.state.orgList;
+        }
+    },
+    methods: {
+        getOrgList() {
+            //获取单位列表
+            this.$store.dispatch("getOrgList");
+        },
+        getOrgInfo() {
+            const _this = this;
+            this.schoolArray = [];
+            this.collegeArray = [];
+            this.labArray = [];
+            if (this.orgList.length > 0) {
+                for (let index = 0; index < this.orgList.length; index++) {
+                    const element = this.orgList[index];
+                    if (element.org_id == this.$route.query.org_id) {
+                        _this.orgInfo = Object.assign({}, element);
                     }
+                    _this[element.org_level + "Array"].push(
+                        Object.assign({}, element)
+                    );
                 }
-            },
-            editOrgInfo(){
-                const URL = this.serverUrl+'/admin/org/handle';
-                const _this=this;
-                switch (this.orgInfo.org_level) {
-                    case "school":
-                        this.orgInfo.pid = 0;
-                        break;
-                    case "college":
-                        this.orgInfo.pid = this.orgInfo.school_id;
-                        break;
-                    case "lab":
-                        this.orgInfo.pid = this.orgInfo.college_id?this.orgInfo.college_id:this.orgInfo.school_id;
-                        break;
-                    default:
-                        break;
-                }
-                if(this.orgInfo.org_id && this.orgInfo.school_id == this.orgInfo.org_id){
-                    alert("不能选择自身作为所属学校");
-                    return false;
-                }
-                if(this.orgInfo.org_id && this.orgInfo.college_id == this.orgInfo.org_id){
-                    alert("不能选择自身作为所属院系");
-                    return false;
-                }
-                if(this.orgInfo.org_name == ''){
-                    alert("实验室名称为必填项！");
-                    return false;
-                }
-                this.emitAjax(URL,this.orgInfo,function(result){
-                    alert("保存成功");
-                    _this.$router.push(_this.pathName+"/OrgList");
-                })
-            },
-            showParentId(){
-                switch (this.orgInfo.org_level) {
-                    case "school":
-                        this.showSchool = false;
-                        this.showCollege = false;
-                        this.orgInfo.college_id = null;
-                        this.orgInfo.school_id = null;
-                        break;
-                    case "college":
-                        this.showSchool = true;
-                        this.showCollege = false;
-                        this.orgInfo.college_id = null;
-                        break;
-                    case "lab":
-                        this.showSchool = true;
-                        this.showCollege = true;
-                        break;
-                    default:
-                        break;
-                }
-            },
-            currentKey(type){
-                this.key = type;
-            },
-            selectUser(user){
-                this.orgInfo[this.key] = user.name+"("+user.username+")";
-                this.key = "";
-                $("#userModal").modal("hide")
             }
         },
-        watch:{
-            orgList(){
-                this.getOrgInfo();
-                this.showParentId();
+        editOrgInfo() {
+            const URL = this.serverUrl + "/admin/org/handle";
+            const _this = this;
+            switch (this.orgInfo.org_level) {
+                case "school":
+                    this.orgInfo.pid = 0;
+                    break;
+                case "college":
+                    this.orgInfo.pid = this.orgInfo.school_id;
+                    break;
+                case "lab":
+                    this.orgInfo.pid = this.orgInfo.college_id
+                        ? this.orgInfo.college_id
+                        : this.orgInfo.school_id;
+                    break;
+                default:
+                    break;
+            }
+            if (
+                this.orgInfo.org_id &&
+                this.orgInfo.school_id == this.orgInfo.org_id
+            ) {
+                alert("不能选择自身作为所属学校");
+                return false;
+            }
+            if (
+                this.orgInfo.org_id &&
+                this.orgInfo.college_id == this.orgInfo.org_id
+            ) {
+                alert("不能选择自身作为所属院系");
+                return false;
+            }
+            if (this.orgInfo.org_name == "") {
+                alert("实验室名称为必填项！");
+                return false;
+            }
+            this.emitAjax(URL, this.orgInfo, function(result) {
+                alert("保存成功");
+                _this.$router.push(_this.pathName + "/OrgList");
+            });
+        },
+        showParentId() {
+            switch (this.orgInfo.org_level) {
+                case "school":
+                    this.showSchool = false;
+                    this.showCollege = false;
+                    this.orgInfo.college_id = null;
+                    this.orgInfo.school_id = null;
+                    break;
+                case "college":
+                    this.showSchool = true;
+                    this.showCollege = false;
+                    this.orgInfo.college_id = null;
+                    break;
+                case "lab":
+                    this.showSchool = true;
+                    this.showCollege = true;
+                    break;
+                default:
+                    break;
             }
         },
-        mounted(){
+        currentKey(type) {
+            this.key = type;
+        },
+        selectUser(user) {
+            this.orgInfo[this.key] = user.name + "(" + user.username + ")";
+            this.key = "";
+            $("#userModal").modal("hide");
+        }
+    },
+    watch: {
+        orgList() {
+            this.getOrgInfo();
+            this.showParentId();
+        }
+    },
+    mounted() {
+        if (this.checkPermission(this)) {
             this.getOrgList();
         }
-    };
+    }
+};
 </script>
 <style>
-@media screen and (min-width:992px) {
+@media screen and (min-width: 992px) {
     .nomargin .form-group {
-        margin-bottom:0; 
-    } 
+        margin-bottom: 0;
+    }
 }
 .control-label {
     white-space: nowrap;
 }
-
 </style>

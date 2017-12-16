@@ -167,8 +167,10 @@
             }
         },
         mounted(){
-            this.getCheckGroupList();
-            this.getOrgList();
+            if(this.checkPermission(this)){
+                this.getCheckGroupList();
+                this.getOrgList();
+            }
         }
     };
 </script>

@@ -67,6 +67,9 @@ export default {
             this.showComponentType = "roomList";
             this.$store.commit("setCurrentRoom");
         },
+    },
+    mounted(){
+        this.checkPermission(this);
     }
 };
 </script>

@@ -149,7 +149,9 @@ export default {
         }
     },
     mounted() {
-        this.getCurrentPlan();
+        if(this.checkPermission(this)){
+            this.getCurrentPlan();
+        }
     }
 };
 </script>

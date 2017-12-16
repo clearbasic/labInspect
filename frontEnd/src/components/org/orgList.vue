@@ -164,7 +164,9 @@
             }
         },
         mounted(){
-            this.getOrgList();
+            if(this.checkPermission(this)){
+                this.getOrgList();
+            }
         }
     };
 </script>

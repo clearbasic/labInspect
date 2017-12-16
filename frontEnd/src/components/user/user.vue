@@ -53,6 +53,9 @@
                 this.$refs.userList.currentUser = user;
             }
         },
-        components:{VueHead,VueLeft,UserList}
+        components:{VueHead,VueLeft,UserList},
+        mounted(){
+            this.checkPermission(this)
+        }
     };
 </script>

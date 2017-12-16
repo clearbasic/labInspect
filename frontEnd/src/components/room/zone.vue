@@ -70,6 +70,9 @@ export default {
             this.showComponentType = "zoneEdit";  
             this.$store.commit("setCurrentZone",zone);
         }
+    },
+    mounted(){
+        this.checkPermission(this)
     }
 };
 </script>
