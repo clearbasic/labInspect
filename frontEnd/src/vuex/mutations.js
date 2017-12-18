@@ -22,11 +22,5 @@ export default {
             zone_name:"",
             org_id:0,
         },data);
-    },
-    setCurrentUser(state,data){
-        state.currentUser = Object.assign({},data);
-    },
-    logout(state){
-        state.currentUser = {};
     }
 }

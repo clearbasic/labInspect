@@ -26,12 +26,12 @@
                     <li><a href="">其他系统</a></li>
                 </ul>
             </div>
-            <div class="navbar-buttons navbar-header pull-right" v-if="$store.state.currentUser.username">
+            <div class="navbar-buttons navbar-header pull-right" v-if="loginUser.username">
                 <ul class="nav ace-nav">
                     <li class="light-blue">
                         <a href="" data-toggle="dropdown" class="dropdown-toggle">
                             <span class="user-info">
-                                <small>欢迎您，{{$store.state.currentUser.name}},</small>
+                                <small>欢迎您，{{loginUser.name}},</small>
                                 您可以
                             </span>
                             <i class="ace-icon fa fa-caret-down"></i>
@@ -51,6 +51,7 @@
     </div>
 </template>
 <script>
+import { setLocalData,delLocalData } from "../../assets/common.js";
 export default {
     data() {
         return {};
@@ -58,7 +59,12 @@ export default {
     methods:{
         logout(){
             if(window.confirm("是否要退出本系统！")){
-                this.$store.dispatch("logout",{router:this.$router});
+                const url = this.serverUrl +"/admin/login/logout";
+                const _this = this;
+                this.emitAjax(url,null,function(result){
+                    delLocalData();
+                    _this.$router.push(_this.pathName+"/login");
+                })
             }
         }
     }

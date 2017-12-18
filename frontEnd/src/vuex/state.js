@@ -7,6 +7,5 @@ export default {
     checkWork:{},
     orgList:[],
     currentRoom:{},
-    currentZone:{},
-    currentUser:{}
+    currentZone:{}
 }

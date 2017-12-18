@@ -26,10 +26,7 @@ export default {
         },
         isLogin(){
             //验证登录
-            const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-            if(userInfo){
-                this.$store.commit("setCurrentUser",userInfo);
-            }else{
+            if(!this.loginUser){
                 this.$router.push(this.pathName+"/login");
             }
         }

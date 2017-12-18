@@ -26,18 +26,18 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <select v-model="plan_id" style="font-size:14px">
+                                    <select v-model="plan_id" style="font-size:14px" @change="getCurrentPlan">
                                         <option value="0">当前期次</option>
                                         <option :value="plan.plan_id" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
                                     </select>
-                                    <select v-model="college_id" style="font-size:14px" v-if="loginUser.user_level == 'school'"> 
+                                    <select v-model="college_id" style="font-size:14px" v-if="college_list.length>0" @change="getCurrentPlan"> 
                                         <option :value="org.org_id" v-for="org in college_list" :key="'org'+org.org_id">{{org.org_name}}</option>
                                     </select>
                                 </div>
                             </h1>
                         </div>
                         <h3 class="text-center" style="margin-top:10px;">
-                           {{college_name}} - {{currentPlan.plan_name}}
+                            {{currentPlan.plan_name}}
                         </h3>
                         <div class="row">
                             <div class="col-xs-12">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <!-- 循环实验室三种任务 -->
-                        <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0">
+                        <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key">
                             <div class="widget-header">
                                 <h5 v-if="key == 'lab'">自查</h5>
                                 <h5 v-if="key == 'college'">复查</h5>
@@ -81,7 +81,7 @@
                                                 <td>
                                                     <span v-if="task.sum == '0'">详情</span>
                                                     <router-link 
-                                                        :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id}}"
+                                                        :to="{path:pathName+'/checkWork/setting'}" 
                                                         v-if="task.sum != '0'">
                                                         详情
                                                     </router-link>
@@ -94,11 +94,6 @@
                                 </div>
                             </div>
                         </div>
-                        <h5 v-if="task_list.lab.length==0&&task_list.college.length==0&&task_list.school.length==0" class="center red">
-                            您还没有设置此期次的任务哦，如要设置
-                            <router-link :to="pathName+'/checkPlan/'+plan_id">点我点我</router-link>
-                            ！
-                        </h5>
                     </div>
                 </div>
             </div>
@@ -120,7 +115,6 @@ export default {
             plan_list:[],
             college_list:[],
             college_id:0,
-            college_name:"",
             task_list:{
                 lab:[],
                 college:[],
@@ -131,15 +125,6 @@ export default {
     computed: {
         checkWork() {
             return this.$store.state.checkWork;
-        }
-    },
-    watch:{
-        college_id(){
-            this.getCollegeName();
-            this.getCurrentPlan();
-        },
-        plan_id(){
-            this.getCurrentPlan();
         }
     },
     methods: {
@@ -153,7 +138,7 @@ export default {
         },
         getCollegeList(){
             //如果是学校级别，显示学院选项
-            if(this.loginUser.user_level == "school"){
+            if(loginUser.user_level == "school"){
                 const _this = this;
                 const URl = this.serverUrl + "/admin/org/index";
                 this.emitAjax(URl,null,function(result){
@@ -184,16 +169,6 @@ export default {
                     this.college_list.push(Object.assign({},org));
                 }
             }
-            this.getCollegeName();
-        },
-        getCollegeName(){
-            for (let index = 0; index < this.college_list.length; index++) {
-                const college = this.college_list[index];
-                if(this.college_id == college.org_id){
-                    this.college_name = college.org_name;
-                    break;
-                }
-            }
         },
         setTaskType(taskList){
             //期次任务分类
@@ -207,17 +182,15 @@ export default {
                 const task = taskList[index];
                 _this.task_list[task.task_level].push(Object.assign({},task));
             }
-        },
-        init(){
-            this.college_id = this.loginUser.org_id;
-            this.getPlanList();
-            this.getCollegeList();
-            this.getCurrentPlan();
         }
     },
     mounted() {
         if(this.checkPermission(this)){
-            this.init();
+            const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+            this.college_id = userInfo.org_id;
+            this.getPlanList();
+            this.getCollegeList();
+            this.getCurrentPlan();
         }
     }
 };

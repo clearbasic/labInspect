@@ -4,7 +4,7 @@
             <li :class="['firstNav',{active:parentNode === index,open:parentNode===index}]"
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
-                v-if="permission[$store.state.currentUser.user_level] >= first.permission"
+                v-if="permission[loginUser.user_level] >= first.permission"
             >
                 <a :class="{red:index===leftMenuData.length-1}" @click="toggleMenu($event)" v-if="first.url != pathName+'/logout'">
                     <i :class="'menu-icon '+first.icon"></i>
@@ -20,7 +20,7 @@
                     <li :class="{active:$route&&$route.meta.active==second.url}" 
                         v-for="second in first.child" 
                         :key="second.name"
-                        v-if="permission[$store.state.currentUser.user_level] >= second.permission"
+                        v-if="permission[loginUser.user_level] >= second.permission"
                     >
                         <router-link :to="second.url" :class="{'dropdown-toggle':second.child&&second.child.length>0}">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -37,6 +37,7 @@
 </template>
 <script>
 import leftMenuData from '../../config/leftMenu';
+import { setLocalData,delLocalData } from "../../assets/common.js";
 export default {
     data() {
         return {
@@ -58,7 +59,12 @@ export default {
         },
         logout(){
             if(window.confirm("是否要退出本系统！")){
-                this.$store.dispatch("logout",{router:this.$router});
+                const url = this.serverUrl +"/admin/login/logout";
+                const _this = this;
+                this.emitAjax(url,null,function(result){
+                    delLocalData();
+                    _this.$router.push(_this.pathName+"/login");
+                })
             }
         }
     },

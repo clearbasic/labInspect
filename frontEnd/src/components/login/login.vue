@@ -66,6 +66,7 @@
     </div>
 </template>
 <script>
+    import { setLocalData,delLocalData } from "../../assets/common.js";
     export default {
         name:"login",
         data(){
@@ -80,17 +81,21 @@
             login(){
                 //登录
                 if(!this.isNotEmpty()){return false};
-                let data = {
-                    data:{
-                        username:this.username,
-                        password:this.password,
-                        verifyCode:this.verifyCode,
-                    },
-                    router:this.$router,
-                    refreshVerifyCode:this.refreshVerifyCode
+                const _this = this;
+                let data={
+                    username:this.username,
+                    password:this.password,
+                    verifyCode:this.verifyCode,
                 }
                 this.remeberMe();
-                this.$store.dispatch("login",data);
+                const url = this.serverUrl +"/admin/login/login";
+                this.emitAjax(url,data,function(result){
+                    setLocalData(result);
+                    window.location.href = _this.pathName+"/";
+                },function(){
+                    delLocalData();
+                    _this.refreshVerifyCode();
+                })
             },
             refreshVerifyCode(){
                 //刷新验证码
@@ -136,7 +141,7 @@
                     return false;
                 }
                 return true;
-            }
+            },
         },
         mounted(){
             this.info();

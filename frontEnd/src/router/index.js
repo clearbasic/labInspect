@@ -8,9 +8,7 @@ import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 import CheckGroup from "../components/checkGroup/checkGroup";
 import CheckWork from "../components/checkWork/checkWork";
-import WorkSetting from "../components/checkWork/workSetting";
-import WorkPending from "../components/checkWork/workPending";
-import WorkFinished from "../components/checkWork/workFinished";
+import CheckWorkList from "../components/checkWork/CheckWorkList";
 import OrgList from "../components/org/orgList";
 import OrgEdit from "../components/org/orgEdit";
 import User from "../components/user/user";
@@ -125,29 +123,11 @@ export default new Router({
 				permission:5,
 			}
 		},{
-			path:pathName+"/checkWork/setting",
-			name:"checkWorksetting",
-			component:WorkSetting,
+			path:pathName+"/checkWork/:id",
+			name:"checkWorkList",
+			component:CheckWorkList,
 			meta:{
-				title:"任务安排 - "+title,
-				active:pathName+"/checkWork",
-				permission:5,
-			}
-		},{
-			path:pathName+"/checkWork/pending",
-			name:"checkWorkpending",
-			component:WorkPending,
-			meta:{
-				title:"进度检查 - "+title,
-				active:pathName+"/checkWork",
-				permission:5,
-			}
-		},{
-			path:pathName+"/checkWork/finished",
-			name:"checkWorkfinished",
-			component:WorkFinished,
-			meta:{
-				title:"检查结果 - "+title,
+				title:"检查工作列表 - "+title,
 				active:pathName+"/checkWork",
 				permission:5,
 			}
