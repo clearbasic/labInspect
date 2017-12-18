@@ -121,6 +121,7 @@
                 changeObj:null,
                 orgType:"all",
                 orgArray:[],
+                orgListArray:[],
             }
         },
         components:{VueHead,VueLeft},
@@ -131,7 +132,7 @@
         },
         watch:{
             orgList(){
-                this.filterOrgList();
+                this.filterList();
             }
         },
         methods:{
@@ -162,16 +163,26 @@
                 }
             },
             filterList(){
-                if(this.orgType == 'all'){
-                    this.getOrgList();
-                }else{
-                    this.getOrgList({org_level:this.orgType});
-                }
-            },
-            filterOrgList(){
-                this.orgArray = [];
+                //检索整个单位列表
+                this.orgListArray = [];
+                console.log(this.orgList)
                 for (let index = 0; index < this.orgList.length; index++) {
                     const org = this.orgList[index];
+                    if(this.orgType == "all"){
+                        this.orgListArray.push(org);
+                    }else{
+                        if(this.orgType == org.org_level){
+                            this.orgListArray.push(org);
+                        }
+                    }
+                }
+                this.filterOrgList();
+            },
+            filterOrgList(){
+                //检索单位列表后，判断权限
+                this.orgArray = [];
+                for (let index = 0; index < this.orgListArray.length; index++) {
+                    const org = this.orgListArray[index];
                     switch (this.loginUser.user_level) {
                         case "lab":
                             if(org.org_level == "lab"){

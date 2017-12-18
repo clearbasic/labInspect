@@ -159,6 +159,7 @@
             this.getOrgList();
             if(this.user){
                 this.userInfo = Object.assign({},this.user);
+                this.user_level = this.user.user_level;
             }
         }
     };

@@ -7,12 +7,12 @@
                 <span class="icon-bar"></span>
             </button>
             <div class="navbar-header pull-left">
-                <a href="index.html" class="navbar-brand">
+                <router-link :to="pathName+'/'" class="navbar-brand">
                     <small>
                         <i class="fa fa-leaf"></i>
                         实验室安全检查管理系统
                     </small>
-                </a>
+                </router-link>
             </div>
             <div class="sysSelect pull-left">
                 <a href="" data-toggle="dropdown" class="dropdown-toggle">
