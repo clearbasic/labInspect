@@ -1,7 +1,7 @@
 <template>
     <div id="sidebars" class="sidebar responsive">
         <ul class="nav nav-list">
-            <li :class="['firstNav',{active:parentNode === index,open:parentNode === index}]"
+            <li :class="['firstNav',{active:parentNode === index,open:parentNode===index}]"
                 v-for="(first,index) in leftMenuData" 
                 :key="first.name"
                 v-if="permission[$store.state.currentUser.user_level] >= first.permission"
@@ -48,12 +48,13 @@ export default {
     },
     methods: {
         toggleMenu(event){
-            if(event.target.nodeName == "A"){
-                $(event.target).next(".submenu").slideToggle(300);
-            }else{
-                $(event.target).parents("a").next(".submenu").slideToggle(300);
+            if($(event.target).parents(".firstNav").hasClass("open")){
+                return false;
             }
-            $(event.target).parents(".firstNav").toggleClass("open");
+            $(".firstNav").removeClass("open");
+            $(".firstNav").find(".submenu").slideUp(300);
+            $(event.target).parents(".firstNav").find(".submenu").slideDown(300);
+            $(event.target).parents(".firstNav").addClass("open");
         },
         logout(){
             if(window.confirm("是否要退出本系统！")){

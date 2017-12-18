@@ -34,12 +34,13 @@ function emitAjax(url,opt,success,error){
                 case 101:
                     //登录失效
                     delLocalData();
-                    window.location.href = "/login";
+                    alert("登录过期，请重新登录！");
+                    window.location.href = pathName+"/login";
                     break;
                 case 103:
                     delLocalData();
                     alert("您的帐号被禁用或者被删除，请联系相关管理员！");
-                    window.location.href = "/login";
+                    window.location.href = pathName+"/login";
                     break;
                 default:
                     alert(resultObj.error);
