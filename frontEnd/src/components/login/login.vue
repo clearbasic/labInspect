@@ -99,6 +99,7 @@
             },
             refreshVerifyCode(){
                 //刷新验证码
+                this.verifyCode = "";
                 $(".verifyCode").attr("src",this.serverUrl+'/admin/login/getVerify?code='+Math.random());
             },
             remeberMe(){

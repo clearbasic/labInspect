@@ -81,7 +81,7 @@
                                                 <td>
                                                     <span v-if="task.sum == '0'">详情</span>
                                                     <router-link 
-                                                        :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id}}"
+                                                        :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id,plan_id}}"
                                                         v-if="task.sum != '0'">
                                                         详情
                                                     </router-link>
@@ -114,7 +114,6 @@ export default {
     data() {
         return {
             title: "检查工作列表",
-            checkPlan:[],
             currentPlan:{},
             plan_id:0,
             plan_list:[],
@@ -127,11 +126,6 @@ export default {
                 school:[],
             },
         };
-    },
-    computed: {
-        checkWork() {
-            return this.$store.state.checkWork;
-        }
     },
     watch:{
         college_id(){

@@ -82,7 +82,7 @@
                                         >
                                     </td>
                                     <td class="center">
-                                        <router-link :to="{path:pathName+'/checkList/'+item.id,query:{checkListName:item.name}}">{{item.count}}</router-link>
+                                        <router-link :to="pathName+'/checkList/'+item.id">{{item.count}}</router-link>
                                     </td>
                                     <td class="center">
                                         <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name,item.count)">

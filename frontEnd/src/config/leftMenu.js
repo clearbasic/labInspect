@@ -82,13 +82,13 @@ export default [
             {
                 name:"实验室单位设置",
                 url:pathName+"/orgList",
-                permission:7,
+                permission:5,
                 icon:'',
             },
             {
                 name:"用户设置",
                 url:pathName+"/userList",
-                permission:7,
+                permission:5,
                 icon:'',
             },
             {

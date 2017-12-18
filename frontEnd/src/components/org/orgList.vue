@@ -26,19 +26,19 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <router-link class="btn btn-primary btn-sm" tag="button"
+                                    <router-link class="btn btn-primary btn-sm" tag="button" v-if="loginUser.user_level != 'lab'"
                                     :to="{path:pathName+'/orgEdit'}">添加</router-link>
                                 </div>
                             </h1>
                         </div>
                         
                         <div class="dataTables_wrapper form-inline no-footer">
-                            <div class="row">
+                            <div class="row"  v-if="loginUser.user_level == 'school'||loginUser.user_level == 'college'">
                                 <div class="col-xs-12">
                                     <select @change="filterList" v-model="orgType">
                                         <option value="all">全部</option>
-                                        <option value="school">显示学校</option>
-                                        <option value="college">显示院系</option>
+                                        <option value="school" v-if="loginUser.user_level == 'school'">显示学校</option>
+                                        <option value="college" v-if="loginUser.user_level == 'school'||loginUser.user_level == 'college'">显示院系</option>
                                         <option value="lab">显示实验室</option>
                                     </select>
                                 </div>
@@ -56,7 +56,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(org,index) in orgList" :key="'orgList'+index">
+                                        <tr v-for="(org,index) in orgArray" :key="'orgList'+index">
                                             <td class="center">{{org.org_id}}</td>
                                             <td>
                                                 <router-link :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">{{org.org_name}}</router-link>
@@ -119,13 +119,19 @@
             return {
                 title:"单位列表",
                 changeObj:null,
-                orgType:"all"
+                orgType:"all",
+                orgArray:[],
             }
         },
         components:{VueHead,VueLeft},
         computed:{
             orgList(){
                 return this.$store.state.orgList;
+            }
+        },
+        watch:{
+            orgList(){
+                this.filterOrgList();
             }
         },
         methods:{
@@ -160,6 +166,27 @@
                     this.getOrgList();
                 }else{
                     this.getOrgList({org_level:this.orgType});
+                }
+            },
+            filterOrgList(){
+                this.orgArray = [];
+                for (let index = 0; index < this.orgList.length; index++) {
+                    const org = this.orgList[index];
+                    switch (this.loginUser.user_level) {
+                        case "lab":
+                            if(org.org_level == "lab"){
+                                this.orgArray.push(Object.assign({},org));
+                            }
+                            break;
+                        case "college":
+                            if(org.org_level != "school"){
+                                this.orgArray.push(Object.assign({},org));
+                            }
+                            break;
+                        default:
+                            this.orgArray.push(Object.assign({},org));
+                            break;
+                    }
                 }
             }
         },

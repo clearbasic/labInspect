@@ -34,7 +34,7 @@
                                 </div>
                             </h1>
                         </div>
-                        <h3 style="margin:10px 0;" class="text-center">{{$route.query.checkListName}}</h3>
+                        <h3 style="margin:10px 0;" class="text-center">{{currentCheckItem.name}}</h3>
                         <table class="table table-striped table-bordered table-hover">
                             <thead>
                                 <tr>
@@ -147,6 +147,7 @@ export default {
             isOrderInput:0,
             isTypeInput:0,
             checkListDate:[],
+            currentCheckItem:{},
             flag:{
                 type:"",
                 msg:"",
@@ -241,10 +242,29 @@ export default {
             this.emitAjax(URL, data, function(result) {
                 _SELF.checkListDate = result;
             });
+        },
+        getCheckList() {
+            //刷新指标库列表
+            const URL = this.serverUrl + "/admin/checklist/index";
+            const _SELF = this;
+            this.emitAjax(URL, null, function(result) {
+                _SELF.getCheckItem(result)
+            });
+        },
+        getCheckItem(checkList){
+            const _this = this;
+            for (let index = 0; index < checkList.length; index++) {
+                const checkItem = checkList[index];
+                if(this.$route.params.id == checkItem.id){
+                    _this.currentCheckItem = Object.assign({},checkItem);
+                    break;
+                }
+            }
         }
     },
     mounted(){
         if(this.checkPermission(this)){
+            this.getCheckList();
             this.getCheckItemList();
         }
     }

@@ -59,12 +59,7 @@ export default {
     methods:{
         logout(){
             if(window.confirm("是否要退出本系统！")){
-                const url = this.serverUrl +"/admin/login/logout";
-                const _this = this;
-                this.emitAjax(url,null,function(result){
-                    delLocalData();
-                    _this.$router.push(_this.pathName+"/login");
-                })
+                this.$store.dispatch("logout");
             }
         }
     }

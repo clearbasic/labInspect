@@ -93,7 +93,7 @@ export default new Router({
 			meta:{
 				title:"实验室单位编辑 - "+title,
 				active:pathName+"/orgList",
-				permission:7,
+				permission:5,
 			}
 		},{
 			path:pathName+"/userList",
@@ -102,7 +102,7 @@ export default new Router({
 			meta:{
 				title:"实验室用户管理 - "+title,
 				active:pathName+"/userList",
-				permission:7,
+				permission:5,
 			}
 		},{
 			path:pathName+"/checkGroup",

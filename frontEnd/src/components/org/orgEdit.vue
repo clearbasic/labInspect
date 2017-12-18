@@ -70,8 +70,8 @@
                                             <label class="col-sm-2 col-lg-4 col-md-5 control-label">单位级别：</label>
                                             <div class="col-sm-10 col-lg-8 col-md-7">
                                                 <select class="form-control" v-model="orgInfo.org_level" @change="showParentId">
-                                                    <option value="school">学校</option>
-                                                    <option value="college">院系</option>
+                                                    <option value="school" v-if="loginUser.user_level=='school'">学校</option>
+                                                    <option value="college" v-if="loginUser.user_level=='school' || loginUser.user_level=='school'">院系</option>
                                                     <option value="lab">实验室</option>
                                                 </select>
                                             </div>

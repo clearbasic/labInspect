@@ -4,7 +4,6 @@ export default {
         task_list:[],
         rule_list:[],
     },
-    checkWork:{},
     orgList:[],
     currentRoom:{},
     currentZone:{}

@@ -9,16 +9,17 @@ export default {
             context.commit("getCheckPlan",result);
         })
     },
-    getCheckWork(context,data){
-        const url = serverUrl + "/admin/check/index";
-        emitAjax(url,data,function(result){
-            context.commit("getCheckWork",result);
-        })
-    },
     getOrgList(context,data){
         const url = serverUrl +"/admin/org/index";
         emitAjax(url,data,function(result){
             context.commit("getOrgList",result);
+        })
+    },
+    logout(){
+        const url = serverUrl +"/admin/login/logout";
+        emitAjax(url,null,function(result){
+            delLocalData();
+            window.location.href = pathName+"/login";
         })
     }
 }

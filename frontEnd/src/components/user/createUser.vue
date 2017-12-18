@@ -106,6 +106,10 @@
                     user_level:this.user_level
                 })
                 this.emitAjax(URL,data,function(){
+                    if(_this.loginUser.username == _this.userInfo.username){
+                        alert("您修改了自己的信息，请重新登录，便以更新信息！");
+                        _this.$store.dispatch("logout");
+                    }
                     _this.getUserList();
                     _this.showUserList();
                 });
@@ -119,7 +123,21 @@
                 const _this = this;
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];
-                    _this.userOrgList.push(Object.assign({},element));
+                    switch (this.loginUser.user_level) {
+                        case 'lab':
+                            if(element.org_level =="lab"){
+                                _this.userOrgList.push(Object.assign({},element));
+                            }
+                            break;
+                        case 'college':
+                            if(element.org_level !="school"){
+                                _this.userOrgList.push(Object.assign({},element));
+                            }
+                            break;
+                        default:
+                            _this.userOrgList.push(Object.assign({},element));
+                            break;
+                    }
                 }
             },
             setUserLevel(){
