@@ -30,7 +30,7 @@
                                         <option value="0">当前期次</option>
                                         <option :value="plan.plan_id" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
                                     </select>
-                                    <select v-model="college_id" style="font-size:14px" v-if="loginUser.user_level == 'school'"> 
+                                    <select v-model="college_id" style="font-size:14px" v-if="permission[loginUser.user_level] >= permission.school"> 
                                         <option :value="org.org_id" v-for="org in college_list" :key="'org'+org.org_id">{{org.org_name}}</option>
                                     </select>
                                 </div>
@@ -145,16 +145,6 @@ export default {
                 _this.plan_list = result;
             });
         },
-        getCollegeList(){
-            //如果是学校级别，显示学院选项
-            if(this.loginUser.user_level == "school"){
-                const _this = this;
-                const URl = this.serverUrl + "/admin/org/index";
-                this.emitAjax(URl,null,function(result){
-                    _this.filterOrg(result);
-                });
-            }
-        },
         getCurrentPlan(){
             //获取期次信息
             const _this = this;
@@ -170,6 +160,14 @@ export default {
                 _this.setTaskType(result.check_list);
             });
         },
+        getCollegeList(){
+            //如果是学校级别，显示学院选项
+            const _this = this;
+            const URl = this.serverUrl + "/admin/org/index";
+            this.emitAjax(URl,null,function(result){
+                _this.filterOrg(result);
+            });  
+        },
         filterOrg(orgList){
             this.college_list = [];
             for (let index = 0; index < orgList.length; index++) {
@@ -178,9 +176,9 @@ export default {
                     this.college_list.push(Object.assign({},org));
                 }
             }
-            this.getCollegeName();
+            this.getCollege();
         },
-        getCollegeName(){
+        getCollege(){
             for (let index = 0; index < this.college_list.length; index++) {
                 const college = this.college_list[index];
                 if(this.college_id == college.org_id){
@@ -202,11 +200,21 @@ export default {
                 _this.task_list[task.task_level].push(Object.assign({},task));
             }
         },
-        init(){
+        labUserInit(){
             this.college_id = this.loginUser.org_id;
             this.getPlanList();
             this.getCollegeList();
             this.getCurrentPlan();
+        },
+        init(){
+            if(this.loginUser.user_level == "lab"){
+                this.labUserInit();
+            }else{
+                this.college_id = this.loginUser.org_id;
+                this.getPlanList();
+                this.getCollegeList();
+                this.getCurrentPlan();
+            }
         }
     },
     mounted() {

@@ -26,19 +26,19 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <router-link class="btn btn-primary btn-sm" tag="button" v-if="loginUser.user_level != 'lab'"
+                                    <router-link class="btn btn-primary btn-sm" tag="button" v-if="permission[loginUser.user_level] >= permission.college"
                                     :to="{path:pathName+'/orgEdit'}">添加</router-link>
                                 </div>
                             </h1>
                         </div>
                         
                         <div class="dataTables_wrapper form-inline no-footer">
-                            <div class="row"  v-if="loginUser.user_level == 'school'||loginUser.user_level == 'college'">
+                            <div class="row"  v-if="permission[loginUser.user_level] >= permission.college">
                                 <div class="col-xs-12">
                                     <select @change="filterList" v-model="orgType">
                                         <option value="all">全部</option>
-                                        <option value="school" v-if="loginUser.user_level == 'school'">显示学校</option>
-                                        <option value="college" v-if="loginUser.user_level == 'school'||loginUser.user_level == 'college'">显示院系</option>
+                                        <option value="school" v-if="permission[loginUser.user_level] >= permission.school">显示学校</option>
+                                        <option value="college" v-if="permission[loginUser.user_level] >= permission.college">显示院系</option>
                                         <option value="lab">显示实验室</option>
                                     </select>
                                 </div>
