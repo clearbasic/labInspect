@@ -37,7 +37,7 @@
                             </h1>
                         </div>
                         <h3 class="text-center" style="margin-top:10px;">
-                           {{college_name}} - {{currentPlan.plan_name}}
+                           <span v-if="college_name">{{college_name}} - </span>{{currentPlan.plan_name}}
                         </h3>
                         <div class="row">
                             <div class="col-xs-12">
@@ -51,7 +51,10 @@
                             </div>
                         </div>
                         <!-- 循环实验室三种任务 -->
-                        <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0">
+                        <h5 v-if="permission[loginUser.user_level] > permission.college" class="center red">
+                            请于左上角选择要查看的学院列表
+                        </h5>
+                        <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0 && college_id!=0">
                             <div class="widget-header">
                                 <h5 v-if="key == 'lab'">自查</h5>
                                 <h5 v-if="key == 'college'">复查</h5>
@@ -79,13 +82,7 @@
                                                     <span v-if="task.sum != '0'">{{task.state}}</span>
                                                 </td>
                                                 <td>
-                                                    <span v-if="task.sum == '0'">详情</span>
-                                                    <router-link 
-                                                        :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id,plan_id}}"
-                                                        v-if="task.sum != '0'">
-                                                        详情
-                                                    </router-link>
-                                                    
+                                                    <router-link :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id,plan_id}}">详情</router-link>
                                                 </td>
                                                 <td>{{task.problem_fatal?task.problem_fatal:0}}/{{task.problem_common?task.problem_common:0}}</td>
                                             </tr>
@@ -124,12 +121,13 @@ export default {
                 lab:[],
                 college:[],
                 school:[],
-            },
+            }
         };
     },
     watch:{
         college_id(){
             this.getCurrentPlan();
+            this.getCollege();
         },
         plan_id(){
             this.getCurrentPlan();
@@ -143,6 +141,51 @@ export default {
             this.emitAjax(URl,null,function(result){
                 _this.plan_list = result;
             });
+        },
+        getOrgList(){
+            //获取单位信息
+            const _this = this;
+            const URl = this.serverUrl + "/admin/org/index";
+            this.emitAjax(URl,null,function(result){
+                if(_this.loginUser.user_level == "lab"){
+                    _this.setLabCollegeId(result);
+                }else{
+                    _this.getCollegeList(result);
+                }
+            });  
+        },
+        setLabCollegeId(orgLIst){
+            //实验室用户获取college_id
+            let userOrgId = "";
+            for (let index = 0; index < orgLIst.length; index++) {
+                const org = orgLIst[index];
+                if(this.loginUser.org_id == org.org_id){
+                    this.college_id = org.pid;
+                    break;
+                }
+            }
+            this.getCollegeList(orgLIst);
+        },
+        getCollegeList(orgList){
+            //获得院系列表，锁定院系名称
+            this.college_list = [];
+            for (let index = 0; index < orgList.length; index++) {
+                const org = orgList[index];
+                if(org.org_level == "college"){
+                    this.college_list.push(Object.assign({},org));
+                }
+            }
+            this.getCollege();
+        },
+        getCollege(){
+            //获得当前学院的名称
+            for (let index = 0; index < this.college_list.length; index++) {
+                const college = this.college_list[index];
+                if(this.college_id == college.org_id){
+                    this.college_name = college.org_name;
+                    break;
+                }
+            }
         },
         getCurrentPlan(){
             //获取期次信息
@@ -159,33 +202,6 @@ export default {
                 _this.setTaskType(result.check_list);
             });
         },
-        getCollegeList(){
-            //如果是学校级别，显示学院选项
-            const _this = this;
-            const URl = this.serverUrl + "/admin/org/index";
-            this.emitAjax(URl,null,function(result){
-                _this.filterOrg(result);
-            });  
-        },
-        filterOrg(orgList){
-            this.college_list = [];
-            for (let index = 0; index < orgList.length; index++) {
-                const org = orgList[index];
-                if(org.org_level != "lab"){
-                    this.college_list.push(Object.assign({},org));
-                }
-            }
-            this.getCollege();
-        },
-        getCollege(){
-            for (let index = 0; index < this.college_list.length; index++) {
-                const college = this.college_list[index];
-                if(this.college_id == college.org_id){
-                    this.college_name = college.org_name;
-                    break;
-                }
-            }
-        },
         setTaskType(taskList){
             //期次任务分类
             const _this = this;
@@ -198,22 +214,26 @@ export default {
                 const task = taskList[index];
                 _this.task_list[task.task_level].push(Object.assign({},task));
             }
-        },
-        labUserInit(){
-            this.college_id = this.loginUser.org_id;
-            this.getPlanList();
-            this.getCollegeList();
-            this.getCurrentPlan();
+            //过滤自查、复查、抽查
+            switch (this.permission[this.loginUser.user_level]) {
+                case this.permission.college:
+                    this.task_list.school = [];
+                    break;
+                case this.permission.lab:
+                    this.task_list.school = [];
+                    this.task_list.college = [];
+                    break;
+                default:
+                    break;
+            }
         },
         init(){
-            if(this.loginUser.user_level == "lab"){
-                this.labUserInit();
-            }else{
+            this.getPlanList();
+            //非实验室用户 当前学院id就是用户所属学院id
+            if(this.permission[this.loginUser.user_level] > this.permission.lab){
                 this.college_id = this.loginUser.org_id;
-                this.getPlanList();
-                this.getCollegeList();
-                this.getCurrentPlan();
             }
+            this.getOrgList();
         }
     },
     mounted() {
