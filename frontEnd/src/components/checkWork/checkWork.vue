@@ -129,7 +129,6 @@ export default {
     },
     watch:{
         college_id(){
-            this.getCollegeName();
             this.getCurrentPlan();
         },
         plan_id(){

@@ -165,7 +165,6 @@
             filterList(){
                 //检索整个单位列表
                 this.orgListArray = [];
-                console.log(this.orgList)
                 for (let index = 0; index < this.orgList.length; index++) {
                     const org = this.orgList[index];
                     if(this.orgType == "all"){

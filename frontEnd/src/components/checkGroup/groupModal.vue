@@ -9,30 +9,6 @@
                             <input type="text" class="form-control" v-model="changeObj.group_name" placeholder="实验室小组名称">
                             <span class="form-control-feedback red">*</span>
                         </div>
-                        <div class="form-group">
-                            <label><h5>实验室小组类型：</h5></label>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" class="ace" v-model="changeObj.level" value="lab">
-                                    <span class="lbl">自查小组</span>
-                                </label>
-                                <label>
-                                    <input type="radio" class="ace" v-model="changeObj.level" value="college">
-                                    <span class="lbl">复查小组</span>
-                                </label>
-                                <label>
-                                    <input type="radio" class="ace" v-model="changeObj.level" value="school">
-                                    <span class="lbl">抽查小组</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label><h5>所属机构：</h5></label>
-                            <select v-model="changeObj.org_id">
-                                <option value="0">全部</option>
-                                <option :value="org.org_id" v-for="org in orgList"> {{org.org_name}}</option>
-                            </select>
-                        </div>
                         <div class="form-group has-feedback">
                             <label><h5>组长名称：</h5></label>
                             <input type="text" class="form-control" v-model="changeObj.leader_name" placeholder="组长名称" readonly data-target="#userModal" data-toggle="modal">
@@ -85,6 +61,8 @@ export default {
             if(this.changeObj.group_id){
                 URL = this.serverUrl + "/admin/group/edit";
             }
+            this.changeObj.level = this.loginUser.user_level;
+            this.changeObj.org_id = this.loginUser.org_id;
             this.emitAjax(URL, this.changeObj, function(result) {
                 _SELF.getCheckGroupList();
                 _SELF.closeModal();

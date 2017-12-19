@@ -7,8 +7,10 @@
                     <th>房间名</th>
                     <th class="hidden-640">责任人</th>
                     <th class="center little hidden-640">联系电话</th>
-                    <th class="center little">排序编号</th>
+                    <th class="center hidden-640">所属院系</th>
+                    <th class="center hidden-640">所属实验室</th>
                     <th class="center little hidden-640">所属分组</th>
+                    <th class="center little">排序编号</th>
                     <th class="center little">操作</th>
                 </tr>
             </thead>
@@ -20,6 +22,12 @@
                     </td>
                     <td class="hidden-640">{{room.agent_name}}({{room.agent_id}})</td>
                     <td class="center little hidden-640">{{room.phone}}</td>
+                    <td class="center hidden-640">{{room.dept_name}}</td>
+                    <td class="center hidden-640">{{room.lab_name}}</td>
+                    <td class="center hidden-640">
+                        <span v-if="room.zone_id == 0">无</span>
+                        <span v-for="zone in zoneList" :key="'zone'+zone.zone_id" v-if="room.zone_id == zone.zone_id">{{zone.zone_name}}</span>
+                    </td>
                     <td class="center little" @dblclick="isShowOrder=room.room_id">
                         <span v-if="isShowOrder != room.room_id">{{room.room_order}}</span>
                         <input type="text" 
@@ -30,10 +38,6 @@
                             @focus="currentOrder = room.room_order"
                             autofocus="autofocus"
                         >
-                    </td>
-                    <td class="center hidden-640">
-                        <span v-if="room.zone_id == 0">无</span>
-                        <span v-for="zone in zoneList" :key="'zone'+zone.zone_id" v-if="room.zone_id == zone.zone_id">{{zone.zone_name}}</span>
                     </td>
                     <td class="center little">
                         <div class="hidden-xs btn-group">
