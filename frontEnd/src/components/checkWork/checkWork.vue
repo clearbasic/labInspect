@@ -31,20 +31,21 @@
                                         <option :value="plan.plan_id" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
                                     </select>
                                     <select v-model="college_id" style="font-size:14px" v-if="permission[loginUser.user_level] >= permission.school"> 
+                                        <option value="0">请选择</option>
                                         <option :value="org.org_id" v-for="org in college_list" :key="'org'+org.org_id">{{org.org_name}}</option>
                                     </select>
                                 </div>
                             </h1>
                         </div>
-                        <h3 class="text-center" style="margin-top:10px;">
+                        <h3 class="text-center" style="margin-top:10px;" v-if="college_id!=0">
                            <span v-if="college_name">{{college_name}} - </span>{{currentPlan.plan_name}}
                         </h3>
-                        <div class="row">
+                        <div class="row" v-if="college_id!=0">
                             <div class="col-xs-12">
                                 <h5 class="text-center">
-                                    共有自查{{task_list.lab.length}}次，
-                                    复查{{task_list.college.length}}次，
-                                    抽查{{task_list.school.length}}次。
+                                    <span v-if="task_list.lab.length>0">共有自查{{task_list.lab.length}}次，</span>
+                                    <span v-if="task_list.college.length>0">复查{{task_list.college.length}}次，</span>
+                                    <span v-if="task_list.school.length>0">抽查{{task_list.school.length}}次，</span>
                                     满分{{currentPlan.plan_score}}分
                                     <router-link to=''>工作说明</router-link>
                                 </h5>
@@ -52,7 +53,7 @@
                         </div>
                         <!-- 循环实验室三种任务 -->
                         <h5 v-if="permission[loginUser.user_level] > permission.college" class="center red">
-                            请于左上角选择要查看的学院列表
+                            请于右上角选择要查看的学院列表
                         </h5>
                         <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0 && college_id!=0">
                             <div class="widget-header">
@@ -68,8 +69,9 @@
                                                 <th class="center little">任务名称</th>
                                                 <th>学校要求时间</th>
                                                 <th class="center little">开展情况</th>
-                                                <th>查看详情</th>
-                                                <th>查看结果</th>
+                                                <th class="center little">检查分配</th>
+                                                <th class="center little">查看进度</th>
+                                                <th class="center little">查看结果</th>
                                             </tr>
                                         </thead>
                                         <!-- 循环每个实验室的具体任务 -->
@@ -81,17 +83,23 @@
                                                     <span v-if="task.sum == '0'">未开展</span>
                                                     <span v-if="task.sum != '0'">{{task.state}}</span>
                                                 </td>
-                                                <td>
-                                                    <router-link :to="{path:pathName+'/checkWork/'+task.task_id,query:{college_id,plan_id}}">详情</router-link>
+                                                <td class="center">
+                                                    <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}">分配</router-link>
                                                 </td>
-                                                <td>{{task.problem_fatal?task.problem_fatal:0}}/{{task.problem_common?task.problem_common:0}}</td>
+                                                <td class="center">
+                                                    <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}">检查进度</router-link>
+                                                </td>
+                                                <td class="center">
+                                                    <router-link :to="{path:pathName+'/checkWork/result/'+task.task_id,query:{college_id}}" v-if="task.finished != '0'">结果</router-link>
+                                                    <span v-if="task.finished == '0'">结果</span>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                        <h5 v-if="task_list.lab.length==0&&task_list.college.length==0&&task_list.school.length==0" class="center red">
+                        <h5 v-if="task_list.lab.length==0&&task_list.college.length==0&&task_list.school.length==0&&college_id!=0" class="center red">
                             您还没有设置此期次的任务哦，如要设置
                             <router-link :to="pathName+'/checkPlan/'+plan_id">点我点我</router-link>
                             ！
@@ -134,6 +142,14 @@ export default {
         }
     },
     methods: {
+        init(){
+            this.getPlanList();
+            //学院用户
+            if(this.permission[this.loginUser.user_level] == this.permission.college){
+                this.college_id = this.loginUser.org_id;
+            }
+            this.getOrgList();
+        },
         getPlanList(){
             //获取期次列表
             const _this = this;
@@ -197,10 +213,12 @@ export default {
                 }:{
                     college_id:this.college_id,
                 };
-            this.emitAjax(URl,data,function(result){
-                _this.currentPlan = result.plan;
-                _this.setTaskType(result.check_list);
-            });
+            if(this.college_id!=0){
+                this.emitAjax(URl,data,function(result){
+                    _this.currentPlan = result.plan;
+                    _this.setTaskType(result.check_list);
+                });
+            }
         },
         setTaskType(taskList){
             //期次任务分类
@@ -226,14 +244,6 @@ export default {
                 default:
                     break;
             }
-        },
-        init(){
-            this.getPlanList();
-            //非实验室用户 当前学院id就是用户所属学院id
-            if(this.permission[this.loginUser.user_level] > this.permission.lab){
-                this.college_id = this.loginUser.org_id;
-            }
-            this.getOrgList();
         }
     },
     mounted() {

@@ -45,7 +45,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(group,index) in checkGroupArray" :key="'checkGroupArray'+index">
+                                    <tr v-for="(group,index) in checkGroupArray" :key="'checkGroupArray'+index" v-if="group.org_id == loginUser.org_id">
                                         <td class="center">{{group.group_id}}</td>
                                         <td>{{group.group_name}}</td>
                                         <td class="center">

@@ -8,7 +8,7 @@ import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
 import CheckGroup from "../components/checkGroup/checkGroup";
 import CheckWork from "../components/checkWork/checkWork";
-import CheckWorkList from "../components/checkWork/CheckWorkList";
+import CheckWorkSetting from "../components/checkWork/checkWorkSetting";
 import OrgList from "../components/org/orgList";
 import OrgEdit from "../components/org/orgEdit";
 import User from "../components/user/user";
@@ -123,9 +123,9 @@ export default new Router({
 				permission:5,
 			}
 		},{
-			path:pathName+"/checkWork/:id",
-			name:"checkWorkList",
-			component:CheckWorkList,
+			path:pathName+"/checkWork/setting/:id",
+			name:"checkWorkSetting",
+			component:CheckWorkSetting,
 			meta:{
 				title:"检查工作列表 - "+title,
 				active:pathName+"/checkWork",
