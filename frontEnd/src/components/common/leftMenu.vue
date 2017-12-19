@@ -49,13 +49,13 @@ export default {
     },
     methods: {
         toggleMenu(event){
-            if($(event.target).parents(".firstNav").hasClass("open")){
-                return false;
-            }
+            const isOpen = $(event.target).parents(".firstNav").hasClass("open");
             $(".firstNav").removeClass("open");
-            $(".firstNav").find(".submenu").slideUp(300);
-            $(event.target).parents(".firstNav").find(".submenu").slideDown(300);
-            $(event.target).parents(".firstNav").addClass("open");
+            $(".firstNav").find(".submenu").slideUp();
+            if(!isOpen){
+                $(event.target).parents(".firstNav").find(".submenu").slideDown();
+                $(event.target).parents(".firstNav").addClass("open");
+            }
         },
         logout(){
             if(window.confirm("是否要退出本系统！")){
