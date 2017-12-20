@@ -30,7 +30,7 @@ export default [
             {
                 name:"检查小组",
                 url:pathName+"/checkGroup",
-                permission:7,
+                permission:5,
                 icon:"",
             },
             {

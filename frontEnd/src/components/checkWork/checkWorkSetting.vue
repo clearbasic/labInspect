@@ -51,7 +51,7 @@
                             <p class="pull-right">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">添加</button>
                                 <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                                    <li v-for="lab in lab_list" :key="'lab'+lab.org_id">
+                                    <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
                                         <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
                                     </li>
                                 </ul>
@@ -64,9 +64,17 @@
                                 </h5>
                                 <p>
                                     本单位要求时间：
-                                    <datepicker v-model="check.dt_begin" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
-                                    -
-                                    <datepicker v-model="check.dt_end" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
+                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    <datepicker v-model="check.dt_begin" width="140" 
+                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
+                                        v-if="today < momentObj(check.dt_begin).unix()"
+                                    ></datepicker>
+                                    到
+                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    <datepicker v-model="check.dt_end" width="140" 
+                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
+                                        v-if="today < momentObj(check.dt_begin).unix()"
+                                    ></datepicker>
                                 </p>
                             </div>
                             <div class="widget-body">
@@ -83,17 +91,18 @@
                                             <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == check.org_id">
                                                 <td>
                                                     <h5>
-                                                        {{zone.zone_name}}
+                                                        分组名称：{{zone.zone_name}}
                                                     </h5>
+                                                    分组下的房间：
                                                     <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
-                                                        {{room.room_name}}
+                                                        （{{room.room_name}}）
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
                                                     <div v-for="checkZone in check.zone_list" :key="'checkZone'+checkZone.zone_id" v-if="checkZone.zone_id == zone.zone_id">
                                                         <select v-model="checkZone.group_id">
-                                                            <option value="0">选择检查小组</option>
+                                                            <option value="0">--请选择--</option>
                                                             <option :value="group.group_id" 
                                                                 v-for="group in group_list" 
                                                                 :key="'group'+group.group_id"
@@ -109,7 +118,15 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="2" class="center">
-                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)">保存设置</button>
+                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < momentObj(check.dt_begin).unix()">保存</button>
+                                                    <router-link class="btn btn-default btn-sm" 
+                                                        v-if="today > momentObj(check.dt_begin).unix()&&today < momentObj(check.dt_begin).unix()" 
+                                                        :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
+                                                    >查看进度</router-link>
+                                                    <router-link class="btn btn-default btn-sm" 
+                                                        v-if="today > momentObj(check.dt_end).unix()"
+                                                        :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
+                                                    >查看结果</router-link>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -139,35 +156,38 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
-                                            <tr v-for="zone in newLabSetting.zone_list" :key="'zone'+zone.zone_id">
+                                            <!-- 循环本实验室所属房间分组列表， -->
+                                            <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == newLabSetting.org_id">
                                                 <td>
-                                                    <div>
-                                                        <h5>
-                                                            {{zone.zone_name}}
-                                                        </h5>
-                                                        <span v-for="room in zone.room_list" :key="'room'+room.room_id">
-                                                            {{room.room_name}}
-                                                        </span>
-                                                    </div>
+                                                    <h5>
+                                                        分组名称：{{zone.zone_name}}
+                                                    </h5>
+                                                    分组下的房间：
+                                                    <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
+                                                       （{{room.room_name}}）
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <div>
-                                                        <select name="" id="" v-model="zone.group_id" @click="changeGroup(zone)">
+                                                    <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
+                                                    <div v-for="checkZone in newLabSetting.zone_list" :key="'checkZone'+checkZone.zone_id" v-if="checkZone.zone_id == zone.zone_id">
+                                                        <select v-model="checkZone.group_id">
                                                             <option value="0">选择检查小组</option>
                                                             <option :value="group.group_id" 
                                                                 v-for="group in group_list" 
                                                                 :key="'group'+group.group_id"
-                                                                v-if="zone.org_id == group.org_id"
+                                                                v-if="newLabSetting.org_id == group.org_id"
                                                             >{{group.group_name}}</option>
                                                         </select>
+                                                        <br>
+                                                        <span v-for="group in group_list" :key="'group'+group.group_id" v-if="checkZone.group_id==group.group_id">
+                                                            组长：{{group.leader_name}} 组员：{{group.members}}
+                                                        </span>
                                                     </div>
-                                                    <span>组长：{{zone.leader_name}} 组员：{{zone.members}}</span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2" class="center">
-                                                    <button class="btn btn-success btn-sm">保存设置</button>
+                                                    <button class="btn btn-success btn-sm" @click="saveCheckTask">添加</button>
                                                     <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
                                                 </td>
                                             </tr>
@@ -187,6 +207,7 @@
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
 import datepicker from "vue2-datepicker";
+import moment from 'moment';
 export default {
     name: "checkWork",
     components: { VueHead, VueLeft, datepicker },
@@ -204,6 +225,8 @@ export default {
             group_list:[],
             zone_list:[],
             room_list:[],
+            today:Date.parse(new Date())/1000,
+            momentObj:moment,
             check_list: [
                 {
                     org_id: 17,
@@ -253,8 +276,21 @@ export default {
                 _this.college_info = result.college_info;
             })
         },
+        editCheckTask(checkTask){
+            //修改检查工作
+            const _this = this;
+            const URL = this.serverUrl + "/admin/check/handle";
+            const today = moment().format("YYYY-MM-DD");
+            checkTask.dt_begin = moment(checkTask.dt_begin).format("YYYY-MM-DD");
+            checkTask.dt_end = moment(checkTask.dt_end).format("YYYY-MM-DD");
+            
+            this.emitAjax(URL,checkTask,function(){
+                alert("保存成功！")
+                _this.getCheckInfo();
+            })
+        },
         addLabSetting(lab){
-            //判断 有没有分配过的实验室
+            //分配检察工作 判断 有没有分配过的实验室
             for (let index = 0; index < this.check_list.length; index++) {
                 const check = this.check_list[index];
                 if(check.org_id == lab.org_id){
@@ -262,23 +298,51 @@ export default {
                     return false;
                 }
             }
-            this.newLabSetting.org_id = lab.org_id;
-            this.newLabSetting.org_name = lab.org_name;
-            this.newLabSetting.zone_list=[];
+            this.newLabSetting = {
+                org_id:lab.org_id,
+                org_name:lab.org_name,
+                check_level:this.currentTask.task_level,
+                task_id:this.$route.params.id,
+                zone_list:[],
+                dt_begin:moment(this.currentTask.dt_begin).format("YYYY-MM-DD"),
+                dt_end: moment(this.currentTask.dt_end).format("YYYY-MM-DD")
+            }
             this.addLab = true;
             for (let index = 0; index < this.zone_list.length; index++) {
                 const zone = this.zone_list[index];
                 if(lab.org_id == zone.org_id){
                     this.newLabSetting.zone_list.push({
                         zone_id: zone.zone_id,
-                        zone_name:zone.zone_name,
                         group_id: 0,
                     })
                 }
             }
         },
-        editCheckTask(checkTask){
-            console.log(checkTask);
+        saveCheckTask(){
+            //分配检察工作
+            const _this = this;
+            const URL = this.serverUrl + "/admin/check/handle";
+            if(this.newLabSetting.dt_begin ==""){
+                alert("请选择开始时间！");
+                return false;
+            }
+            if(this.newLabSetting.dt_end ==""){
+                alert("请选择结束时间！");
+                return false;
+            }
+            this.newLabSetting.dt_begin = moment(this.newLabSetting.dt_begin).format("YYYY-MM-DD");
+            this.newLabSetting.dt_end = moment(this.newLabSetting.dt_end).format("YYYY-MM-DD");
+            this.emitAjax(URL,this.newLabSetting,function(){
+                _this.getCheckInfo();
+                _this.addLab = false;
+                _this.newLabSetting={
+                    org_id: 0,
+                    org_name: "",
+                    dt_begin: "",
+                    dt_end: "",
+                    zone_list: []
+                }
+            })
         }
     },
     mounted() {

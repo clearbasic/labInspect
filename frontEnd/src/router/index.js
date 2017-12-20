@@ -112,7 +112,7 @@ export default new Router({
 			meta:{
 				title:"检查小组 - "+title,
 				active:pathName+"/checkGroup",
-				permission:7,
+				permission:5,
 			}
 		},{
 			path:pathName+"/checkWork",
