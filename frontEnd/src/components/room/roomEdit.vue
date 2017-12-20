@@ -1,6 +1,11 @@
 <template>
     <div class="roowEdit">
         <div class="form-horizontal">
+            <div class="row form-group">
+                <div class="col-xs-12 red">
+                    注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~A110。~表示房间名按顺序添加
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div :class="['form-group','has-feedback',{'has-error':!room.room_name}]">
@@ -59,31 +64,31 @@
                     <div class="form-group">
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">所属学院</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
-                            <select class="form-control" v-model="room.dept_id" @change="getLabArray(room.dept_id)">
+                            <select class="form-control" v-model="room.dept_id">
                                 <option :value="0">全部</option>
                                 <option v-for="college in collegeArray" :value="college.org_id" :key="'college'+college.org_id">{{college.org_name}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" v-if="room.dept_id">
                     <div class="form-group">
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">所属实验室</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
                             <select class="form-control" v-model="room.lab_id">
                                 <option :value="0">全部</option>
-                                <option v-for="lab in labArray" :value="lab.org_id" :key="'lab'+lab.org_id">{{lab.org_name}}</option>
+                                <option v-for="lab in labArray" :value="lab.org_id" :key="'lab'+lab.org_id" v-if="lab.pid == room.dept_id">{{lab.org_name}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" v-if="room.lab_id">
                     <div class="form-group">
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">房间分组</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
                             <select class="form-control" v-model="room.zone_id">
                                 <option :value="0">无</option>
-                                <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id">{{zone.zone_name}}</option>
+                                <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id" v-if="zone.org_id == room.lab_id">{{zone.zone_name}}</option>
                             </select>
                         </div>
                     </div>
@@ -93,7 +98,9 @@
                 <div class="col-xs-12">
                     <div class="pull-right">
                         <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
-                        <button class="btn btn-success btn-sm" @click="saveRoom">保存</button>
+                        <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
+                        <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">房间名预览</button>
+                        <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
                     </div>
                 </div>
             </div>
@@ -109,6 +116,23 @@
                         <UserList 
                             :sure="selectUser"
                         ></UserList>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="roomNameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">  
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">房间名称预览</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group clearfix">
+                            <li v-for="roomName in roomNameList" :key="roomName" class="list-group-item col-sm-2">
+                                {{roomName}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -145,16 +169,14 @@ import UserList from '../user/userList'
                 labArray:[],
                 schoolArray:[],
                 zoneArray:[],
+                roomNameList:[],
             }
         },
         methods:{
-            saveRoom(){
+            editRoom(){
                 //保存房间
-                let url = this.serverUrl + "/admin/room/add";
                 const _this = this;
-                if(this.room.room_id){
-                    url = this.serverUrl + "/admin/room/edit";
-                }
+                const url = this.serverUrl + "/admin/room/edit";
                 if(!this.room.room_name){
                     alert("请填写房间名称！");
                     return false;
@@ -162,6 +184,67 @@ import UserList from '../user/userList'
                 this.emitAjax(url,this.room,function(){
                     _this.showRoomList();
                 })
+            },
+            createRoom(){
+                //新建房间
+                const _this = this;
+                const url = this.serverUrl + "/admin/room/add";
+                if(!this.room.room_name){
+                    alert("请填写房间名称！");
+                    return false;
+                }
+                const data = {
+                    room_name:this.getNewRoomList(),
+                    agent_name:this.room.agent_name,
+                    agent_id:this.room.agent_id,
+                    phone:this.room.phone,
+                    building_name:this.room.building_name,
+                    room_order:this.room.room_order,
+                    dept_id:this.room.dept_id,
+                    lab_id:this.room.lab_id,
+                    zone_id:this.room.zone_id
+                };
+                this.emitAjax(url,data,function(){
+                    _this.showRoomList();
+                })
+            },
+            getNewRoomList(){
+                //获得房间信息
+                const roomName = this.room.room_name;
+                let roomNameArray = [];
+                let roomArray = [];
+                let roomInfoArray = [];
+                //根据，分割字符串。
+                if(roomName.search(",")>0){
+                    roomNameArray = roomName.split(",");
+                }else if(roomName.search("，")>0){
+                    roomNameArray = roomName.split("，");
+                }else{
+                    roomNameArray.push(roomName);
+                }
+                //循环分割的字符串数组
+                for (let index = 0; index < roomNameArray.length; index++) {
+                    const room_name = roomNameArray[index];
+                    //如果有~分割循环
+                    if(room_name.search("~")>0){
+                        const room = room_name.split("~");
+                        const minRoom = parseInt(room[0].match(/(\d+)$/)[1]);
+                        const maxRoom = parseInt(room[1].match(/(\d+)$/)[1]);
+                        //获取房间前缀
+                        const roomNamePrefix = room[0].substring(0,room[0].match(/(\d+)$/)["index"]);
+                        for (let index = minRoom; index <= maxRoom; index++) {
+                            roomArray.push(roomNamePrefix+index);
+                        }
+                    }else{
+                        //从后面往前找纯数字
+                        const nameMatch = room_name.match(/(\d+)$/);
+                        //获取房间前缀
+                        const roomNamePrefix = room_name.substring(0,nameMatch["index"]);
+                        roomArray.push(roomNamePrefix+nameMatch[1]);
+                    }
+                }
+                this.roomNameList = roomArray;
+                return roomArray;
             },
             selectUser(user){
                 //选择用户
@@ -187,7 +270,7 @@ import UserList from '../user/userList'
                     }
                 }
             },
-            getLabArray(id){
+            getLabArray(){
                 //获得实验室列表
                 const _this = this;
                 this.labArray = [];
@@ -195,13 +278,7 @@ import UserList from '../user/userList'
                     for (let index = 0; index < _this.orgList.length; index++) {
                         const element = _this.orgList[index];
                         if(element.org_level == "lab" && element.org_state == "yes"){
-                            if(id != 0 ){
-                                if(element.pid == id){
-                                    _this.labArray.push(Object.assign({},element));
-                                }
-                            }else{
-                                _this.labArray.push(Object.assign({},element));
-                            }
+                            _this.labArray.push(Object.assign({},element));
                         }
                     }
                 }

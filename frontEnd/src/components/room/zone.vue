@@ -25,8 +25,8 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <router-link :to="pathName+'/room'" tag="button" class="btn btn-default btn-sm">返回</router-link>
                                     <button class="btn btn-primary btn-sm" @click="showZoneEdit">添加分组</button>
+                                    <router-link :to="pathName+'/room'" tag="button" class="btn btn-primary btn-sm">房间管理</router-link>
                                 </div>
                             </h1>
                         </div>
@@ -55,7 +55,7 @@ export default {
     components: { VueHead, VueLeft, ZoneList, zoneEdit },
     data() {
         return {
-            title: "房间分组列表",
+            title: "房间分组管理",
             showComponentType:"zoneList",
         };
     },
@@ -72,7 +72,7 @@ export default {
         }
     },
     mounted(){
-        this.checkPermission(this)
+        this.checkPermission(this);
     }
 };
 </script>

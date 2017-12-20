@@ -14,6 +14,7 @@ import OrgEdit from "../components/org/orgEdit";
 import User from "../components/user/user";
 import Room from "../components/room/room";
 import Zone from "../components/room/zone";
+import RoomZoneList from "../components/room/roomZoneList";
 import Login from "../components/login/login";
 
 
@@ -137,7 +138,7 @@ export default new Router({
 			component:Room,
 			meta:{
 				title:"房间列表 - "+title,
-				active:pathName+"/room",
+				active:pathName+"/zone",
 				permission:5,
 			}
 		},{
@@ -146,7 +147,16 @@ export default new Router({
 			component:Zone,
 			meta:{
 				title:"房间分组列表 - "+title,
-				active:pathName+"/room",
+				active:pathName+"/zone",
+				permission:5,
+			}
+		},{
+			path:pathName+"/zone/:id",
+			name:"roomZone",
+			component:RoomZoneList,
+			meta:{
+				title:"房间分组 - "+title,
+				active:pathName+"/zone",
 				permission:5,
 			}
 		}

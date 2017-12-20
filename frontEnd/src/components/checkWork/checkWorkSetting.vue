@@ -79,7 +79,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="zone in check.zone_list" :key="'zone'+zone.zone_id">
+                                            <!-- 循环本实验室所属房间分组列表， -->
+                                            <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == check.org_id">
                                                 <td>
                                                     <h5>
                                                         {{zone.zone_name}}
@@ -89,8 +90,9 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div>
-                                                        <select name="" id="" v-model="zone.group_id" @click="changeGroup(zone)">
+                                                    <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
+                                                    <div v-for="checkZone in check.zone_list" :key="'checkZone'+checkZone.zone_id" v-if="checkZone.zone_id == zone.zone_id">
+                                                        <select v-model="checkZone.group_id">
                                                             <option value="0">选择检查小组</option>
                                                             <option :value="group.group_id" 
                                                                 v-for="group in group_list" 
@@ -98,33 +100,20 @@
                                                                 v-if="check.org_id == group.org_id"
                                                             >{{group.group_name}}</option>
                                                         </select>
+                                                        <br>
+                                                        <span v-for="group in group_list" :key="'group'+group.group_id" v-if="checkZone.group_id==group.group_id">
+                                                            组长：{{group.leader_name}} 组员：{{group.members}}
+                                                        </span>
                                                     </div>
-                                                    <span>组长：{{zone.leader_name}} 组员：{{zone.members}}</span>
                                                 </td>
                                             </tr>
-                                            <tr v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id==0 && room.org_id == check.org_id">
-                                                <td>
-                                                    {{room.room_id}}
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <select name="" id="" v-model="zone.group_id" @click="changeGroup(zone)">
-                                                            <option value="0">选择检查小组</option>
-                                                            <option :value="group.group_id" 
-                                                                v-for="group in group_list" 
-                                                                :key="'group'+group.group_id"
-                                                                v-if="check.org_id == group.org_id"
-                                                            >{{group.group_name}}</option>
-                                                        </select>
-                                                    </div>
-                                                    <span>组长：{{zone.leader_name}} 组员：{{zone.members}}</span>
+                                            <tr>
+                                                <td colspan="2" class="center">
+                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)">保存设置</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table> 
-                                    <div class="center" style="padding:10px;">
-                                        <button class="btn btn-success btn-sm">保存设置</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -150,14 +139,17 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
                                             <tr v-for="zone in newLabSetting.zone_list" :key="'zone'+zone.zone_id">
                                                 <td>
-                                                    <h5>
-                                                        {{zone.zone_name}}
-                                                    </h5>
-                                                    <span v-for="room in zone.room_list" :key="'room'+room.room_id">
-                                                        {{room.room_name}}
-                                                    </span>
+                                                    <div>
+                                                        <h5>
+                                                            {{zone.zone_name}}
+                                                        </h5>
+                                                        <span v-for="room in zone.room_list" :key="'room'+room.room_id">
+                                                            {{room.room_name}}
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <div>
@@ -173,12 +165,15 @@
                                                     <span>组长：{{zone.leader_name}} 组员：{{zone.members}}</span>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td colspan="2" class="center">
+                                                    <button class="btn btn-success btn-sm">保存设置</button>
+                                                    <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table> 
-                                    <div class="center" style="padding:10px;">
-                                        <button class="btn btn-success btn-sm">保存设置</button>
-                                        <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -258,18 +253,6 @@ export default {
                 _this.college_info = result.college_info;
             })
         },
-        changeGroup(zone){
-            for (let index = 0; index < this.group_list.length; index++) {
-                const group = this.group_list[index];
-                if(zone.group_id == group.group_id){
-                    zone.group_name =  group.group_name;
-                    zone.leader_id =  group.leader_id;
-                    zone.leader_name =  group.leader_name;
-                    zone.members =  group.members;
-                    break;
-                }
-            }
-        },
         addLabSetting(lab){
             //判断 有没有分配过的实验室
             for (let index = 0; index < this.check_list.length; index++) {
@@ -281,6 +264,7 @@ export default {
             }
             this.newLabSetting.org_id = lab.org_id;
             this.newLabSetting.org_name = lab.org_name;
+            this.newLabSetting.zone_list=[];
             this.addLab = true;
             for (let index = 0; index < this.zone_list.length; index++) {
                 const zone = this.zone_list[index];
@@ -292,6 +276,9 @@ export default {
                     })
                 }
             }
+        },
+        editCheckTask(checkTask){
+            console.log(checkTask);
         }
     },
     mounted() {

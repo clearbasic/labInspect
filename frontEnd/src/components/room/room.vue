@@ -25,7 +25,7 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" @click="showRoomEdit">添加</button>
+                                    <button class="btn btn-primary btn-sm" @click="showRoomEdit">添加房间</button>
                                     <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">分组管理</router-link>
                                 </div>
                             </h1>

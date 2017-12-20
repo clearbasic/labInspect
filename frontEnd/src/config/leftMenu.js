@@ -93,7 +93,7 @@ export default [
             },
             {
                 name:"房间设置",
-                url:pathName+"/room",
+                url:pathName+"/zone",
                 permission:5,
                 icon:'',
             }
