@@ -115,11 +115,12 @@
                 this.refreshVerifyCode();
                 const remeberMe = localStorage.getItem("remeberMe");
                 const authKey = localStorage.getItem("authKey");
+                const sessionId = localStorage.getItem("sessionId");
                 if(remeberMe){
                     this.username = remeberMe;
                     this.remeberme = true;
                 }
-                if(authKey){
+                if(authKey&&sessionId&&this.loginUser.username){
                     this.$router.push(this.pathName+"/");
                 }
             },

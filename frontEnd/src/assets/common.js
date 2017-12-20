@@ -82,4 +82,30 @@ function checkPermission(obj){
     }
     return true;
 }
-export {emitAjax,setLocalData,delLocalData,checkPermission};
+function getUserInfo(){
+    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    let data = {};
+    if(userInfo){
+        switch (userInfo.user_level) {
+            case md5("lab_level").toString():
+                data = Object.assign({},userInfo,{
+                    user_level:"lab"
+                })
+                break;
+            case md5("college_level").toString():
+                data = Object.assign({},userInfo,{
+                    user_level:"college"
+                })
+                break;
+            case md5("school_level").toString():
+                data = Object.assign({},userInfo,{
+                    user_level:"school"
+                })
+                break;
+            default:
+                break;
+        }
+    }
+    return data;
+}
+export {emitAjax,setLocalData,delLocalData,checkPermission,getUserInfo};

@@ -26,7 +26,7 @@ export default {
         },
         isLogin(){
             //验证登录
-            if(!this.loginUser){
+            if(!this.loginUser.username){
                 this.$router.push(this.pathName+"/login");
             }
         }

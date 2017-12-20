@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router';
 import { serverUrl,pathName } from "./config/server.js";
-import { emitAjax,checkPermission } from "./assets/common.js";
+import { emitAjax,checkPermission ,getUserInfo} from "./assets/common.js";
 import store from './vuex';
 
 Vue.config.productionTip = false;
@@ -17,7 +17,7 @@ Vue.prototype.permission = {
   college:8,
   lab:6,
 }
-Vue.prototype.loginUser = JSON.parse(localStorage.getItem("userInfo"));
+Vue.prototype.loginUser = getUserInfo();
 //这是钩子进入页面之前,就修改title
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title    //这 to.meta.title 是在router里设置的
