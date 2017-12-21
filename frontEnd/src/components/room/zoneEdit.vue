@@ -27,7 +27,7 @@
                     <label class="control-label col-sm-4 col-md-4 col-lg-3">所属单位</label>
                     <div class="col-sm-8 col-md-8 col-lg-9">
                         <select class="form-control" v-model="zone.org_id">
-                            <option :value="0">全部</option>
+                            <option :value="0">--全部--</option>
                             <option v-for="org in orgList" :value="org.org_id" :key="'orgList'+org.org_id" 
                                 v-if="org.org_level=='lab'&&org.org_state == 'yes'">{{org.org_name}}</option>
                         </select>

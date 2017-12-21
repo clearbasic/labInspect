@@ -34,7 +34,6 @@ function emitAjax(url,opt,success,error){
                 case 101:
                     //登录失效
                     delLocalData();
-                    alert("登录过期，请重新登录！");
                     window.location.href = pathName+"/login";
                     break;
                 case 103:

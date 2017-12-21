@@ -46,7 +46,7 @@
                 <label for="email" class="control-label col-sm-2">单位</label>
                 <div class="col-sm-10">
                     <select v-model="userInfo.org_id" @change="setUserLevel">
-                        <option value="0">全部</option>
+                        <option value="0">--全部--</option>
                         <option :value="org.org_id" v-for="(org,index) in userOrgList" :key="'org'+index">{{org.org_name}}</option>
                     </select>
                 </div>

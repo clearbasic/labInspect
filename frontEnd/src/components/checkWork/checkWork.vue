@@ -27,11 +27,11 @@
                                 {{title}}
                                 <div class="pull-right">
                                     <select v-model="plan_id" style="font-size:14px">
-                                        <option value="0">当前期次</option>
+                                        <option value="0">--当前期次--</option>
                                         <option :value="plan.plan_id" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
                                     </select>
                                     <select v-model="college_id" style="font-size:14px" v-if="permission[loginUser.user_level] >= permission.school"> 
-                                        <option value="0">请选择</option>
+                                        <option value="0">--请选择--</option>
                                         <option :value="org.org_id" v-for="org in college_list" :key="'org'+org.org_id">{{org.org_name}}</option>
                                     </select>
                                 </div>

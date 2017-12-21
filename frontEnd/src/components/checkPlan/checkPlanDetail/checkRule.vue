@@ -60,13 +60,13 @@
                                 <tr v-if="addRule && addRuleType == ruleConfig.type">
                                     <td style="text-align:left;">
                                        <select v-model="newRule.college_id" @change="getLabList(newRule.college_id)">
-                                           <option value="0">全部</option>
+                                           <option value="0">--全部--</option>
                                            <option v-for="(college,index) in collegeArray" :key="'collegeArray'+index" 
                                                 :value="college.org_id"
                                            >{{college.org_name}}</option>
                                        </select>
                                        <select v-model="newRule.lab_id">
-                                           <option value="0">全部</option>
+                                           <option value="0">--全部--</option>
                                             <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
                                                 :value="lab.org_id"
                                            >{{lab.org_name}}</option>

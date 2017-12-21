@@ -65,7 +65,7 @@
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">所属学院</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
                             <select class="form-control" v-model="room.dept_id">
-                                <option :value="0">全部</option>
+                                <option :value="0">--全部--</option>
                                 <option v-for="college in collegeArray" :value="college.org_id" :key="'college'+college.org_id">{{college.org_name}}</option>
                             </select>
                         </div>
@@ -76,7 +76,7 @@
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">所属实验室</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
                             <select class="form-control" v-model="room.lab_id">
-                                <option :value="0">全部</option>
+                                <option :value="0">--全部--</option>
                                 <option v-for="lab in labArray" :value="lab.org_id" :key="'lab'+lab.org_id" v-if="lab.pid == room.dept_id">{{lab.org_name}}</option>
                             </select>
                         </div>
@@ -87,7 +87,7 @@
                         <label class="control-label col-sm-4 col-md-4 col-lg-3">房间分组</label>
                         <div class="col-sm-8 col-md-8 col-lg-9">
                             <select class="form-control" v-model="room.zone_id">
-                                <option :value="0">无</option>
+                                <option :value="0">--无--</option>
                                 <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id" v-if="zone.org_id == room.lab_id">{{zone.zone_name}}</option>
                             </select>
                         </div>

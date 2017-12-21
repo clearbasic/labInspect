@@ -230,12 +230,12 @@ export default {
     },
     methods: {
         getCheckInfo() {
-            //获取信息 flag为true不查询基础信息只查询检查工作列表
+            //获取检查工作基础信息
             const _this = this;
             const URL = this.serverUrl + "/admin/check/baseinfo";
             const data = {
                 college_id: this.$route.query.college_id,
-                task_id: this.$route.params.id,
+                task_id: this.$route.params.id
             };
             this.emitAjax(URL, data, function(result) {
                 _this.currentPlan = result.plan;
@@ -248,6 +248,7 @@ export default {
             });
         },
         getCheckList(){
+            //获取检查工作基础信息
             const _this = this;
             const URL = this.serverUrl + "/admin/check/allot";
             const data = {
@@ -269,8 +270,8 @@ export default {
             checkTask.dt_end = moment(checkTask.dt_end).format("YYYY-MM-DD");
 
             this.emitAjax(URL, checkTask, function() {
+                _this.getCheckList();
                 alert("保存成功！");
-                _this.getCheckInfo(true);
             });
         },
         addLabSetting(lab) {
@@ -323,7 +324,7 @@ export default {
                 this.newLabSetting.dt_end
             ).format("YYYY-MM-DD");
             this.emitAjax(URL, this.newLabSetting, function() {
-                _this.getCheckInfo(true);
+                _this.getCheckList();
                 _this.addLab = false;
                 _this.newLabSetting = {
                     org_id: 0,
@@ -336,7 +337,7 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {
+        if (this.checkPermission(this)) {  
             this.getCheckInfo();
             this.getCheckList();
         }

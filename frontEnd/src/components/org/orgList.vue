@@ -36,7 +36,7 @@
                             <div class="row"  v-if="permission[loginUser.user_level] >= permission.college">
                                 <div class="col-xs-12">
                                     <select @change="filterList" v-model="orgType">
-                                        <option value="all">全部</option>
+                                        <option value="all">--全部--</option>
                                         <option value="school" v-if="permission[loginUser.user_level] >= permission.school">显示学校</option>
                                         <option value="college" v-if="permission[loginUser.user_level] >= permission.college">显示院系</option>
                                         <option value="lab">显示实验室</option>
