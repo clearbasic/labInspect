@@ -41,7 +41,8 @@
                             {{user.person_state == 'yes'?"开启":"禁用"}}   
                         </td>
                         <td class="center little">
-                            <div class="hidden-xs btn-group">
+                            <span v-if="user.username == 'admin'">系统账户不能操作</span>
+                            <div class="hidden-xs btn-group" v-if="user.username != 'admin'">
                                 <button class="btn btn-success btn-xs" @click="sure(user)">
                                     <i class="ace-icon glyphicon glyphicon-edit" v-if="$route.name=='userList'"></i>
                                     <i class="ace-icon glyphicon glyphicon-ok" v-if="$route.name!='userList'"></i>
@@ -50,7 +51,7 @@
                                     <i class="ace-icon fa fa-trash-o"></i>
                                 </button>
                             </div>
-                            <div class="hidden-sm hidden-md hidden-lg">
+                            <div class="hidden-sm hidden-md hidden-lg" v-if="user.username != 'admin'">
                                 <div class="inline pos-rel">
                                     <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto" aria-expanded="false">
                                         <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
@@ -100,7 +101,7 @@
             getUserList(data){
                 const _this = this;
                 const URL = this.serverUrl +"/admin/person/index";
-                this.emitAjax(URL,data,function(result){
+                this.emitAjax(URL,data,function(result){    
                     _this.userList = result;
                 })
             },

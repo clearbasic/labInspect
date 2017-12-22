@@ -94,13 +94,15 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
-                        <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
-                        <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
-                        <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-md-offset-4 col-lg-offset-3 col-sm-8 col-md-8 col-lg-9">
+                            <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
+                            <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
+                            <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
+                            <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
+                        </div>
                     </div>
                 </div>
             </div>

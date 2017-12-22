@@ -70,7 +70,7 @@
                                         </td>
                                     </tr>
                                     <tr v-if="checkGroupArray.length == 0">
-                                        <td colspan="8" class="center">暂无数据</td>
+                                        <td colspan="8" class="center">暂无检查小组数据</td>
                                     </tr>
                                 </tbody>
                             </table>

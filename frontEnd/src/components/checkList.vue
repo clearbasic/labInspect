@@ -112,7 +112,7 @@
                                 </tr>
                                 <tr v-if="checkListDate.length ==0">
                                     <td colspan="6" align="center">
-                                        暂无数据
+                                        暂无指标库数据
                                     </td>
                                 </tr>
                             </tbody>

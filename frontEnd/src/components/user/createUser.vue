@@ -67,11 +67,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-12">
-                    <div class="pull-right">
-                        <button class="btn btn-default btn-sm" @click="showUserList">返回</button>
-                        <button class="btn btn-success btn-sm" @click="saveUser">保存</button>
-                    </div>
+                <div class="col-sm-10 col-sm-offset-2">
+                    <button class="btn btn-default btn-sm" @click="showUserList">返回</button>
+                    <button class="btn btn-success btn-sm" @click="saveUser">保存</button>
                 </div>  
             </div>
         </div>
@@ -118,7 +116,9 @@
                     return false;
                 }
                 const data = Object.assign({},this.userInfo,{
-                    user_level:this.user_level
+                    user_level:this.user_level,
+                    username:this.userInfo.username.replace(/\s+/g,""),
+                    password:this.userInfo.password.replace(/\s+/g,""),
                 })
                 this.emitAjax(URL,data,function(){
                     if(_this.loginUser.username == _this.userInfo.username){

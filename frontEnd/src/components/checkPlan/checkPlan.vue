@@ -107,7 +107,7 @@
                                     </td>
                                 </tr>
                                 <tr v-if="checkPlan.length == 0">
-                                    <td colspan="5" align="center">暂无数据..</td>
+                                    <td colspan="5" align="center">暂无期次数据</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -177,7 +177,8 @@ export default {
             const URL = this.serverUrl + "/admin/plan/index";
             const _SELF = this;
             this.emitAjax(URL, null, function(result) {
-                _SELF.checkPlan = Object.assign({},result);
+                _SELF.checkPlan = result;
+
             });
         }
     },

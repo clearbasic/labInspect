@@ -59,3 +59,9 @@
         }
     };
 </script>
+<style>
+    .dataTables_wrapper input[type=password] {
+        margin:0 4px;
+    }
+</style>
+

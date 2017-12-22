@@ -98,6 +98,9 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        <tr v-if="orgArray.length==0">
+                                            <td colspan="6" class="center">暂无单位数据</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

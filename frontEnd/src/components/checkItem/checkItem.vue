@@ -109,6 +109,9 @@
                                         </button>
                                     </td>
                                 </tr>
+                                <tr v-if="checkListDate.length == 0">
+                                    <td colspan="6" class="center">暂无指标数据</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

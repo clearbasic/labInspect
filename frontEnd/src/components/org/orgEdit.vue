@@ -24,13 +24,13 @@
                         </ul>
                     </div>
                     <!-- 右侧主要内容 -->
-                    <div class="page-content">
+                    <div class="page-content nomargin">
                         <div class="page-header">
                             <h1>
                                 {{$route.query.org_id?orgInfo.org_name:"新建单位"}}
                             </h1>
                         </div>
-                        <ul class="list-group form-horizontal nomargin">
+                        <ul class="list-group form-horizontal">
                             <li class="list-group-item active">
                                 基础信息
                             </li>
@@ -298,7 +298,7 @@
                         </ul>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="pull-right">
+                                <div class="form-group">
                                     <router-link :to="pathName+'/orgList'" class="btn btn-default btn-sm" tag="button">返回</router-link>
                                     <button class="btn btn-success btn-sm" @click="editOrgInfo">保存</button>
                                 </div>

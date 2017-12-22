@@ -61,6 +61,9 @@
                         </div>
                     </td>
                 </tr>
+                <tr v-if="zoneList.length == 0">
+                    <td colspan="5" class="center">暂无房间分组</td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -88,7 +88,10 @@
                                     <td>{{room.dept_name}}</td>
                                     <td>{{room.lab_name}}</td>
                                     <td class="center little">
-                                        <a @click="showCheckItem(room)">开展工作</a>
+                                        <a @click="showCheckItem(room)">
+                                            <span v-if="room.effort_state != 'finished'">开展工作</span>
+                                            <span v-if="room.effort_state == 'finished'">已提交</span>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -123,8 +126,8 @@
                                     </li>
                                 </ul>
                             </div>
-                            <button class="btn btn-success btn-sm" @click="submitRoomData(ruleList,'submit')">提交检查</button>
-                            <button class="btn btn-primary btn-sm" @click="submitRoomData(ruleList,'save')">保存草稿</button>
+                            <button class="btn btn-success btn-sm" @click="submitRoomData(ruleList,'submit')" v-if="currentRoom.effort_state !='finished'">提交检查</button>
+                            <button class="btn btn-primary btn-sm" @click="submitRoomData(ruleList,'save')" v-if="currentRoom.effort_state !='finished'">保存草稿</button>
                         </div>
                     </div>
                 </div>
@@ -181,6 +184,8 @@ export default {
                 lab_id:room.lab_id,
                 task_level:this.currentTask.task_level,
                 plan_id:this.currentPlan.plan_id,
+                check_id:room.check_id,
+                room_id:room.room_id,
             }
             this.currentRoom = room;
             this.emitAjax(URL,data,function(result){
@@ -235,10 +240,21 @@ export default {
                 const _this = this;
                 const URL = this.serverUrl + "/admin/check/submitcheck";
                 this.emitAjax(URL,data,function(){
+                    if(flag=="submit"){
+                        _this.resetEffortState();
+                    }
                     _this.templateType = "room";
                 })
             }
-            
+        },
+        resetEffortState(){
+            const room_list = this.currentTask.room_list;
+            for (let index = 0; index < room_list.length; index++) {
+                const element = room_list[index];
+                if(this.currentRoom.effort_id == element.effort_id){
+                    element.effort_state = "finished";
+                }
+            }
         }
     },
     mounted() {

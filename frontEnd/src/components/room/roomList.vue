@@ -69,6 +69,9 @@
                         </div>
                     </td>
                 </tr>
+                <tr v-if="roomList.length == 0">
+                    <td colspan="9" class="center">暂无房间</td>
+                </tr>
             </tbody>
         </table>
     </div>

@@ -83,9 +83,9 @@
                 if(!this.isNotEmpty()){return false};
                 const _this = this;
                 let data={
-                    username:this.username,
-                    password:this.password,
-                    verifyCode:this.verifyCode,
+                    username:this.username.replace(/\s+/g,""),
+                    password:this.password.replace(/\s+/g,""),
+                    verifyCode:this.verifyCode.replace(/\s+/g,""),
                 }
                 this.remeberMe();
                 const url = this.serverUrl +"/admin/login/login";
