@@ -30,9 +30,9 @@
                 <ul class="nav ace-nav">
                     <li class="light-blue">
                         <a href="" data-toggle="dropdown" class="dropdown-toggle">
-                            <span class="user-info">
+                            <span class="user-info" style="max-width:200px;">
                                 <small>欢迎您，{{loginUser.name}},</small>
-                                您可以
+                                {{loginUser.username}}
                             </span>
                             <i class="ace-icon fa fa-caret-down"></i>
                         </a>

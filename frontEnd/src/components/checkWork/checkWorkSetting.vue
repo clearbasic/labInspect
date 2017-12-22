@@ -16,10 +16,10 @@
                                 <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link :to="pathName+'/checkWork'">{{title}}</router-link>
+                                <router-link :to="pathName+'/checkWork'">检查工作</router-link>
                             </li>
                             <li>
-                                <a class="active">设置检查工作</a>
+                                <a class="active">{{title}}</a>
                             </li>
                         </ul>
                     </div>
@@ -43,7 +43,7 @@
                                 <h5 class="text-center">
                                     学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
                                     满分{{currentPlan.plan_score}}
-                                    <router-link to=''>工作说明</router-link>
+                                    <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
                                 </h5>
                             </div>
                         </div>
@@ -213,7 +213,7 @@ export default {
     components: { VueHead, VueLeft, datepicker },
     data() {
         return {
-            title: "检查工作",
+            title: "分配检查工作",
             addLab: false,
             currentPlan: {},
             currentTask: { dt_begin: "", dt_end: "" },
@@ -255,6 +255,7 @@ export default {
                 task_id: this.$route.params.id,
             };
             this.emitAjax(URL, data, function(result) {
+                console.log(result)
                 _this.check_list = result;
             });
         },

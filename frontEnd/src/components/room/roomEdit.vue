@@ -2,7 +2,7 @@
     <div class="roowEdit">
         <div class="form-horizontal">
             <div class="row form-group">
-                <div class="col-xs-12 red">
+                <div class="col-xs-12 red" v-if="!room.room_id">
                     注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~A110。~表示房间名按顺序添加
                 </div>
             </div>
@@ -99,7 +99,7 @@
                     <div class="pull-right">
                         <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
                         <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
-                        <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">房间名预览</button>
+                        <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
                         <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
                     </div>
                 </div>
@@ -204,6 +204,9 @@ import UserList from '../user/userList'
                     lab_id:this.room.lab_id,
                     zone_id:this.room.zone_id
                 };
+                if(data.room_name.length>100){
+                    return confirm("您添加的房间数量达到"+data.room_name.length+"间，数据量较大，请确认是否正确！");
+                }
                 this.emitAjax(url,data,function(){
                     _this.showRoomList();
                 })
@@ -236,11 +239,7 @@ import UserList from '../user/userList'
                             roomArray.push(roomNamePrefix+index);
                         }
                     }else{
-                        //从后面往前找纯数字
-                        const nameMatch = room_name.match(/(\d+)$/);
-                        //获取房间前缀
-                        const roomNamePrefix = room_name.substring(0,nameMatch["index"]);
-                        roomArray.push(roomNamePrefix+nameMatch[1]);
+                        roomArray.push(room_name);
                     }
                 }
                 this.roomNameList = roomArray;
@@ -264,7 +263,7 @@ import UserList from '../user/userList'
                 if(this.orgList.length>0){
                     for (let index = 0; index < this.orgList.length; index++) {
                         const element = this.orgList[index];
-                        if(element.org_state == "yes"){
+                        if(element.org_state != "no"){
                             _this[element.org_level+"Array"].push(Object.assign({},element));
                         }
                     }

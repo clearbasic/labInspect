@@ -331,10 +331,11 @@ export default {
             this.schoolArray=[];
             this.college=[];
             this.labArray=[];
+            console.log(this.orgList)
             if(this.orgList.length>0){
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];
-                    if(element.org_state == "yes"){
+                    if(element.org_state != "no"){
                         _this[element.org_level+"Array"].push(Object.assign({},element));
                     }
                 }
@@ -346,8 +347,7 @@ export default {
             if(this.orgList.length>0){
                 for (let index = 0; index < _this.orgList.length; index++) {
                     const element = _this.orgList[index];
-                    
-                    if(element.org_level == "lab" && element.org_state == "yes"){
+                    if(element.org_level == "lab" && element.org_state != "no"){
                         if(id != 0 ){
                             if(element.pid == id){
                                 _this.labArray.push(Object.assign({},element));

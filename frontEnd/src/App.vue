@@ -53,9 +53,7 @@ export default {
 a:hover {
     cursor: pointer;
 }
-.little {
-    width: 80px;
-}
+
 .inlineInput {
     display: inline-block;
     width: 100%;
@@ -86,9 +84,19 @@ input[readonly]:hover {
         display: none !important;
     }
 }
-@media screen and (max-width: 767px) {
+@media screen and (min-width: 768px) {
     .little {
-        width: auto;
+        width: 80px;
+    }
+}
+@media screen and (min-width: 992px) {
+    .little {
+        width: 110px;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .little {
+        width: 140px;
     }
 }
 </style>

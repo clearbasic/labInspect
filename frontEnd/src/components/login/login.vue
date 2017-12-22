@@ -22,19 +22,19 @@
                                 <fieldset>
                                     <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                            <input type="text" class="form-control" v-model="username" placeholder="Username" />
+                                            <input type="text" class="form-control" v-model="username" placeholder="用户名" />
                                             <i class="ace-icon fa fa-user"></i>
                                         </span>
                                     </label>
                                     <label class="block clearfix">
                                         <span class="block input-icon input-icon-right">
-                                            <input type="password" class="form-control" v-model="password" placeholder="Password" />
+                                            <input type="password" class="form-control" v-model="password" placeholder="密码" />
                                             <i class="ace-icon fa fa-lock"></i>
                                         </span>
                                     </label>
                                     <label class="block clearfix row">
                                         <span class="block input-icon input-icon-right col-xs-6">
-                                            <input type="text" class="form-control" v-model="verifyCode" placeholder="VerifyCode" />
+                                            <input type="text" class="form-control" v-model="verifyCode" placeholder="验证码" />
                                         </span>
                                         <span class="block input-icon input-icon-right col-xs-6">
                                             <img :src="serverUrl+'/admin/login/getVerify'" class="verifyCode" alt="验证码" @click="refreshVerifyCode">

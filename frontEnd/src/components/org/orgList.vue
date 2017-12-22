@@ -31,11 +31,10 @@
                                 </div>
                             </h1>
                         </div>
-                        
                         <div class="dataTables_wrapper form-inline no-footer">
                             <div class="row"  v-if="permission[loginUser.user_level] >= permission.college">
                                 <div class="col-xs-12">
-                                    <select @change="filterList" v-model="orgType">
+                                    <select v-model="orgType">
                                         <option value="all">--全部--</option>
                                         <option value="school" v-if="permission[loginUser.user_level] >= permission.school">显示学校</option>
                                         <option value="college" v-if="permission[loginUser.user_level] >= permission.college">显示院系</option>
@@ -132,6 +131,9 @@
         },
         watch:{
             orgList(){
+                this.filterList();
+            },
+            orgType(){
                 this.filterList();
             }
         },

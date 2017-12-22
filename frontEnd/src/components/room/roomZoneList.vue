@@ -29,6 +29,7 @@
                                 {{currentZone.zone_name}}的房间列表
                                 <div class="pull-right">
                                     <router-link :to="pathName+'/zone'" tag="button" class="btn btn-primary btn-sm">返回</router-link>
+                                    <router-link :to="pathName+'/room'" tag="button" class="btn btn-primary btn-sm">房间列表</router-link>
                                 </div>
                             </h1>
                         </div>

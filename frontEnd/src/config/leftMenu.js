@@ -40,6 +40,12 @@ export default [
                 icon:"",
             },
             {
+                name:"我的检查工作",
+                url:pathName+"/myCheck",
+                permission:1,
+                icon:"",
+            },
+            {
                 name:"问题反馈",
                 url:pathName+"",
                 permission:1,

@@ -47,13 +47,13 @@
                                     <span v-if="task_list.college.length>0">复查{{task_list.college.length}}次，</span>
                                     <span v-if="task_list.school.length>0">抽查{{task_list.school.length}}次，</span>
                                     满分{{currentPlan.plan_score}}分
-                                    <router-link to=''>工作说明</router-link>
+                                    <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
                                 </h5>
                             </div>
                         </div>
                         <!-- 循环实验室三种任务 -->
-                        <h5 v-if="permission[loginUser.user_level] > permission.college" class="center red">
-                            请于右上角选择要查看的学院列表
+                        <h5 v-if="permission[loginUser.user_level] > permission.college && college_id==0" class="center red">
+                            请于右上角选择要查看的期次和学院
                         </h5>
                         <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0 && college_id!=0">
                             <div class="widget-header">
@@ -66,7 +66,7 @@
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th class="center little">任务名称</th>
+                                                <th class="center little">检查安排</th>
                                                 <th>学校要求时间</th>
                                                 <th class="center little">开展情况</th>
                                                 <th class="center little">检查分配</th>
@@ -87,11 +87,12 @@
                                                     <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}">分配</router-link>
                                                 </td>
                                                 <td class="center">
-                                                    <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}">检查进度</router-link>
+                                                    <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}" v-if="task.sum > 0">检查进度</router-link>
+                                                    <span v-if="task.sum == 0">检查进度</span>
                                                 </td>
                                                 <td class="center">
-                                                    <router-link :to="{path:pathName+'/checkWork/result/'+task.task_id,query:{college_id}}" v-if="task.finished != '0'">结果</router-link>
-                                                    <span v-if="task.finished == '0'">结果</span>
+                                                    <router-link :to="{path:pathName+'/checkWork/result/'+task.task_id,query:{college_id}}" v-if="task.finished > 0">结果</router-link>
+                                                    <span v-if="task.finished == 0">结果</span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -118,7 +119,7 @@ export default {
     components: { VueHead, VueLeft },
     data() {
         return {
-            title: "检查工作列表",
+            title: "检查工作",
             currentPlan:{},
             plan_id:0,
             plan_list:[],

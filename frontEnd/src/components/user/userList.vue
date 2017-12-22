@@ -30,7 +30,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user,index) in userList" :key="'user'+index">
-                        <td>{{user.username}}</td>
+                        <td>
+                            {{user.username}} <span v-if="user.username == loginUser.username">（自己）</span>
+                        </td>
                         <td class="center little">{{user.name}}</td>
                         <td class="hidden-640">{{user.org_name}}</td>
                         <td class="center little">{{user.mobile}}</td>

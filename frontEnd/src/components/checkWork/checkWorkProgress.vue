@@ -16,10 +16,10 @@
                                 <router-link :to="pathName+'/'">首页</router-link>
                             </li>
                             <li>
-                                <router-link :to="pathName+'/checkWork'">{{title}}</router-link>
+                                <router-link :to="pathName+'/checkWork'">检查工作</router-link>
                             </li>
                             <li>
-                                <a class="active">设置检查工作</a>
+                                <a class="active">{{title}}</a>
                             </li>
                         </ul>
                     </div>
@@ -43,19 +43,9 @@
                                 <h5 class="text-center">
                                     学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
                                     满分{{currentPlan.plan_score}}
-                                    <router-link to=''>工作说明</router-link>
+                                    <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
                                 </h5>
                             </div>
-                        </div>
-                        <div class="clearfix position-relative">
-                            <p class="pull-right">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">添加</button>
-                                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                                    <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
-                                        <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
-                                    </li>
-                                </ul>
-                            </p>
                         </div>
                         <div class="widget-box widget-color-blue ui-sortable-handle" v-for="check in progress_list" :key="'check'+check.org_id">
                             <div class="widget-header">
@@ -64,17 +54,9 @@
                                 </h5>
                                 <p>
                                     本单位要求时间：
-                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
-                                    <datepicker v-model="check.dt_begin" width="140" 
-                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < momentObj(check.dt_begin).unix()"
-                                    ></datepicker>
+                                    <span>{{check.dt_begin.substring(0.10)}}</span>
                                     到
-                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
-                                    <datepicker v-model="check.dt_end" width="140" 
-                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < momentObj(check.dt_begin).unix()"
-                                    ></datepicker>
+                                    <span>{{check.dt_begin.substring(0.10)}}</span>
                                 </p>
                             </div>
                             <div class="widget-body">
@@ -82,18 +64,23 @@
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>小组</th>
-                                                <th>组长</th>
-                                                <th>电话</th>
-                                                <th>进度</th>
-                                                <th>已完成房间</th>
-                                                <th>未完成房间</th>
+                                                <th>检查小组</th>
+                                                <th>小组组长</th>
+                                                <th>组长电话</th>
+                                                <th class="center">检查进度</th>
+                                                <th class="center">已完成房间</th>
+                                                <th class="center">未完成房间</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <!-- 循环本实验室所属房间分组列表， -->
-                                            <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == check.org_id">
-                                                
+                                            <!-- 循环本实验室所属检查小组列表 -->
+                                            <tr v-for="group in check.group_list" :key="'group'+group.group_id">
+                                                <td>{{group.group_name}}</td>
+                                                <td>{{group.leader_name}}</td>
+                                                <td>{{group.phone}}</td>
+                                                <td class="center">{{group.progress}}</td>
+                                                <td class="center">{{group.finished}}</td>
+                                                <td class="center">{{group.sum - group.finished}}</td>
                                             </tr>
                                         </tbody>
                                     </table> 
@@ -115,7 +102,7 @@ export default {
     components: { VueHead, VueLeft, datepicker },
     data() {
         return {
-            title: "检查工作",
+            title: "检查工作进度",
             addLab: false,
             currentPlan: {},
             currentTask: { dt_begin: "", dt_end: "" },
@@ -146,10 +133,23 @@ export default {
                 _this.college_info = result.college_info;
             });
         },
+        getProgressList(){
+            const _this = this;
+            const URL = this.serverUrl +"/admin/check/progress";
+            const data = {
+                college_id: this.$route.query.college_id,
+                task_id: this.$route.params.id
+            }
+            this.emitAjax(URL,data,function(result){
+                console.log(result)
+                _this.progress_list = result;
+            })
+        }
     },
     mounted() {
         if (this.checkPermission(this)) {  
             this.getCheckInfo();
+            this.getProgressList();
         }
     }
 };

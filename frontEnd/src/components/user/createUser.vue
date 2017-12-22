@@ -125,17 +125,19 @@
                     const element = this.orgList[index];
                     switch (this.loginUser.user_level) {
                         case 'lab':
-                            if(element.org_level =="lab"){
+                            if(element.org_level =="lab"&&element.org_state !="no"){
                                 _this.userOrgList.push(Object.assign({},element));
                             }
                             break;
                         case 'college':
-                            if(element.org_level !="school"){
+                            if(element.org_level !="school"&&element.org_state !="no"){
                                 _this.userOrgList.push(Object.assign({},element));
                             }
                             break;
                         default:
-                            _this.userOrgList.push(Object.assign({},element));
+                            if(element.org_state !="no"){
+                                _this.userOrgList.push(Object.assign({},element));
+                            }
                             break;
                     }
                 }

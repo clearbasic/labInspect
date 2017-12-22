@@ -6,11 +6,13 @@ import CheckList from '../components/checkList';
 import CheckItem from '../components/checkItem/checkItem';
 import CheckPlan from '../components/checkPlan/checkPlan';
 import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
+import CheckPlanSummary from '../components/checkPlan/checkPlanSummary';
 import CheckGroup from "../components/checkGroup/checkGroup";
 import CheckWork from "../components/checkWork/checkWork";
 import CheckWorkSetting from "../components/checkWork/checkWorkSetting";
 import CheckWorkProgress from "../components/checkWork/checkWorkProgress";
 import CheckWorkResult from "../components/checkWork/checkWorkResult";
+import MyCheck from "../components/myCheck/myCheck";
 import OrgList from "../components/org/orgList";
 import OrgEdit from "../components/org/orgEdit";
 import User from "../components/user/user";
@@ -79,6 +81,15 @@ export default new Router({
 				title:"检查期次 - "+title,
 				active:pathName+"/checkPlan",
 				permission:9,
+			}
+		},{
+			path:pathName+"/checkPlanSummary",
+			name:"checkPlanSummary",
+			component:CheckPlanSummary,
+			meta:{
+				title:"工作说明 - "+title,
+				active:pathName+"/checkWork",
+				permission:5,
 			}
 		},{
 			path:pathName+"/orgList",
@@ -151,6 +162,15 @@ export default new Router({
 				title:"检查工作结果 - "+title,
 				active:pathName+"/checkWork",
 				permission:5,
+			}
+		},{
+			path:pathName+"/myCheck",
+			name:"myCheck",
+			component:MyCheck,
+			meta:{
+				title:"我的检查工作 - "+title,
+				active:pathName+"/myCheck",
+				permission:1,
 			}
 		},{
 			path:pathName+"/room",
