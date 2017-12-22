@@ -52,6 +52,21 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="email" class="control-label col-sm-2">状态</label>
+                <div class="col-sm-10">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" v-model="userInfo.person_state" value="yes" class="ace">
+                            <span class="lbl">开启</span>
+                        </label>
+                        <label>
+                            <input type="radio" v-model="userInfo.person_state" value="no" class="ace">
+                            <span class="lbl">禁用</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-xs-12">
                     <div class="pull-right">
                         <button class="btn btn-default btn-sm" @click="showUserList">返回</button>

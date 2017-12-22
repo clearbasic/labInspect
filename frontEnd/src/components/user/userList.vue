@@ -38,7 +38,7 @@
                         <td class="center little">{{user.mobile}}</td>
                         <td class="hidden-640">{{user.email}}</td>
                         <td class="center little hidden-640">
-                            {{user.person_state == 'yes'?"开启":"禁止"}}   
+                            {{user.person_state == 'yes'?"开启":"禁用"}}   
                         </td>
                         <td class="center little">
                             <div class="hidden-xs btn-group">
