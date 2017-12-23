@@ -335,7 +335,8 @@ export default {
     data() {
         return {
             orgInfo: {
-                org_level: "school"
+                org_level: "school",
+                org_state:"yes"
             },
             showSchool: false,
             showCollege: false,

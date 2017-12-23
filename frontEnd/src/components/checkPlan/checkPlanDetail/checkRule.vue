@@ -331,7 +331,6 @@ export default {
             this.schoolArray=[];
             this.college=[];
             this.labArray=[];
-            console.log(this.orgList)
             if(this.orgList.length>0){
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];

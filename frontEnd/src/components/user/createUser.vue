@@ -83,7 +83,8 @@
             return {
                 userInfo:{
                     password:"",
-                    org_id:0
+                    org_id:0,
+                    person_state:"yes"
                 },
                 user_level:"",
                 userOrgList:[],
@@ -115,10 +116,12 @@
                     alert("请填写您的姓名！");
                     return false;
                 }
+                const username = this.userInfo.username?this.userInfo.username.replace(/\s+/g,""):"";
+                const password = this.userInfo.password?this.userInfo.password.replace(/\s+/g,""):"";
                 const data = Object.assign({},this.userInfo,{
                     user_level:this.user_level,
-                    username:this.userInfo.username.replace(/\s+/g,""),
-                    password:this.userInfo.password.replace(/\s+/g,""),
+                    username,
+                    password,
                 })
                 this.emitAjax(URL,data,function(){
                     if(_this.loginUser.username == _this.userInfo.username){

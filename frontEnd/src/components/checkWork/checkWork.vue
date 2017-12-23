@@ -84,7 +84,8 @@
                                                     <span v-if="task.sum != '0'">{{task.state}}</span>
                                                 </td>
                                                 <td class="center">
-                                                    <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}">分配</router-link>
+                                                    <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}" v-if="loginUser.user_level == key">分配</router-link>
+                                                    <span v-if="loginUser.user_level != key">分配</span>
                                                 </td>
                                                 <td class="center">
                                                     <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}" v-if="task.sum > 0">检查进度</router-link>
@@ -92,7 +93,7 @@
                                                 </td>
                                                 <td class="center">
                                                     <router-link :to="{path:pathName+'/checkWork/result/'+task.task_id,query:{college_id}}" v-if="task.finished > 0">结果</router-link>
-                                                    <span v-if="task.finished == 0">结果</span>
+                                                    <span v-if="task.finished == 0">查看结果</span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -192,6 +193,7 @@ export default {
                     this.college_list.push(Object.assign({},org));
                 }
             }
+            this.college_id = this.college_list[0]?this.college_list[0].org_id:0;
             this.getCollege();
         },
         getCollege(){

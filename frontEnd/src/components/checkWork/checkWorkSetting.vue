@@ -49,7 +49,7 @@
                         </div>
                         <div class="clearfix position-relative">
                             <p class="pull-right">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">添加</button>
+                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" v-if="loginUser.user_level == currentTask.task_level">添加</button>
                                 <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                                     <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
                                         <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
@@ -64,16 +64,16 @@
                                 </h5>
                                 <p>
                                     本单位要求时间：
-                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    <span v-if="today > moment(check.dt_begin).unix()">{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
                                     <datepicker v-model="check.dt_begin" width="140" 
                                         :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < momentObj(check.dt_begin).unix()"
+                                        v-if="today < moment(check.dt_begin).unix()"
                                     ></datepicker>
                                     到
-                                    <span v-if="today > momentObj(check.dt_begin).unix()">{{momentObj(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    <span v-if="today > moment(check.dt_begin).unix()">{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
                                     <datepicker v-model="check.dt_end" width="140" 
                                         :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < momentObj(check.dt_begin).unix()"
+                                        v-if="today < moment(check.dt_begin).unix()"
                                     ></datepicker>
                                 </p>
                             </div>
@@ -100,31 +100,29 @@
                                                 </td>
                                                 <td>
                                                     <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
-                                                    <div v-for="checkZone in check.zone_list" :key="'checkZone'+checkZone.zone_id" v-if="checkZone.zone_id == zone.zone_id">
-                                                        <select v-model="checkZone.group_id">
-                                                            <option value="0">--请选择--</option>
-                                                            <option :value="group.group_id" 
-                                                                v-for="group in group_list" 
-                                                                :key="'group'+group.group_id"
-                                                                v-if="check.org_id == group.org_id"
-                                                            >{{group.group_name}}</option>
-                                                        </select>
-                                                        <br>
-                                                        <span v-for="group in group_list" :key="'group'+group.group_id" v-if="checkZone.group_id==group.group_id">
-                                                            组长：{{group.leader_name}} 组员：{{group.members}}
-                                                        </span>
-                                                    </div>
+                                                    <select :value="check.zone_list[zone.zone_id]?check.zone_list[zone.zone_id].group_id:0" @change="setGroupId(check,zone.zone_id,$event)">
+                                                        <option value="0">--请选择--</option>
+                                                        <option :value="group.group_id" 
+                                                            v-for="group in group_list" 
+                                                            :key="'group'+group.group_id"
+                                                            v-if="group.org_id == loginUser.org_id"
+                                                        >{{group.group_name}}</option>
+                                                    </select>
+                                                    <br>
+                                                    <span v-for="group in group_list" :key="'group'+group.group_id" v-if="check.zone_list[zone.zone_id]&&check.zone_list[zone.zone_id].group_id==group.group_id">
+                                                        组长：{{group.leader_name}} 组员：{{group.members}}
+                                                    </span>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr v-if="loginUser.user_level == currentTask.task_level">
                                                 <td colspan="2" class="center">
-                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < momentObj(check.dt_begin).unix()">保存</button>
+                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
                                                     <router-link class="btn btn-default btn-sm" 
-                                                        v-if="today > momentObj(check.dt_begin).unix()&&today < momentObj(check.dt_begin).unix()" 
+                                                        v-if="today > moment(check.dt_begin).unix()&&today < moment(check.dt_begin).unix()" 
                                                         :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                                     >查看进度</router-link>
                                                     <router-link class="btn btn-default btn-sm" 
-                                                        v-if="today > momentObj(check.dt_end).unix()"
+                                                        v-if="today > moment(check.dt_end).unix()"
                                                         :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                                     >查看结果</router-link>
                                                 </td>
@@ -169,23 +167,21 @@
                                                 </td>
                                                 <td>
                                                     <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
-                                                    <div v-for="checkZone in newLabSetting.zone_list" :key="'checkZone'+checkZone.zone_id" v-if="checkZone.zone_id == zone.zone_id">
-                                                        <select v-model="checkZone.group_id">
-                                                            <option value="0">--请选择--</option>
-                                                            <option :value="group.group_id" 
-                                                                v-for="group in group_list" 
-                                                                :key="'group'+group.group_id"
-                                                                v-if="newLabSetting.org_id == group.org_id"
-                                                            >{{group.group_name}}</option>
-                                                        </select>
-                                                        <br>
-                                                        <span v-for="group in group_list" :key="'group'+group.group_id" v-if="checkZone.group_id==group.group_id">
-                                                            组长：{{group.leader_name}} 组员：{{group.members}}
-                                                        </span>
-                                                    </div>
+                                                    <select :value="newLabSetting.zone_list[zone.zone_id]?newLabSetting.zone_list[zone.zone_id].group_id:0" @change="setGroupId(newLabSetting,zone.zone_id,$event)">
+                                                        <option value="0">--请选择--</option>
+                                                        <option :value="group.group_id" 
+                                                            v-for="group in group_list" 
+                                                            :key="'group'+group.group_id"
+                                                            v-if="group.org_id == loginUser.org_id"
+                                                        >{{group.group_name}}</option>
+                                                    </select>
+                                                    <br>
+                                                    <span v-for="group in group_list" :key="'group'+group.group_id" v-if="newLabSetting.zone_list[zone.zone_id]&&newLabSetting.zone_list[zone.zone_id].group_id==group.group_id">
+                                                        组长：{{group.leader_name}} 组员：{{group.members}}
+                                                    </span>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr v-if="loginUser.user_level == currentTask.task_level">
                                                 <td colspan="2" class="center">
                                                     <button class="btn btn-success btn-sm" @click="saveCheckTask">添加</button>
                                                     <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
@@ -207,7 +203,6 @@
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
 import datepicker from "vue2-datepicker";
-import moment from "moment";
 export default {
     name: "checkWork",
     components: { VueHead, VueLeft, datepicker },
@@ -222,11 +217,14 @@ export default {
             group_list: [],
             zone_list: [],
             room_list: [],
-            today: Date.parse(new Date()) / 1000,
-            momentObj: moment,
             check_list: [],
             newLabSetting: {}
         };
+    },
+    watch:{
+        newLabSetting(){
+            console.log(1)
+        }
     },
     methods: {
         getCheckInfo() {
@@ -255,19 +253,36 @@ export default {
                 task_id: this.$route.params.id,
             };
             this.emitAjax(URL, data, function(result) {
-                console.log(result)
                 _this.check_list = result;
             });
+        },
+        setGroupId(checkObj,zone_id,event){
+            //给房间分组分配检查小组
+            checkObj.zone_list[zone_id] = {
+                group_id:event.target.value,
+                zone_id
+            };
+            for (let index = 0; index < this.group_list.length; index++) {
+                const group = this.group_list[index];
+                if(event.target.value == group.group_id){
+                    const text = '组长：'+group.leader_name+' 组员：'+group.members;
+                    if($(event.target).siblings("span").length>0){
+                        $(event.target).siblings("span").html(text);
+                    }else{
+                        $(event.target).parent().append("<span>"+text+"</span>");
+                    }
+                }
+            }
         },
         editCheckTask(checkTask) {
             //修改检查工作
             const _this = this;
             const URL = this.serverUrl + "/admin/check/handle";
-            const today = moment().format("YYYY-MM-DD");
-            checkTask.dt_begin = moment(checkTask.dt_begin).format(
+            const today = this.moment().format("YYYY-MM-DD");
+            checkTask.dt_begin = this.moment(checkTask.dt_begin).format(
                 "YYYY-MM-DD"
             );
-            checkTask.dt_end = moment(checkTask.dt_end).format("YYYY-MM-DD");
+            checkTask.dt_end = this.moment(checkTask.dt_end).format("YYYY-MM-DD");
 
             this.emitAjax(URL, checkTask, function() {
                 alert("保存成功！");
@@ -288,20 +303,18 @@ export default {
                 org_name: lab.org_name,
                 check_level: this.currentTask.task_level,
                 task_id: this.$route.params.id,
-                zone_list: [],
-                dt_begin: moment(this.currentTask.dt_begin).format(
-                    "YYYY-MM-DD"
-                ),
-                dt_end: moment(this.currentTask.dt_end).format("YYYY-MM-DD")
+                zone_list: {},
+                dt_begin: this.currentTask.dt_begin,
+                dt_end: this.currentTask.dt_end
             };
             this.addLab = true;
             for (let index = 0; index < this.zone_list.length; index++) {
                 const zone = this.zone_list[index];
                 if (lab.org_id == zone.org_id) {
-                    this.newLabSetting.zone_list.push({
+                    this.newLabSetting.zone_list[zone.zone_id] = {
                         zone_id: zone.zone_id,
                         group_id: 0
-                    });
+                    };
                 }
             }
         },
@@ -317,22 +330,15 @@ export default {
                 alert("请选择结束时间！");
                 return false;
             }
-            this.newLabSetting.dt_begin = moment(
+            this.newLabSetting.dt_begin = this.moment(
                 this.newLabSetting.dt_begin
             ).format("YYYY-MM-DD");
-            this.newLabSetting.dt_end = moment(
+            this.newLabSetting.dt_end = this.moment(
                 this.newLabSetting.dt_end
             ).format("YYYY-MM-DD");
             this.emitAjax(URL, this.newLabSetting, function() {
-                _this.getCheckInfo(true);
+                _this.getCheckInfo();
                 _this.addLab = false;
-                _this.newLabSetting = {
-                    org_id: 0,
-                    org_name: "",
-                    dt_begin: "",
-                    dt_end: "",
-                    zone_list: []
-                };
             });
         }
     },

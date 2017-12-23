@@ -54,9 +54,9 @@
                                 </h5>
                                 <p>
                                     本单位要求时间：
-                                    <span>{{check.dt_begin.substring(0.10)}}</span>
+                                    <span>{{check.dt_begin.substring(0,10)}}</span>
                                     到
-                                    <span>{{check.dt_begin.substring(0.10)}}</span>
+                                    <span>{{check.dt_end.substring(0,10)}}</span>
                                 </p>
                             </div>
                             <div class="widget-body">
@@ -141,7 +141,6 @@ export default {
                 task_id: this.$route.params.id
             }
             this.emitAjax(URL,data,function(result){
-                console.log(result)
                 _this.progress_list = result;
             })
         }

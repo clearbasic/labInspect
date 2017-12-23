@@ -10,10 +10,12 @@
             <li class="list-group-item" v-for="(item,index) in labArray" :key="'zicha'+index" v-if="item.task_level === 'lab'">
                 {{item.task_name}}，
                 自 <datepicker v-model="item.dt_begin" width="140"
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_begin.substring(0,10)}}</span>
                 至 <datepicker v-model="item.dt_end" width="140"
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_end.substring(0,10)}}</span>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs" v-if="today < moment(item.dt_begin).unix()"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
                 <button v-if="index === labArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('lab',1)">增加下一个月</button>
             </li>
             <li v-show="newTaskLevel==='lab'" class="list-group-item">
@@ -34,10 +36,12 @@
             <li class="list-group-item" v-for="(item,index) in collegeArray" :key="'zicha'+index" v-if="item.task_level === 'college'">
                 {{item.task_name}}，
                 自 <datepicker v-model="item.dt_begin" width="140"
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_begin.substring(0,10)}}</span>
                 至 <datepicker v-model="item.dt_end" width="140"
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_end.substring(0,10)}}</span>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs" v-if="today < moment(item.dt_begin).unix()"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
                 <button v-if="index === collegeArray.length-1" class="btn btn-primary btn-sm" @click="autoAddTask('college',4)">增加下一季度</button>
             </li>
             <li v-show="newTaskLevel==='college'" class="list-group-item">
@@ -57,13 +61,13 @@
             </div>
             <li class="list-group-item" v-for="(item,index) in schoolArray" :key="'zicha'+index" v-if="item.task_level === 'school'">
                 {{item.task_name}}，
-                自 <datepicker v-model="item.dt_begin" width="140" 
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                至 <datepicker v-model="item.dt_end" width="140" 
-                    :confirm="true" confirm-text="修改" @confirm="editTask(item)"></datepicker>
-                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs">
-                    <i class="ace-icon glyphicon glyphicon-minus"></i>
-                </button>
+                自 <datepicker v-model="item.dt_begin" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_begin.substring(0,10)}}</span>
+                至 <datepicker v-model="item.dt_end" width="140"
+                    :confirm="true" confirm-text="修改" @confirm="editTask(item)" v-if="today < moment(item.dt_begin).unix()"></datepicker>
+                    <span v-if="today > moment(item.dt_begin).unix()">{{item.dt_end.substring(0,10)}}</span>
+                <button @click="delTask(item.task_id)" class=" btn btn-danger btn-xs" v-if="today < moment(item.dt_begin).unix()"><i class="ace-icon glyphicon glyphicon-minus"></i></button>
             </li>
             <li v-show="newTaskLevel==='school'" class="list-group-item">
                 {{newTaskName}}，
@@ -77,7 +81,6 @@
 </template>
 <script>
 import datepicker from 'vue2-datepicker';
-import moment from 'moment';
 export default {
     name: "checkTask",
     data(){
@@ -136,8 +139,8 @@ export default {
                 plan_id:this.$route.params.id,
                 task_name:this.newTaskName,
                 task_level:this.newTaskLevel,
-                dt_begin:moment(this.newTaskDtBegin).format("YYYY-MM-DD"),
-                dt_end:moment(this.newTaskDtEnd).format("YYYY-MM-DD"),
+                dt_begin:this.moment(this.newTaskDtBegin).format("YYYY-MM-DD"),
+                dt_end:this.moment(this.newTaskDtEnd).format("YYYY-MM-DD"),
             }
             this.emitAjax(URL, data, function(result) {
                 _SELF.getCheckPlanData();
@@ -151,8 +154,8 @@ export default {
             let _this = this;
             let length = this[type+"Array"].length;
             let {dt_begin,dt_end} = this[type+"Array"][length-1];
-            let changedBegin = moment(dt_begin).add(space,"months").format("YYYY-MM-DD");
-            let changedEnd = moment(dt_end).add(space,"months").format("YYYY-MM-DD");
+            let changedBegin = this.moment(dt_begin).add(space,"months").format("YYYY-MM-DD");
+            let changedEnd = this.moment(dt_end).add(space,"months").format("YYYY-MM-DD");
             const lastTaskName = this[type+'Array'][this[type+'Array'].length-1].task_name;
             const lastTaskNameCount = lastTaskName.match(/\d+/)[0];
 
@@ -180,8 +183,8 @@ export default {
         },
         editTask(task){
             //修改
-            const begin = moment(task.dt_begin).format("YYYY-MM-DD");
-            const end = moment(task.dt_end).format("YYYY-MM-DD");
+            const begin = this.moment(task.dt_begin).format("YYYY-MM-DD");
+            const end = this.moment(task.dt_end).format("YYYY-MM-DD");
             const URL = this.serverUrl + "/admin/task/edit";
             let _this = this;
             if(begin>end){

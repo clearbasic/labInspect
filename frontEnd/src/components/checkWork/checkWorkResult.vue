@@ -68,7 +68,6 @@
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
 import datepicker from "vue2-datepicker";
-import moment from "moment";
 export default {
     name: "checkWork",
     components: { VueHead, VueLeft, datepicker },
@@ -83,8 +82,6 @@ export default {
             group_list: [],
             zone_list: [],
             room_list: [],
-            today: Date.parse(new Date()) / 1000,
-            momentObj: moment,
             check_list: [],
             newLabSetting: {}
         };
@@ -124,11 +121,11 @@ export default {
             //修改检查工作
             const _this = this;
             const URL = this.serverUrl + "/admin/check/handle";
-            const today = moment().format("YYYY-MM-DD");
-            checkTask.dt_begin = moment(checkTask.dt_begin).format(
+            const today = this.moment().format("YYYY-MM-DD");
+            checkTask.dt_begin = this.moment(checkTask.dt_begin).format(
                 "YYYY-MM-DD"
             );
-            checkTask.dt_end = moment(checkTask.dt_end).format("YYYY-MM-DD");
+            checkTask.dt_end = this.moment(checkTask.dt_end).format("YYYY-MM-DD");
 
             this.emitAjax(URL, checkTask, function() {
                 _this.getCheckList();

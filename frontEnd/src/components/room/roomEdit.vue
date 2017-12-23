@@ -3,7 +3,7 @@
         <div class="form-horizontal">
             <div class="row form-group">
                 <div class="col-xs-12 red" v-if="!room.room_id">
-                    注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~A110。~表示房间名按顺序添加
+                    注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~110。~表示房间名按顺序添加
                 </div>
             </div>
             <div class="row">
@@ -98,10 +98,10 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-md-offset-4 col-lg-offset-3 col-sm-8 col-md-8 col-lg-9">
-                            <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
                             <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
-                            <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
                             <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
+                            <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
+                            <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
                         </div>
                     </div>
                 </div>
@@ -153,17 +153,11 @@ import UserList from '../user/userList'
         },
         components:{UserList},
         computed:{
-            room(){
-                return this.$store.state.currentRoom;
-            },
-            orgList(){
-                return this.$store.state.orgList;
-            }
+            room(){return this.$store.state.currentRoom},
+            orgList(){ return this.$store.state.orgList}
         },
         watch:{
-            orgList(){
-                this.getOrgInfo();
-            }
+            orgList(){this.getOrgInfo()}
         },
         data(){
             return {
@@ -179,8 +173,7 @@ import UserList from '../user/userList'
                 //保存房间
                 const _this = this;
                 const url = this.serverUrl + "/admin/room/edit";
-                if(!this.room.room_name){
-                    alert("请填写房间名称！");
+                if(this.isSubmit()){
                     return false;
                 }
                 this.emitAjax(url,this.room,function(){
@@ -191,8 +184,7 @@ import UserList from '../user/userList'
                 //新建房间
                 const _this = this;
                 const url = this.serverUrl + "/admin/room/add";
-                if(!this.room.room_name){
-                    alert("请填写房间名称！");
+                if(this.isSubmit()){
                     return false;
                 }
                 const data = {
@@ -213,12 +205,27 @@ import UserList from '../user/userList'
                     _this.showRoomList();
                 })
             },
+            isSubmit(){
+                if(!this.room.room_name){
+                    alert("请填写房间名称！");
+                    return false;
+                }
+                if(!room.dept_id){
+                    alert("请选择所属学院！");
+                    return false;
+                }
+                if(!room.opt_id){
+                    alert("请选择所属实验室！");
+                    return false;
+                }
+            },
             getNewRoomList(){
                 //获得房间信息
                 const roomName = this.room.room_name;
                 let roomNameArray = [];
                 let roomArray = [];
                 let roomInfoArray = [];
+                if(!roomName){return false}
                 //根据，分割字符串。
                 if(roomName.search(",")>0){
                     roomNameArray = roomName.split(",");
@@ -251,6 +258,9 @@ import UserList from '../user/userList'
                 //选择用户
                 this.room.agent_name = user.name;
                 this.room.agent_id = user.username;
+                if(!this.room.phone){
+                    this.room.phone = user.mobile;
+                }
                 $("#userModal").modal("hide");
             },
             getOrgList(data){

@@ -25,7 +25,7 @@
                             <h1>
                                 {{title}}
                                 <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" @click="showRoomEdit">添加房间</button>
+                                    <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">添加房间</button>
                                     <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">分组管理</router-link>
                                 </div>
                             </h1>
@@ -60,7 +60,12 @@ export default {
         showRoomEdit(room){
             //显示房间编辑页面
             this.showComponentType = "roomEdit";
-            this.$store.commit("setCurrentRoom",room);
+            const length = $(".roomList tbody tr").length;
+            if(room){
+                this.$store.commit("setCurrentRoom",room);
+            }else{
+                this.$store.commit("setCurrentRoom",{room_order:length+1});
+            }
         },
         showRoomList(){
             //显示房间列表页面

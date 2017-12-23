@@ -139,7 +139,6 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
-import moment from "moment";
 
 export default {
     name: "myCheck",
@@ -156,8 +155,6 @@ export default {
             currentTask:{},//点击的哪次安排
             currentRoom:{},
             ruleList:[],//存放房间的指标库
-            moment:moment,
-            today:Date.parse(new Date())/1000,
         };
     },
     methods: {
@@ -226,7 +223,6 @@ export default {
             }
             //如果有一票否决指标不合格数量大于0，总分为0
             score = fatal==0 ?parseFloat(score.toFixed(2)):0;
-            console.log(score)
             const data = {
                 score:score,
                 checkList:ruleList,
