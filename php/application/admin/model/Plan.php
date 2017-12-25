@@ -20,17 +20,35 @@ class Plan extends Common
     protected $createTime = 'dt_create';
     protected $updateTime = false;
     protected $insert = [
-        'creator' => 'chingo',
+        'creator'
     ];
+    protected function setCreatorAttr()
+    {
+        return $GLOBALS['userInfo']['username'];
+    }
     /**
      * [getDataList 获取列表]
      * @return    [array]
      */
-    public function getDataList($keywords, $page, $limit)
+    public function getDataList($param, $page, $limit)
     {
         $map = [];
+
+        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         if ($keywords) {
             $map['plan_name'] = ['like', '%'.$keywords.'%'];
+        }
+
+        $plan_id = !empty($param['plan_id']) ? $param['plan_id']: '';
+        if ($plan_id) {
+            $map['plan_id'] = $plan_id;
+        }
+
+        $current = !empty($param['current']) ? $param['current']: '';
+        if ($current == '1') {
+            $map['current'] = 'yes';
+            $list = $this->where($map)->find();
+            return $list;
         }
 
         $list = $this->where($map);
@@ -38,8 +56,7 @@ class Plan extends Common
         if ($page && $limit) {
             $list = $list->page($page, $limit);
         }
-        $list = $list
-            ->select();
+        $list = $list->select();
         $data = $list;
         return $data;
     }

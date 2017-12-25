@@ -198,6 +198,19 @@ class Common extends Model
 			}
 		}
 		return $data;
-	}		
+	}
+    /**
+     * 获取所有子孙
+     */
+    public function getAllParent($id, &$data = [])
+    {
+        $map['org_id'] = $id;
+        $pid = $this->where($map)->value('pid');
+        if ($pid != '0') {
+                $data[] = $pid;
+                $this->getAllParent($pid, $data);
+        }
+        return $data;
+    }
 
 }

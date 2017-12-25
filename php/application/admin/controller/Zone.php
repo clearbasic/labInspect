@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 检查安排
+// | Description: 房间分组
 // +----------------------------------------------------------------------
 // | Author: chenkq <chenkq@chingo.cn>
 // +----------------------------------------------------------------------
@@ -12,51 +12,61 @@ use think\Db;
 use app\common\adapter\AuthAdapter;
 use app\common\controller\Common;
 
-class Task extends Checklogin
+class Zone extends Checklogin
 {
-
     public function index()
     {
-        $model = model('task');
+        $model = model('Zone');
         $param = $this->param;
-        $plan_id = !empty($param['plan_id']) ? $param['plan_id']: '';
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         $page = !empty($param['page']) ? $param['page']: '';
         $limit = !empty($param['limit']) ? $param['limit']: '';
-        $data = $model->getDataList($plan_id,$keywords, $page, $limit);
-        if (!$data) {
-            return resultArray(['error' => $model->getError()]);
-        }
+        $data = $model->getDataList($keywords, $page, $limit);
         return resultArray(['data' => $data]);
     }
+
     public function add()
     {
-        $model = model('task');
+        $model = model('Zone');
         $param = $this->param;
         $data = $model->createData($param);
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }
-        return resultArray(['data' => $data]);
+        return resultArray(['data' => '添加成功']);
     }
-    public function del()
-    {
-        $model = model('task');
-        $param = $this->param;
-        $data = $model->delDataById($param['task_id']);
-        if (!$data) {
-            return resultArray(['error' => $model->getError()]);
-        }
-        return resultArray(['data' => '删除成功']);
-    }
+
     public function edit()
     {
-        $model = model('task');
+        $model = model('Zone');
         $param = $this->param;
-        $data = $model->updateDataById($param, $param['task_id']);
+        $data = $model->updateDataById($param, $param['zone_id']);
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => '编辑成功']);
     }
+
+    public function del()
+    {
+        $model = model('Zone');
+        $param = $this->param;
+        $data = $model->delById($param['zone_id']);
+        if (!$data) {
+            return resultArray(['error' => $model->getError()]);
+        }
+        return resultArray(['data' => '删除成功']);
+    }
+
+    public function deletes()
+    {
+        $model = model('Zone');
+        $param = $this->param;
+        $data = $model->delDatas($param['zone_id']);
+        if (!$data) {
+            return resultArray(['error' => $model->getError()]);
+        }
+        return resultArray(['data' => '删除成功']);
+    }
+
 }

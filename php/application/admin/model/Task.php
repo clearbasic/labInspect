@@ -20,8 +20,12 @@ class Task extends Common
     protected $createTime = 'dt_create';
     protected $updateTime = false;
     protected $insert = [
-        'creator' => 'chingo',
+        'creator'
     ];
+    protected function setCreatorAttr()
+    {
+        return $GLOBALS['userInfo']['username'];
+    }
 
     /**
      * [getDataList 获取列表]
@@ -45,8 +49,7 @@ class Task extends Common
             $list = $list->page($page, $limit);
         }
         $list = $list
-            ->group('task_level')
-            ->order('task_name,dt_begin')
+            ->order('task_level,task_name,dt_begin')
             ->select();
         $data = $list;
         return $data;

@@ -12,36 +12,36 @@ use think\Db;
 use app\common\adapter\AuthAdapter;
 use app\common\controller\Common;
 
-class Rule extends Common
+class Rule extends Checklogin
 {
 
     public function add()
     {
-        $rule = model('CkRule');
+        $model = model('CkRule');
         $param = $this->param;
-        $data = $rule->createData($param);
+        $data = $model->createData($param);
         if (!$data) {
-            return resultArray(['error' => $rule->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => $data]);
     }
     public function del()
     {
-        $rule = model('CkRule');
+        $model = model('CkRule');
         $param = $this->param;
-        $data = $rule->delData($param);
+        $data = $model->delData($param);
         if (!$data) {
-            return resultArray(['error' => $rule->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => '删除成功']);
     }
     public function edit()
     {
-        $rule = model('CkRule');
+        $model = model('CkRule');
         $param = $this->param;
-        $data = $rule->updateData($param);
+        $data = $model->updateData($param);
         if (!$data) {
-            return resultArray(['error' => $rule->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => '编辑成功']);
     }

@@ -26,31 +26,40 @@ class Org extends Common
      * [getDataList 获取列表]
      * @return    [array]
      */
+
     public function getDataList($param, $page, $limit)
     {
+        //获取登录用户的子单位ID组
         $map = [];
-        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        if ($keywords) {
-            $map['org_name'] = ['like', '%'.$keywords.'%'];
+        $orgIds =[];
+        if ($GLOBALS['userInfo']['org_id'] != '1'){
+            $childIds = $this->getAllChild($GLOBALS['userInfo']['org_id']);
+            $childIds[]=$GLOBALS['userInfo']['org_id'];
+            $parentIds = $this->getAllParent($GLOBALS['userInfo']['org_id']);
+            $orgIds = array_merge($childIds,$parentIds);
         }
+        if (!empty($orgIds))$map['org_id'] = ['in', $orgIds];
 
+        //根据关键字查询
+        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
+        if ($keywords) $map['org_name'] = ['like', '%'.$keywords.'%'];
+        //根据单位级别查询
         $org_level = !empty($param['org_level']) ? $param['org_level']: '';
-        if ($org_level) {
-            $map['org_level'] = $org_level;
-        }
+        if ($org_level)$map['org_level'] = $org_level;
+        //根据pid父级单位ID
+        $pid = !empty($param['pid']) ? $param['pid']: '';
+        if ($pid)  $map['pid'] = $pid;
 
         $list = $this->where($map);
         // 若有分页
-        if ($page && $limit) {
-            $list = $list->page($page, $limit);
-        }
-        $list = $list
-            ->order('org_level,org_id')
-            ->select();
+        if ($page && $limit) $list = $list->page($page, $limit);
+
+        $list = $list->order('org_level,org_id')->select();
+
         foreach ($list as  $k =>$v) {
-            if($v['org_level'] == 'college'){
-                    $v['school_id']  = $v['pid'];
-            }
+            $v['pname'] = $this->where('org_id',$v['pid'])->value('org_name');
+            if($v['org_level'] == 'college') $v['school_id']  = $v['pid'];
+
             if($v['org_level'] == 'lab'){
                 $v['school_id'] = $this->where('org_id',$v['pid'])->value('pid');
                 if ($v['school_id'] !== '0'){
@@ -66,7 +75,7 @@ class Org extends Common
     }
 
     /**
-     * 通过id修改指标体系
+     * 通过id修改单位信息
      * @param  array   $param  [description]
      */
     public function handleData($param)
@@ -78,9 +87,17 @@ class Org extends Common
                 $this->error = '暂无此数据';
                 return false;
             }
+            $org_level = $checkData['org_level'];
+            $user_level = model('person')->where('org_id',$org_id)->column('user_level');
+
             $this->startTrans();
             try {
                 $this->allowField(true)->save($param, ['org_id' => $org_id]);
+                foreach ($user_level as $v){
+                    model('person')->save([
+                        'user_level'  => $this->org_level,
+                    ],['org_id' => $this->org_id,'user_level' => $org_level]);
+                }
                 $this->commit();
                 return '编辑成功';
 

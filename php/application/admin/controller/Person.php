@@ -11,51 +11,61 @@ use think\Request;
 use think\Db;
 use app\common\adapter\AuthAdapter;
 use app\common\controller\Common;
-class Person extends Common
+class Person extends Checklogin
 {
     public function index()
     {
-        $plan = model('Person');
+        $model = model('Person');
         $param = $this->param;
         $page = !empty($param['page']) ? $param['page']: '';
         $limit = !empty($param['limit']) ? $param['limit']: '';
-        $data = $plan->getDataList($param, $page, $limit);
+        $data = $model->getDataList($param, $page, $limit);
         if (!$data) {
-            return resultArray(['error' => $plan->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => $data]);
     }
     public function add()
     {
-        $plan = model('Person');
+        $model = model('Person');
         $param = $this->param;
-        $data = $plan->addData($param);
+        $data = $model->addData($param);
         if (!$data) {
-            return resultArray(['error' => $plan->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => $data]);
     }
 
     public function del()
     {
-        $plan = model('Person');
+        $model = model('Person');
         $param = $this->param;
-        $data = $plan->delDataById($param['id']);
+        $data = $model->delDataById($param['id']);
         if (!$data) {
-            return resultArray(['error' => $plan->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => '删除成功']);
     }
     public function edit()
     {
-        $plan = model('Person');
+        $model = model('Person');
         $param = $this->param;
-        $data = $plan->updateDataById($param, $param['id']);
+        $data = $model->updateDataById($param, $param['id']);
         if (!$data) {
-            return resultArray(['error' => $plan->getError()]);
+            return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => '编辑成功']);
     }
-
+    public function getuser()
+    {
+        $model = model('Person');
+        $param = $this->param;
+        $username = !empty($param['username']) ? $param['username']: '';
+        $data = $model->getuser($username);
+        if (!$data) {
+            return resultArray(['error' => $model->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
 
 }

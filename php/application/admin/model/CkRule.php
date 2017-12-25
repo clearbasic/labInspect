@@ -20,8 +20,12 @@ class CkRule extends Common
     protected $createTime = 'dt_create';
     protected $updateTime = false;
     protected $insert = [
-        'creator' => 'chingo',
+        'creator'
     ];
+    protected function setCreatorAttr()
+    {
+        return $GLOBALS['userInfo']['username'];
+    }
 
     /**
      * 创建检查规则

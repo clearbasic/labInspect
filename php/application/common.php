@@ -168,21 +168,20 @@ function GetFirstCharter($str){
 }
 
 
-function my_sort($arrays,$sort_key,$sort_order=SORT_ASC,$sort_type=SORT_NUMERIC ){
-
-    if(is_array($arrays)){
-        foreach ($arrays as $array){
-            if(is_array($array)){
-                $key_arrays[] = $array[$sort_key];
-            } else{
-                return false;
-            }
-
-        }
-    }else{
-        return false;
-    }
-    array_multisort($key_arrays,$sort_order,$sort_type,$arrays);
-
-    return $arrays;
+/*
+ * 创建房间检查后创建分表
+ * @param id
+ */
+function add_newtable($table_name){
+    $sql = 'create table '.$table_name.'(
+       `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+      `rules_id` int(11) DEFAULT NULL COMMENT "条款id",
+      `answer` int(11) DEFAULT NULL COMMENT "条款选中项",
+      `mark` varchar(255) DEFAULT NULL COMMENT "备注",
+      `org_id` int(11) DEFAULT NULL COMMENT "实验室id",
+      `task_id` int(11) DEFAULT NULL COMMENT "自查任务id",
+       PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8;';
+    $result = Db::execute($sql);
+    return $result;
 }
