@@ -62,18 +62,20 @@
                                 <h5 class="widget-title bigger lighter">
                                     {{check.org_name}}
                                 </h5>
-                                <p>
+                                <p v-if="today >= moment(check.dt_begin).unix()">
                                     本单位要求时间：
-                                    <span v-if="today > moment(check.dt_begin).unix()">{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    <span >{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                                    到
+                                    <span>{{moment(check.dt_end).format('YYYY-MM-DD')}}</span>
+                                </p>
+                                <p v-if="today < moment(check.dt_begin).unix()">
+                                    本单位要求时间：
                                     <datepicker v-model="check.dt_begin" width="140" 
                                         :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < moment(check.dt_begin).unix()"
                                     ></datepicker>
                                     到
-                                    <span v-if="today > moment(check.dt_begin).unix()">{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
                                     <datepicker v-model="check.dt_end" width="140" 
                                         :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                        v-if="today < moment(check.dt_begin).unix()"
                                     ></datepicker>
                                 </p>
                             </div>
@@ -118,11 +120,11 @@
                                                 <td colspan="2" class="center">
                                                     <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
                                                     <router-link class="btn btn-default btn-sm" 
-                                                        v-if="today > moment(check.dt_begin).unix()&&today < moment(check.dt_begin).unix()" 
+                                                        v-if="check.check_state != 'finished'&&today > moment(check.dt_begin).unix()&&today < moment(check.dt_end).unix()" 
                                                         :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                                     >查看进度</router-link>
                                                     <router-link class="btn btn-default btn-sm" 
-                                                        v-if="today > moment(check.dt_end).unix()"
+                                                        v-if="check.check_state == 'finished' || today > moment(check.dt_end).unix()"
                                                         :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                                     >查看结果</router-link>
                                                 </td>
@@ -167,7 +169,7 @@
                                                 </td>
                                                 <td>
                                                     <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
-                                                    <select :value="newLabSetting.zone_list[zone.zone_id]?newLabSetting.zone_list[zone.zone_id].group_id:0" @change="setGroupId(newLabSetting,zone.zone_id,$event)">
+                                                    <select :value="newLabSetting.zone_list[zone.zone_id]?newLabSetting.zone_list[zone.zone_id].group_id:0" @change="setGroupId(newLabSetting,zone.zone_id,$event,true)">
                                                         <option value="0">--请选择--</option>
                                                         <option :value="group.group_id" 
                                                             v-for="group in group_list" 
@@ -221,11 +223,6 @@ export default {
             newLabSetting: {}
         };
     },
-    watch:{
-        newLabSetting(){
-            console.log(1)
-        }
-    },
     methods: {
         getCheckInfo() {
             //获取信息 flag为true不查询基础信息只查询检查工作列表
@@ -256,25 +253,31 @@ export default {
                 _this.check_list = result;
             });
         },
-        setGroupId(checkObj,zone_id,event){
+        setGroupId(checkObj,zone_id,event,istrue){
             //给房间分组分配检查小组
             checkObj.zone_list[zone_id] = {
                 group_id:event.target.value,
                 zone_id
             };
-            for (let index = 0; index < this.group_list.length; index++) {
-                const group = this.group_list[index];
-                if(event.target.value == group.group_id){
-                    const text = '组长：'+group.leader_name+' 组员：'+group.members;
-                    if($(event.target).siblings("span").length>0){
-                        $(event.target).siblings("span").html(text);
-                    }else{
-                        $(event.target).parent().append("<span>"+text+"</span>");
+            if(istrue){
+                for (let index = 0; index < this.group_list.length; index++) {
+                    const group = this.group_list[index];
+                    if(event.target.value == group.group_id){
+                        const text = '组长：'+group.leader_name+' 组员：'+group.members;
+                        if($(event.target).siblings("span").length>0){
+                            $(event.target).siblings("span").html(text);
+                        }else{
+                            $(event.target).parent().append("<span>"+text+"</span>");
+                        }
+                    }
+                    if(event.target.value == 0){
+                        $(event.target).siblings("span").html("");
                     }
                 }
             }
         },
         editCheckTask(checkTask) {
+            console.log(checkTask)
             //修改检查工作
             const _this = this;
             const URL = this.serverUrl + "/admin/check/handle";
@@ -337,7 +340,7 @@ export default {
                 this.newLabSetting.dt_end
             ).format("YYYY-MM-DD");
             this.emitAjax(URL, this.newLabSetting, function() {
-                _this.getCheckInfo();
+                _this.getCheckList();
                 _this.addLab = false;
             });
         }

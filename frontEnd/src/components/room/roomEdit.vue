@@ -173,7 +173,7 @@ import UserList from '../user/userList'
                 //保存房间
                 const _this = this;
                 const url = this.serverUrl + "/admin/room/edit";
-                if(this.isSubmit()){
+                if(!this.isSubmit()){
                     return false;
                 }
                 this.emitAjax(url,this.room,function(){
@@ -184,7 +184,7 @@ import UserList from '../user/userList'
                 //新建房间
                 const _this = this;
                 const url = this.serverUrl + "/admin/room/add";
-                if(this.isSubmit()){
+                if(!this.isSubmit()){
                     return false;
                 }
                 const data = {
@@ -210,14 +210,15 @@ import UserList from '../user/userList'
                     alert("请填写房间名称！");
                     return false;
                 }
-                if(!room.dept_id){
+                if(!this.room.dept_id){
                     alert("请选择所属学院！");
                     return false;
                 }
-                if(!room.opt_id){
+                if(!this.room.lab_id){
                     alert("请选择所属实验室！");
                     return false;
                 }
+                return true;
             },
             getNewRoomList(){
                 //获得房间信息

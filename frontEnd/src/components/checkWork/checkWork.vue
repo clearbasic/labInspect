@@ -84,8 +84,8 @@
                                                     <span v-if="task.sum != '0'">{{task.state}}</span>
                                                 </td>
                                                 <td class="center">
-                                                    <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}" v-if="loginUser.user_level == key">分配</router-link>
-                                                    <span v-if="loginUser.user_level != key">分配</span>
+                                                    <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}" v-if="loginUser.user_level == key&&(task.sum>task.finished || !task.sum)">分配</router-link>
+                                                    <span v-if="loginUser.user_level != key || (task.sum==task.finished&&task.sum>0)">分配</span>
                                                 </td>
                                                 <td class="center">
                                                     <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}" v-if="task.sum > 0">检查进度</router-link>

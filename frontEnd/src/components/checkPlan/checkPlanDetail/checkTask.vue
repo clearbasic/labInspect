@@ -106,14 +106,13 @@ export default {
         addTask(type){
             //显示添加计划输入框
             this.newTaskLevel = type;
-            
             if(type === ''){
                 this.newTaskName = '';
                 this.newTaskLevel = '';
                 this.newTaskDtBegin = '';
                 this.newTaskDtEnd = '';
             }else{
-                if(this[type+'Array'].lengt > 0){
+                if(this[type+'Array'].length > 0){
                     const lastTaskName = this[type+'Array'][this[type+'Array'].length-1].task_name;
                     const lastTaskNameCount = lastTaskName.match(/\d+/)[0];
                     this.newTaskName = "第"+(parseInt(lastTaskNameCount)+1)+"次";
