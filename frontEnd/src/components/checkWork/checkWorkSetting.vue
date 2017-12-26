@@ -253,13 +253,14 @@ export default {
                 _this.check_list = result;
             });
         },
-        setGroupId(checkObj,zone_id,event,istrue){
+        setGroupId(checkObj,zone_id,event,flag){
             //给房间分组分配检查小组
+            const istrue = checkObj.zone_list[zone_id]
             checkObj.zone_list[zone_id] = {
                 group_id:event.target.value,
                 zone_id
             };
-            if(istrue){
+            if(flag || !istrue){
                 for (let index = 0; index < this.group_list.length; index++) {
                     const group = this.group_list[index];
                     if(event.target.value == group.group_id){

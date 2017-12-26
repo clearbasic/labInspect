@@ -72,6 +72,7 @@
                                                     <tr>
                                                         <th>房间号</th>
                                                         <th>指标项</th>
+                                                        <th>问题类型</th>
                                                         <th>问题原因</th>
                                                         <th>描述</th>
                                                         <th>照片</th>
@@ -84,6 +85,10 @@
                                                             <span v-for="room in room_list" :key="room.room_id" v-if="effort.room_id == room.room_id">{{room.room_name}}</span>
                                                         </td>
                                                         <td>{{effort.item_name}}</td>
+                                                        <td>
+                                                            <span v-if="effort.item_level == 'common'">普通</span>
+                                                            <span v-if="effort.item_level == 'fatal'">一票否决</span>
+                                                        </td>
                                                         <td>
                                                             <span v-if="effort.problem_level == 'no'">不合格</span>
                                                             <span v-if="effort.problem_level == 'NA'">不符合</span>
@@ -120,10 +125,10 @@
                                                         </td>
                                                         <td>{{effort.score}}</td>
                                                         <td>
-                                                            1
+                                                            {{effort.problem_common}}
                                                         </td>
                                                         <td>
-                                                            1
+                                                            {{effort.problem_fatal}}
                                                         </td>
                                                         <td>
                                                             <span v-for="user in user_list" :key="user.username" v-if="user.username == effort.staff">{{user.name}}</span>

@@ -86,6 +86,9 @@
                                        <button class="btn btn-success btn-xs" @click="sureAddRule">
                                            <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
                                        </button>
+                                       <button class="btn btn-danger btn-xs" @click="addRuleType=''">
+                                           <i class="ace-icon glyphicon glyphicon-remove bigger-110"></i>
+                                       </button>
                                    </td>
                                 </tr>
                            </tbody>
