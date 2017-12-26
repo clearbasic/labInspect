@@ -47,7 +47,7 @@ export default [
             },
             {
                 name:"问题反馈",
-                url:pathName+"",
+                url:pathName+"/feedback",
                 permission:1,
                 icon:"",
             }
@@ -80,25 +80,25 @@ export default [
         ]
     },
     {
-        name:"系统设置",
+        name:"基础数据管理",
         url:pathName+"",
         icon:"ace-icon fa fa-cog",
         permission:5,
         child:[
             {
-                name:"实验室单位设置",
+                name:"实验室单位管理",
                 url:pathName+"/orgList",
                 permission:5,
                 icon:'',
             },
             {
-                name:"用户设置",
+                name:"用户管理",
                 url:pathName+"/userList",
                 permission:5,
                 icon:'',
             },
             {
-                name:"房间设置",
+                name:"房间及分组管理",
                 url:pathName+"/zone",
                 permission:5,
                 icon:'',

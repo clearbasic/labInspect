@@ -225,7 +225,7 @@ export default {
     },
     methods: {
         getCheckInfo() {
-            //获取信息 flag为true不查询基础信息只查询检查工作列表
+            //获取信息
             const _this = this;
             const URL = this.serverUrl + "/admin/check/baseinfo";
             const data = {

@@ -70,12 +70,12 @@ function delLocalData(){
     localStorage.removeItem("userInfo");
 }
 function checkPermission(obj){
-    const currentUser = JSON.parse(localStorage.getItem("userInfo"));
+    const currentUser = getUserInfo();
     const user_per = obj.permission[currentUser.user_level];
 
     if(user_per < obj.$route.meta.permission){
         alert("您没有访问权限！");
-        obj.$router.push(pathName + "/");
+        obj.$router.back();
         return false;
     }
     return true;

@@ -2,24 +2,25 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { pathName } from "../config/server";
 import Index from '../components/index'
-import CheckList from '../components/checkList';
-import CheckItem from '../components/checkItem/checkItem';
-import CheckPlan from '../components/checkPlan/checkPlan';
-import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail';
-import CheckPlanSummary from '../components/checkPlan/checkPlanSummary';
-import CheckGroup from "../components/checkGroup/checkGroup";
-import CheckWork from "../components/checkWork/checkWork";
-import CheckWorkSetting from "../components/checkWork/checkWorkSetting";
-import CheckWorkProgress from "../components/checkWork/checkWorkProgress";
-import CheckWorkResult from "../components/checkWork/checkWorkResult";
-import MyCheck from "../components/myCheck/myCheck";
-import OrgList from "../components/org/orgList";
-import OrgEdit from "../components/org/orgEdit";
-import User from "../components/user/user";
-import Room from "../components/room/room";
-import Zone from "../components/room/zone";
-import RoomZoneList from "../components/room/roomZoneList";
-import Login from "../components/login/login";
+import CheckList from '../components/checkList.vue';
+import CheckItem from '../components/checkItem/checkItem.vue';
+import CheckPlan from '../components/checkPlan/checkPlan.vue';
+import CheckPlanDetail from '../components/checkPlan/checkPlanDetail/checkPlanDetail.vue';
+import CheckPlanSummary from '../components/checkPlan/checkPlanSummary.vue';
+import CheckGroup from "../components/checkGroup/checkGroup.vue";
+import CheckWork from "../components/checkWork/checkWork.vue";
+import CheckWorkSetting from "../components/checkWork/checkWorkSetting.vue";
+import CheckWorkProgress from "../components/checkWork/checkWorkProgress.vue";
+import CheckWorkResult from "../components/checkWork/checkWorkResult.vue";
+import MyCheck from "../components/myCheck/myCheck.vue";
+import OrgList from "../components/org/orgList.vue";
+import OrgEdit from "../components/org/orgEdit.vue";
+import User from "../components/user/user.vue";
+import Room from "../components/room/room.vue";
+import Zone from "../components/room/zone.vue";
+import RoomZoneList from "../components/room/roomZoneList.vue";
+import Login from "../components/login/login.vue";
+import Feedback from "../components/feedback/feedback.vue";
 
 
 Vue.use(Router)
@@ -89,7 +90,7 @@ export default new Router({
 			meta:{
 				title:"工作说明 - "+title,
 				active:pathName+"/checkWork",
-				permission:5,
+				permission:0,
 			}
 		},{
 			path:pathName+"/orgList",
@@ -198,6 +199,15 @@ export default new Router({
 				title:"房间分组 - "+title,
 				active:pathName+"/zone",
 				permission:5,
+			}
+		},{
+			path:pathName+"/feedback",
+			name:"feedback",
+			component:Feedback,
+			meta:{
+				title:"问题反馈 - "+title,
+				active:pathName+"/feedback",
+				permission:1,
 			}
 		}
 	]
