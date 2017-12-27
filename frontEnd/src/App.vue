@@ -1,6 +1,6 @@
 <template>
     <div :class="{app:isApp,'no-skin':true}">
-        <router-view/>
+        <router-view />
     </div>
 </template>
 
@@ -78,6 +78,13 @@ a:hover {
 }
 input[readonly]:hover {
     cursor: pointer;
+}
+.fade-enter-active {
+    transition: opacity 1s
+}
+	
+.fade-enter,.fade-leave-active {
+    opacity: 0
 }
 @media only screen and (max-width: 640px) {
     .hidden-640 {

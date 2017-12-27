@@ -1,143 +1,135 @@
 <template>
-    <div class="checkWork">
-        <!-- 头部 -->
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link :to="pathName+'/'">首页</router-link>
-                            </li>
-                            <li>
-                                <router-link :to="pathName+'/checkWork'">检查工作</router-link>
-                            </li>
-                            <li>
-                                <a class="active">{{title}}</a>
-                            </li>
-                        </ul>
+    <!-- 右侧内容 -->
+    <div class="main-content checkWork">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link :to="pathName+'/'">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/checkWork'">检查工作</router-link>
+                    </li>
+                    <li>
+                        <a class="active">{{title}}</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        {{title}}
+                    </h1>
+                </div>
+                <h3 class="text-center" style="margin-top:10px;">
+                    {{college_info.org_name}} - 
+                    {{currentPlan.plan_name}} 
+                    {{currentTask.task_name}}
+                    <span v-if="currentTask.task_level === 'lab'">自查</span>
+                    <span v-if="currentTask.task_level === 'college'">复查</span>
+                    <span v-if="currentTask.task_level === 'school'">抽查</span>
+                </h3>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h5 class="text-center">
+                            学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
+                            满分{{currentPlan.plan_score}}
+                            <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
+                        </h5>
                     </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                {{title}}
-                            </h1>
+                </div>
+                <div class="accordion-style1 panel-group" id="accordion">
+                    <div class="panel panel-default" v-for="(org,index) in result_list" :key="'org'+org.org_id">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a :href="'#panelOrg'+index" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
+                                    <i :class="['bigger-110 ace-icon fa',{'fa-angle-down':index==0},{'fa-angle-right':index!=0}]" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
+                                    {{org.org_name}}
+                                </a>
+                            </h4>
                         </div>
-                        <h3 class="text-center" style="margin-top:10px;">
-                            {{college_info.org_name}} - 
-                            {{currentPlan.plan_name}} 
-                            {{currentTask.task_name}}
-                            <span v-if="currentTask.task_level === 'lab'">自查</span>
-                            <span v-if="currentTask.task_level === 'college'">复查</span>
-                            <span v-if="currentTask.task_level === 'school'">抽查</span>
-                        </h3>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h5 class="text-center">
-                                    学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
-                                    满分{{currentPlan.plan_score}}
-                                    <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="accordion-style1 panel-group" id="accordion">
-                            <div class="panel panel-default" v-for="(org,index) in result_list" :key="'org'+org.org_id">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a :href="'#panelOrg'+index" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="false">
-                                            <i :class="['bigger-110 ace-icon fa',{'fa-angle-down':index==0},{'fa-angle-right':index!=0}]" data-icon-hide="ace-icon fa fa-angle-down" data-icon-show="ace-icon fa fa-angle-right"></i>
-                                            {{org.org_name}}
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div :class="['panel-collapse collapse',{in:index==0}]" :id="'panelOrg'+index" aria-expanded="false">
-                                    <div class="panel-body">
-                                        <p>开展时间：{{org.check.dt_begin.substring(0,10)}}到{{org.check.dt_end.substring(0,10)}}
-                                            得分：{{org.check.check_score}}
-                                            一般问题数量：{{org.check.problem_common}}
-                                            一票否决数量：{{org.check.problem_fatal}}</p>
-                                        <div class="problem" v-if="org.problem_list.length>0">
-                                            <div class="table-header" style="margin:0;">
-                                                问题汇总
-                                            </div>
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>房间号</th>
-                                                        <th>指标项</th>
-                                                        <th>问题类型</th>
-                                                        <th>问题原因</th>
-                                                        <th>描述</th>
-                                                        <th>照片</th>
-                                                        <th>检查人</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="effort in org.problem_list" :key="effort.room_id">
-                                                        <td>
-                                                            <span v-for="room in room_list" :key="room.room_id" v-if="effort.room_id == room.room_id">{{room.room_name}}</span>
-                                                        </td>
-                                                        <td>{{effort.item_name}}</td>
-                                                        <td>
-                                                            <span v-if="effort.item_level == 'common'">普通</span>
-                                                            <span v-if="effort.item_level == 'fatal'">一票否决</span>
-                                                        </td>
-                                                        <td>
-                                                            <span v-if="effort.problem_level == 'no'">不合格</span>
-                                                            <span v-if="effort.problem_level == 'NA'">不符合</span>
-                                                        </td>
-                                                        <td>{{effort.intro}}</td>
-                                                        <td>
-                                                            <img :src="effort.photos" alt="" v-if="effort.photos">
-                                                        </td>
-                                                        <td>
-                                                            <span v-for="user in user_list" :key="user.username" v-if="user.username == effort.staff">{{user.name}}</span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="roomResult" v-if="org.result.length>0"> 
-                                            <div class="table-header" style="margin:0;">
-                                                各房间得分
-                                            </div>
-                                            <table class="table table-striped table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>房间号</th>
-                                                        <th>得分</th>
-                                                        <th>一般问题数</th>
-                                                        <th>一票否决问题数量</th>
-                                                        <th>检查人</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="effort in org.result" :key="effort.room_id">
-                                                        <td>
-                                                            <span v-for="room in room_list" :key="room.room_id" v-if="effort.room_id == room.room_id">{{room.room_name}}</span>
-                                                        </td>
-                                                        <td>{{effort.score}}</td>
-                                                        <td>
-                                                            {{effort.problem_common}}
-                                                        </td>
-                                                        <td>
-                                                            {{effort.problem_fatal}}
-                                                        </td>
-                                                        <td>
-                                                            <span v-for="user in user_list" :key="user.username" v-if="user.username == effort.staff">{{user.name}}</span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                        <div :class="['panel-collapse collapse',{in:index==0}]" :id="'panelOrg'+index" aria-expanded="false">
+                            <div class="panel-body">
+                                <p>开展时间：{{org.check.dt_begin.substring(0,10)}}到{{org.check.dt_end.substring(0,10)}}
+                                    得分：{{org.check.check_score}}
+                                    一般问题数量：{{org.check.problem_common}}
+                                    一票否决数量：{{org.check.problem_fatal}}</p>
+                                <div class="problem" v-if="org.problem_list.length>0">
+                                    <div class="table-header" style="margin:0;">
+                                        问题汇总
                                     </div>
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>房间号</th>
+                                                <th>指标项</th>
+                                                <th>问题类型</th>
+                                                <th>问题原因</th>
+                                                <th>描述</th>
+                                                <th>照片</th>
+                                                <th>检查人</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="effort in org.problem_list" :key="effort.room_id">
+                                                <td>
+                                                    <span v-for="room in room_list" :key="room.room_id" v-if="effort.room_id == room.room_id">{{room.room_name}}</span>
+                                                </td>
+                                                <td>{{effort.item_name}}</td>
+                                                <td>
+                                                    <span v-if="effort.item_level == 'common'">普通</span>
+                                                    <span v-if="effort.item_level == 'fatal'">一票否决</span>
+                                                </td>
+                                                <td>
+                                                    <span v-if="effort.problem_level == 'no'">不合格</span>
+                                                    <span v-if="effort.problem_level == 'NA'">不符合</span>
+                                                </td>
+                                                <td>{{effort.intro}}</td>
+                                                <td>
+                                                    <img :src="effort.photos" alt="" v-if="effort.photos">
+                                                </td>
+                                                <td>
+                                                    <span v-for="user in user_list" :key="user.username" v-if="user.username == effort.staff">{{user.name}}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="roomResult" v-if="org.result.length>0"> 
+                                    <div class="table-header" style="margin:0;">
+                                        各房间得分
+                                    </div>
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>房间号</th>
+                                                <th>得分</th>
+                                                <th>一般问题数</th>
+                                                <th>一票否决问题数量</th>
+                                                <th>检查人</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="effort in org.result" :key="effort.room_id">
+                                                <td>
+                                                    <span v-for="room in room_list" :key="room.room_id" v-if="effort.room_id == room.room_id">{{room.room_name}}</span>
+                                                </td>
+                                                <td>{{effort.score}}</td>
+                                                <td>
+                                                    {{effort.problem_common}}
+                                                </td>
+                                                <td>
+                                                    {{effort.problem_fatal}}
+                                                </td>
+                                                <td>
+                                                    <span v-for="user in user_list" :key="user.username" v-if="user.username == effort.staff">{{user.name}}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

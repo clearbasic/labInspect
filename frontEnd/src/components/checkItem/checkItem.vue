@@ -1,130 +1,121 @@
 <template>
-	<div class="checkItem">
-        <!-- 头部 -->
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link :to="pathName+'/'">首页</router-link>
-                            </li>
-                            <li>
-                                <router-link :to="pathName+'/checkList'">检查指标类别管理</router-link>
-                            </li>
-                            <li>
-                                <router-link :to="pathName+'/checkList/'+$route.params.id+'?checkListName='+$route.query.checkListName" class="active">{{$route.query.checkListName}}</router-link>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                {{title}}
-                                <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">添加</button>
-                                    <button class="btn btn-primary btn-sm">导入</button>
-                                </div>
-                            </h1>
+    <!-- 右侧内容 -->
+    <div class="main-content checkItem">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link :to="pathName+'/'">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/checkList'">检查指标类别管理</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/checkList/'+$route.params.id+'?checkListName='+$route.query.checkListName" class="active">{{$route.query.checkListName}}</router-link>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        {{title}}
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">添加</button>
+                            <button class="btn btn-primary btn-sm">导入</button>
                         </div>
-                        <h3 style="margin:10px 0;" class="text-center">{{currentCheckItem.name}}</h3>
-                        <table class="table table-striped table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="center" width="60px">指标ID</th>
-                                    <th class="center little hidden-480">类别</th>
-                                    <th>名称</th>
-                                    <th class="center little">一票否决</th>
-                                    <th class="center little">排序</th>
-                                    <th class="center little">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in checkListDate" :key="item.id" :style="item.item_type=== 'header'?'font-weight:bold':''">
-                                    <td class="center">{{item.id}}</td>
-                                    <td class="hidden-480"
-                                        @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Type')"
-                                    >
-                                        <span v-if="isTypeInput != item.id">{{item.item_type=== 'header'?'小标题':'指标'}}</span>
-                                        <label v-if="isTypeInput == item.id" class="text-left">
-                                            <input type="radio" class="ace" v-model="checkItemType" value="header" @click="setcheckItemInfo($event,'Type','header')">
-                                            <span class="lbl">小标题</span>
-                                        </label>
-                                        <label v-if="isTypeInput == item.id" class="text-left">
-                                            <input type="radio" class="ace" v-model="checkItemType" value="common" @click="setcheckItemInfo($event,'Type','common')">
-                                            <span class="lbl">指标</span>
-                                        </label>
-                                    </td>
-                                    <td @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Name')">
-                                        <span v-if="isNameInput != item.id">{{item.item_name}}</span>
-                                        <input  v-if="isNameInput == item.id" 
-                                                autofocus="autofocus"
-                                                type="text" name="item_name" 
-                                                v-model="checkItemName" 
-                                                @blur="setcheckItemInfo"
-                                                @keyup="setcheckItemInfo"
-                                                @focus="setFlag('Name',item.item_name)"
-                                                class="inlineInput"
-                                        >
-                                    </td>
-                                    <td class="center" 
-                                        @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Level')"
-                                    >
-                                        <span v-if="isLevelInput !== item.id">{{item.item_level==="fatal"?'是':'否'}}</span>
-
-                                        <label v-if="isLevelInput == item.id" class="text-left">
-                                            <input type="radio" class="ace" v-model="checkItemLevel" value="fatal" @click="setcheckItemInfo($event,'Level','fatal')">
-                                            <span class="lbl">是</span>
-                                        </label>
-                                        <label v-if="isLevelInput == item.id" class="text-left">
-                                            <input type="radio" class="ace" v-model="checkItemLevel" value="common" @click="setcheckItemInfo($event,'Level','common')">
-                                            <span class="lbl">否</span>
-                                        </label>
-                                    </td>
-                                    <td class="center" 
-                                        @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Order')"
-                                    >
-                                        <span v-if="isOrderInput != item.id">{{item.item_order}}</span>
-                                        <input  v-if="isOrderInput == item.id"
-                                            autofocus="autofocus" 
-                                            type="text" name="item_name" 
-                                            v-model="checkItemOrder" 
-                                            @blur="setcheckItemInfo"
-                                            @keyup="setcheckItemInfo"
-                                            @focus="setFlag('Order',item.item_order)"
-                                            style="width:30px"
-                                            class="text-center"
-                                        >
-                                    </td>
-                                    <td class="center">
-                                        <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.item_name)">
-                                            <i class="ace-icon fa fa-trash-o bigger-110"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr v-if="checkListDate.length == 0">
-                                    <td colspan="6" class="center">暂无指标数据</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    </h1>
                 </div>
+                <h3 style="margin:10px 0;" class="text-center">{{currentCheckItem.name}}</h3>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="center" width="60px">指标ID</th>
+                            <th class="center little hidden-480">类别</th>
+                            <th>名称</th>
+                            <th class="center little">一票否决</th>
+                            <th class="center little">排序</th>
+                            <th class="center little">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in checkListDate" :key="item.id" :style="item.item_type=== 'header'?'font-weight:bold':''">
+                            <td class="center">{{item.id}}</td>
+                            <td class="hidden-480"
+                                @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Type')"
+                            >
+                                <span v-if="isTypeInput != item.id">{{item.item_type=== 'header'?'小标题':'指标'}}</span>
+                                <label v-if="isTypeInput == item.id" class="text-left">
+                                    <input type="radio" class="ace" v-model="checkItemType" value="header" @click="setcheckItemInfo($event,'Type','header')">
+                                    <span class="lbl">小标题</span>
+                                </label>
+                                <label v-if="isTypeInput == item.id" class="text-left">
+                                    <input type="radio" class="ace" v-model="checkItemType" value="common" @click="setcheckItemInfo($event,'Type','common')">
+                                    <span class="lbl">指标</span>
+                                </label>
+                            </td>
+                            <td @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Name')">
+                                <span v-if="isNameInput != item.id">{{item.item_name}}</span>
+                                <input  v-if="isNameInput == item.id" 
+                                        autofocus="autofocus"
+                                        type="text" name="item_name" 
+                                        v-model="checkItemName" 
+                                        @blur="setcheckItemInfo"
+                                        @keyup="setcheckItemInfo"
+                                        @focus="setFlag('Name',item.item_name)"
+                                        class="inlineInput"
+                                >
+                            </td>
+                            <td class="center" 
+                                @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Level')"
+                            >
+                                <span v-if="isLevelInput !== item.id">{{item.item_level==="fatal"?'是':'否'}}</span>
+
+                                <label v-if="isLevelInput == item.id" class="text-left">
+                                    <input type="radio" class="ace" v-model="checkItemLevel" value="fatal" @click="setcheckItemInfo($event,'Level','fatal')">
+                                    <span class="lbl">是</span>
+                                </label>
+                                <label v-if="isLevelInput == item.id" class="text-left">
+                                    <input type="radio" class="ace" v-model="checkItemLevel" value="common" @click="setcheckItemInfo($event,'Level','common')">
+                                    <span class="lbl">否</span>
+                                </label>
+                            </td>
+                            <td class="center" 
+                                @dblclick="showcheckItemInput(item.id,item.item_name,item.item_level,item.item_type,item.item_order,'Order')"
+                            >
+                                <span v-if="isOrderInput != item.id">{{item.item_order}}</span>
+                                <input  v-if="isOrderInput == item.id"
+                                    autofocus="autofocus" 
+                                    type="text" name="item_name" 
+                                    v-model="checkItemOrder" 
+                                    @blur="setcheckItemInfo"
+                                    @keyup="setcheckItemInfo"
+                                    @focus="setFlag('Order',item.item_order)"
+                                    style="width:30px"
+                                    class="text-center"
+                                >
+                            </td>
+                            <td class="center">
+                                <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.item_name)">
+                                    <i class="ace-icon fa fa-trash-o bigger-110"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr v-if="checkListDate.length == 0">
+                            <td colspan="6" class="center">暂无指标数据</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <CheckItemModal
             :getCheckItemList="getCheckItemList"
             :length = "checkListDate.length+1"
         ></CheckItemModal>
-	</div>
+    </div>
 </template>
-
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";

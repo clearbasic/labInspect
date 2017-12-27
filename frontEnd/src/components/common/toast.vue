@@ -7,7 +7,6 @@
     </transition>
 </template>
 <script>
-    
     export default {
         data(){
             return {
@@ -61,12 +60,6 @@
         padding: 0 10px;
         margin-top: -15px;
         z-index: 1000;
-    }
-    .fade-enter,.fade-leave-to {
-        opacity: 0;
-    }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s
     }
 </style>
 

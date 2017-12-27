@@ -4,28 +4,11 @@
         <VueHead></VueHead>
         <div class="main-container" id="main-container">
             <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
+            <VueLeft></VueLeft>
             <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <a href="/">首页</a>
-                            </li>
-                            <li>
-                                <a href="/" class="active">welcome</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <h1 class="text-center">{{msg}}</h1>
-                    </div>
-                </div>
-            </div>
+            <transition name="fade">
+                <router-view />
+            </transition>
         </div>
 	</div>
 </template>

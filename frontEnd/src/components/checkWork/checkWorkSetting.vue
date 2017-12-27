@@ -1,199 +1,191 @@
 <template>
-    <div class="checkWork">
-        <!-- 头部 -->
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link :to="pathName+'/'">首页</router-link>
-                            </li>
-                            <li>
-                                <router-link :to="pathName+'/checkWork'">检查工作</router-link>
-                            </li>
-                            <li>
-                                <a class="active">{{title}}</a>
+    <!-- 右侧内容 -->
+    <div class="main-content checkWork">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link :to="pathName+'/'">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/checkWork'">检查工作</router-link>
+                    </li>
+                    <li>
+                        <a class="active">{{title}}</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        {{title}}
+                    </h1>
+                </div>
+                <h3 class="text-center" style="margin-top:10px;">
+                    {{college_info.org_name}} - 
+                    {{currentPlan.plan_name}} 
+                    {{currentTask.task_name}}
+                    <span v-if="currentTask.task_level === 'lab'">自查</span>
+                    <span v-if="currentTask.task_level === 'college'">复查</span>
+                    <span v-if="currentTask.task_level === 'school'">抽查</span>
+                </h3>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h5 class="text-center">
+                            学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
+                            满分{{currentPlan.plan_score}}
+                            <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
+                        </h5>
+                    </div>
+                </div>
+                <div class="clearfix position-relative">
+                    <p class="pull-right">
+                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" v-if="loginUser.user_level == currentTask.task_level">添加</button>
+                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
+                                <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
                             </li>
                         </ul>
+                    </p>
+                </div>
+                <div class="widget-box widget-color-blue ui-sortable-handle" v-for="check in check_list" :key="'check'+check.org_id">
+                    <div class="widget-header">
+                        <h5 class="widget-title bigger lighter">
+                            {{check.org_name}}
+                        </h5>
+                        <p v-if="today >= moment(check.dt_begin).unix()">
+                            本单位要求时间：
+                            <span >{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
+                            到
+                            <span>{{moment(check.dt_end).format('YYYY-MM-DD')}}</span>
+                        </p>
+                        <p v-if="today < moment(check.dt_begin).unix()">
+                            本单位要求时间：
+                            <datepicker v-model="check.dt_begin" width="140" 
+                                :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
+                            ></datepicker>
+                            到
+                            <datepicker v-model="check.dt_end" width="140" 
+                                :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
+                            ></datepicker>
+                        </p>
                     </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                {{title}}
-                            </h1>
+                    <div class="widget-body">
+                        <div class="widget-main no-padding">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">房间小组</th>
+                                        <th width="50%">分配给</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 循环本实验室所属房间分组列表， -->
+                                    <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == check.org_id">
+                                        <td>
+                                            <h5>
+                                                分组名称：{{zone.zone_name}}
+                                            </h5>
+                                            分组下的房间：
+                                            <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
+                                                （{{room.room_name}}）
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
+                                            <select :value="check.zone_list[zone.zone_id]?check.zone_list[zone.zone_id].group_id:0" @change="setGroupId(check,zone.zone_id,$event)">
+                                                <option value="0">--请选择--</option>
+                                                <option :value="group.group_id" 
+                                                    v-for="group in group_list" 
+                                                    :key="'group'+group.group_id"
+                                                    v-if="group.org_id == loginUser.org_id"
+                                                >{{group.group_name}}</option>
+                                            </select>
+                                            <br>
+                                            <span v-for="group in group_list" :key="'group'+group.group_id" v-if="check.zone_list[zone.zone_id]&&check.zone_list[zone.zone_id].group_id==group.group_id">
+                                                组长：{{group.leader_name}} 组员：{{group.members}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="loginUser.user_level == currentTask.task_level">
+                                        <td colspan="2" class="center">
+                                            <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
+                                            <router-link class="btn btn-default btn-sm" 
+                                                v-if="check.check_state != 'finished'&&today > moment(check.dt_begin).unix()&&today < moment(check.dt_end).unix()" 
+                                                :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
+                                            >查看进度</router-link>
+                                            <router-link class="btn btn-default btn-sm" 
+                                                v-if="check.check_state == 'finished' || today > moment(check.dt_end).unix()"
+                                                :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
+                                            >查看结果</router-link>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
                         </div>
-                        <h3 class="text-center" style="margin-top:10px;">
-                            {{college_info.org_name}} - 
-                            {{currentPlan.plan_name}} 
-                            {{currentTask.task_name}}
-                            <span v-if="currentTask.task_level === 'lab'">自查</span>
-                            <span v-if="currentTask.task_level === 'college'">复查</span>
-                            <span v-if="currentTask.task_level === 'school'">抽查</span>
-                        </h3>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h5 class="text-center">
-                                    学校要求时间{{currentTask.dt_begin.substring(0,10)}} 到 {{currentTask.dt_end.substring(0,10)}}
-                                    满分{{currentPlan.plan_score}}
-                                    <router-link :to="{path:pathName+'/checkPlanSummary',query:{plan_id:currentPlan.plan_id}}">工作说明</router-link>
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="clearfix position-relative">
-                            <p class="pull-right">
-                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" v-if="loginUser.user_level == currentTask.task_level">添加</button>
-                                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                                    <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
-                                        <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
-                                    </li>
-                                </ul>
-                            </p>
-                        </div>
-                        <div class="widget-box widget-color-blue ui-sortable-handle" v-for="check in check_list" :key="'check'+check.org_id">
-                            <div class="widget-header">
-                                <h5 class="widget-title bigger lighter">
-                                    {{check.org_name}}
-                                </h5>
-                                <p v-if="today >= moment(check.dt_begin).unix()">
-                                    本单位要求时间：
-                                    <span >{{moment(check.dt_begin).format('YYYY-MM-DD')}}</span>
-                                    到
-                                    <span>{{moment(check.dt_end).format('YYYY-MM-DD')}}</span>
-                                </p>
-                                <p v-if="today < moment(check.dt_begin).unix()">
-                                    本单位要求时间：
-                                    <datepicker v-model="check.dt_begin" width="140" 
-                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                    ></datepicker>
-                                    到
-                                    <datepicker v-model="check.dt_end" width="140" 
-                                        :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"
-                                    ></datepicker>
-                                </p>
-                            </div>
-                            <div class="widget-body">
-                                <div class="widget-main no-padding">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th width="50%">房间小组</th>
-                                                <th width="50%">分配给</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- 循环本实验室所属房间分组列表， -->
-                                            <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == check.org_id">
-                                                <td>
-                                                    <h5>
-                                                        分组名称：{{zone.zone_name}}
-                                                    </h5>
-                                                    分组下的房间：
-                                                    <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
-                                                        （{{room.room_name}}）
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
-                                                    <select :value="check.zone_list[zone.zone_id]?check.zone_list[zone.zone_id].group_id:0" @change="setGroupId(check,zone.zone_id,$event)">
-                                                        <option value="0">--请选择--</option>
-                                                        <option :value="group.group_id" 
-                                                            v-for="group in group_list" 
-                                                            :key="'group'+group.group_id"
-                                                            v-if="group.org_id == loginUser.org_id"
-                                                        >{{group.group_name}}</option>
-                                                    </select>
-                                                    <br>
-                                                    <span v-for="group in group_list" :key="'group'+group.group_id" v-if="check.zone_list[zone.zone_id]&&check.zone_list[zone.zone_id].group_id==group.group_id">
-                                                        组长：{{group.leader_name}} 组员：{{group.members}}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="loginUser.user_level == currentTask.task_level">
-                                                <td colspan="2" class="center">
-                                                    <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
-                                                    <router-link class="btn btn-default btn-sm" 
-                                                        v-if="check.check_state != 'finished'&&today > moment(check.dt_begin).unix()&&today < moment(check.dt_end).unix()" 
-                                                        :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
-                                                    >查看进度</router-link>
-                                                    <router-link class="btn btn-default btn-sm" 
-                                                        v-if="check.check_state == 'finished' || today > moment(check.dt_end).unix()"
-                                                        :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
-                                                    >查看结果</router-link>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table> 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="widget-box widget-color-blue ui-sortable-handle" v-if="addLab">
-                            <div class="widget-header">
-                                <h5 class="widget-title bigger lighter">
-                                    {{newLabSetting.org_name}}
-                                </h5>
-                                <p>
-                                    本单位要求时间：
-                                    <datepicker v-model="newLabSetting.dt_begin" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
-                                    -
-                                    <datepicker v-model="newLabSetting.dt_end" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
-                                </p>
-                            </div>
-                            <div class="widget-body">
-                                <div class="widget-main no-padding">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th width="50%">房间小组</th>
-                                                <th width="50%">分配给</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- 循环本实验室所属房间分组列表， -->
-                                            <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == newLabSetting.org_id">
-                                                <td>
-                                                    <h5>
-                                                        分组名称：{{zone.zone_name}}
-                                                    </h5>
-                                                    分组下的房间：
-                                                    <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
-                                                       （{{room.room_name}}）
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
-                                                    <select :value="newLabSetting.zone_list[zone.zone_id]?newLabSetting.zone_list[zone.zone_id].group_id:0" @change="setGroupId(newLabSetting,zone.zone_id,$event,true)">
-                                                        <option value="0">--请选择--</option>
-                                                        <option :value="group.group_id" 
-                                                            v-for="group in group_list" 
-                                                            :key="'group'+group.group_id"
-                                                            v-if="group.org_id == loginUser.org_id"
-                                                        >{{group.group_name}}</option>
-                                                    </select>
-                                                    <br>
-                                                    <span v-for="group in group_list" :key="'group'+group.group_id" v-if="newLabSetting.zone_list[zone.zone_id]&&newLabSetting.zone_list[zone.zone_id].group_id==group.group_id">
-                                                        组长：{{group.leader_name}} 组员：{{group.members}}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr v-if="loginUser.user_level == currentTask.task_level">
-                                                <td colspan="2" class="center">
-                                                    <button class="btn btn-success btn-sm" @click="saveCheckTask">添加</button>
-                                                    <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table> 
-                                    
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="widget-box widget-color-blue ui-sortable-handle" v-if="addLab">
+                    <div class="widget-header">
+                        <h5 class="widget-title bigger lighter">
+                            {{newLabSetting.org_name}}
+                        </h5>
+                        <p>
+                            本单位要求时间：
+                            <datepicker v-model="newLabSetting.dt_begin" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
+                            -
+                            <datepicker v-model="newLabSetting.dt_end" width="140" :not-before="currentTask.dt_begin" :not-after="currentTask.dt_end"></datepicker>
+                        </p>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main no-padding">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">房间小组</th>
+                                        <th width="50%">分配给</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 循环本实验室所属房间分组列表， -->
+                                    <tr v-for="zone in zone_list" :key="'zone'+zone.zone_id" v-if="zone.org_id == newLabSetting.org_id">
+                                        <td>
+                                            <h5>
+                                                分组名称：{{zone.zone_name}}
+                                            </h5>
+                                            分组下的房间：
+                                            <span v-for="room in room_list" :key="'room'+room.room_id" v-if="room.zone_id == zone.zone_id">
+                                                （{{room.room_name}}）
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- 循环本实验室所属房间分组列表，跟检查安排的房间分组匹配，匹配上了就利用group_id回显检查小组信息 -->
+                                            <select :value="newLabSetting.zone_list[zone.zone_id]?newLabSetting.zone_list[zone.zone_id].group_id:0" @change="setGroupId(newLabSetting,zone.zone_id,$event,true)">
+                                                <option value="0">--请选择--</option>
+                                                <option :value="group.group_id" 
+                                                    v-for="group in group_list" 
+                                                    :key="'group'+group.group_id"
+                                                    v-if="group.org_id == loginUser.org_id"
+                                                >{{group.group_name}}</option>
+                                            </select>
+                                            <br>
+                                            <span v-for="group in group_list" :key="'group'+group.group_id" v-if="newLabSetting.zone_list[zone.zone_id]&&newLabSetting.zone_list[zone.zone_id].group_id==group.group_id">
+                                                组长：{{group.leader_name}} 组员：{{group.members}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr v-if="loginUser.user_level == currentTask.task_level">
+                                        <td colspan="2" class="center">
+                                            <button class="btn btn-success btn-sm" @click="saveCheckTask">添加</button>
+                                            <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                            
                         </div>
                     </div>
                 </div>

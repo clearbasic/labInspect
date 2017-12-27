@@ -1,38 +1,30 @@
 <template>
-	<div class="checkPlan">
-        <!-- 头部 -->
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link to="/">首页</router-link>
-                            </li>
-                            <li>
-                                <router-link to="/checkPlan" class="active">{{title}}</router-link>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                {{currentPlan.plan_name}}工作说明
-                            </h1>
-                        </div>
-                        <div class="text-justify panel-body" v-html="currentPlan.intro"></div>
-                    </div>
+    <!-- 右侧内容 -->
+    <div class="main-content">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link to="/">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link to="/checkPlan" class="active">{{title}}</router-link>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        {{currentPlan.plan_name}}工作说明
+                    </h1>
                 </div>
+                <div class="text-justify panel-body" v-html="currentPlan.intro"></div>
             </div>
         </div>
-	</div>
+    </div>
 </template>
 
 <script>

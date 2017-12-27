@@ -1,139 +1,131 @@
 <template>
-	<div class="checkList">
-        <!-- 头部 -->
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link :to="pathName+'/'">首页</router-link>
+    <!-- 右侧内容 -->
+    <div class="main-content myCheck">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link :to="pathName+'/'">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/myCheck'" class="active">{{title}}</router-link>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        <span v-if="templateType == 'item'">{{currentRoom.room_name}}房间</span>
+                        {{currentPlan.plan_name}}
+                        <span v-if="templateType != 'task'">
+                            {{currentTask.task_name}}
+                            <span v-if="currentTask.task_level=='lab'">自查</span>
+                            <span v-if="currentTask.task_level=='college'">复查</span>
+                            <span v-if="currentTask.task_level=='school'">抽查</span>
+                        </span>
+                        <div class="pull-right" v-if="templateType !='task'">
+                            <button class="btn btn-default btn-sm" @click="templateType='task'" v-if="templateType=='room'">上一页</button>
+                            <button class="btn btn-default btn-sm" @click="templateType='room'" v-if="templateType=='item'">上一页</button>
+                        </div>
+                    </h1>
+                </div>
+                <!-- 检查安排列表 -->
+                <table class="table table-bordered table-striped table-hover" v-if="templateType=='task'">
+                    <thead>
+                        <tr>
+                            <th class="center little">检查安排</th>
+                            <th>单位要求时间</th>
+                            <th class="center little">检查类型</th>
+                            <th class="center little">开展情况</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="taskCheck in task_list" :key="'taskCheck'+taskCheck.check_id">
+                            <td class="center little">{{taskCheck.task_name}}</td>
+                            <td>{{taskCheck.dt_begin.substring(0,10)}} 到 {{taskCheck.dt_end.substring(0,10)}}</td>
+                            <td class="center little" >
+                                <span v-if="taskCheck.task_level == 'lab'">自查</span>
+                                <span v-if="taskCheck.task_level == 'college'">复查</span>
+                                <span v-if="taskCheck.task_level == 'school'">抽查</span>
+                            </td>
+                            <td class="center little">
+                                <span v-if="today < moment(taskCheck.dt_begin).unix()">未开展</span>
+                                <a v-if="today >= moment(taskCheck.dt_begin).unix()&&today <= moment(taskCheck.dt_end).unix()"
+                                    @click="showRoomList(taskCheck)"
+                                >检查中</a>
+                                <span v-if="today > moment(taskCheck.dt_end).unix()">已结束</span>
+                            </td>
+                        </tr>
+                        <tr v-if="task_list.length == 0">
+                            <td colspan="5" class="center">本期次没有安排给您检查工作！</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 具体检查安排下的房间列表 -->
+                <table v-if="templateType=='room'" class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>房间名</th>
+                            <th>所属院系</th>
+                            <th>所属实验室</th>
+                            <th class="center little">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="room in currentTask.room_list" :key="'room'+room.effort_id">
+                            <td>
+                                <a @click="showCheckItem(room)">{{room.room_name}}</a>
+                            </td>
+                            <td>{{room.dept_name}}</td>
+                            <td>{{room.lab_name}}</td>
+                            <td class="center little">
+                                <a @click="showCheckItem(room)">
+                                    <span v-if="room.effort_state != 'finished'">开展工作</span>
+                                    <span v-if="room.effort_state == 'finished'">已提交</span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 具体房间下面的指标列表 -->
+                <div class="checkItemList" v-if="templateType=='item'">
+                    <p><span class="red">*</span> 为一票否决，该指标不合格，该房间分数即为0，所有指标默认为合格</p>
+                    <p v-if="ruleList.length==0" class="center">没有查到对应的指标</p>
+                    <div class="checkList" v-for="checkList in ruleList" :key="'checkList'+checkList.id" v-if="ruleList.length>0">
+                        <ul class="list-group">
+                            <li class="list-group-item active">
+                                {{checkList.name}}（{{checkList.score}}分）
                             </li>
-                            <li>
-                                <router-link :to="pathName+'/myCheck'" class="active">{{title}}</router-link>
+                            <li class="list-group-item" v-for="item in checkList.checkList" :key="'item'+item.item_id">
+                                <div class="radio nomargin" v-if="item.item_type == 'common'">
+                                    <span class="red" v-if="item.item_level=='fatal'">*</span>  {{item.item_name}}
+                                    <label>
+                                        <input type="radio" class="ace" v-model="item.grade" value="yes">
+                                        <span class="lbl">合格</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="ace" v-model="item.grade" value="no">
+                                        <span class="lbl">不合格</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" class="ace" v-model="item.grade" value="NA">
+                                        <span class="lbl">不适用</span>
+                                    </label>
+                                    <span v-if="item.grade !='yes'">问题描述：<input type="text" v-model="item.intro" ></span>
+                                </div>
+                                <h5 v-if="item.item_type != 'common'" class="nomargin bolder">{{item.item_name}}</h5>
                             </li>
                         </ul>
                     </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                <span v-if="templateType == 'item'">{{currentRoom.room_name}}房间</span>
-                                {{currentPlan.plan_name}}
-                                <span v-if="templateType != 'task'">
-                                    {{currentTask.task_name}}
-                                    <span v-if="currentTask.task_level=='lab'">自查</span>
-                                    <span v-if="currentTask.task_level=='college'">复查</span>
-                                    <span v-if="currentTask.task_level=='school'">抽查</span>
-                                </span>
-                                <div class="pull-right" v-if="templateType !='task'">
-                                    <button class="btn btn-default btn-sm" @click="templateType='task'" v-if="templateType=='room'">上一页</button>
-                                    <button class="btn btn-default btn-sm" @click="templateType='room'" v-if="templateType=='item'">上一页</button>
-                                </div>
-                            </h1>
-                        </div>
-                        <!-- 检查安排列表 -->
-                        <table class="table table-bordered table-striped table-hover" v-if="templateType=='task'">
-                            <thead>
-                                <tr>
-                                    <th class="center little">检查安排</th>
-                                    <th>单位要求时间</th>
-                                    <th class="center little">检查类型</th>
-                                    <th class="center little">开展情况</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="taskCheck in task_list" :key="'taskCheck'+taskCheck.check_id">
-                                    <td class="center little">{{taskCheck.task_name}}</td>
-                                    <td>{{taskCheck.dt_begin.substring(0,10)}} 到 {{taskCheck.dt_end.substring(0,10)}}</td>
-                                    <td class="center little" >
-                                        <span v-if="taskCheck.task_level == 'lab'">自查</span>
-                                        <span v-if="taskCheck.task_level == 'college'">复查</span>
-                                        <span v-if="taskCheck.task_level == 'school'">抽查</span>
-                                    </td>
-                                    <td class="center little">
-                                        <span v-if="today < moment(taskCheck.dt_begin).unix()">未开展</span>
-                                        <a v-if="today >= moment(taskCheck.dt_begin).unix()&&today <= moment(taskCheck.dt_end).unix()"
-                                            @click="showRoomList(taskCheck)"
-                                        >检查中</a>
-                                        <span v-if="today > moment(taskCheck.dt_end).unix()">已结束</span>
-                                    </td>
-                                </tr>
-                                <tr v-if="task_list.length == 0">
-                                    <td colspan="5" class="center">本期次没有安排给您检查工作！</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!-- 具体检查安排下的房间列表 -->
-                        <table v-if="templateType=='room'" class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>房间名</th>
-                                    <th>所属院系</th>
-                                    <th>所属实验室</th>
-                                    <th class="center little">操作</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="room in currentTask.room_list" :key="'room'+room.effort_id">
-                                    <td>
-                                        <a @click="showCheckItem(room)">{{room.room_name}}</a>
-                                    </td>
-                                    <td>{{room.dept_name}}</td>
-                                    <td>{{room.lab_name}}</td>
-                                    <td class="center little">
-                                        <a @click="showCheckItem(room)">
-                                            <span v-if="room.effort_state != 'finished'">开展工作</span>
-                                            <span v-if="room.effort_state == 'finished'">已提交</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <!-- 具体房间下面的指标列表 -->
-                        <div class="checkItemList" v-if="templateType=='item'">
-                            <p><span class="red">*</span> 为一票否决，该指标不合格，该房间分数即为0，所有指标默认为合格</p>
-                            <p v-if="ruleList.length==0" class="center">没有查到对应的指标</p>
-                            <div class="checkList" v-for="checkList in ruleList" :key="'checkList'+checkList.id" v-if="ruleList.length>0">
-                                <ul class="list-group">
-                                    <li class="list-group-item active">
-                                        {{checkList.name}}（{{checkList.score}}分）
-                                    </li>
-                                    <li class="list-group-item" v-for="item in checkList.checkList" :key="'item'+item.item_id">
-                                        <div class="radio nomargin" v-if="item.item_type == 'common'">
-                                            <span class="red" v-if="item.item_level=='fatal'">*</span>  {{item.item_name}}
-                                            <label>
-                                                <input type="radio" class="ace" v-model="item.grade" value="yes">
-                                                <span class="lbl">合格</span>
-                                            </label>
-                                            <label>
-                                                <input type="radio" class="ace" v-model="item.grade" value="no">
-                                                <span class="lbl">不合格</span>
-                                            </label>
-                                            <label>
-                                                <input type="radio" class="ace" v-model="item.grade" value="NA">
-                                                <span class="lbl">不适用</span>
-                                            </label>
-                                            <span v-if="item.grade !='yes'">问题描述：<input type="text" v-model="item.intro" ></span>
-                                        </div>
-                                        <h5 v-if="item.item_type != 'common'" class="nomargin bolder">{{item.item_name}}</h5>
-                                    </li>
-                                </ul>
-                            </div>
-                            <button class="btn btn-success btn-sm" @click="submitRoomData(ruleList,'submit')" v-if="currentRoom.effort_state !='finished'">提交检查</button>
-                            <button class="btn btn-primary btn-sm" @click="submitRoomData(ruleList,'save')" v-if="currentRoom.effort_state !='finished'">保存草稿</button>
-                        </div>
-                    </div>
+                    <button class="btn btn-success btn-sm" @click="submitRoomData(ruleList,'submit')" v-if="currentRoom.effort_state !='finished'">提交检查</button>
+                    <button class="btn btn-primary btn-sm" @click="submitRoomData(ruleList,'save')" v-if="currentRoom.effort_state !='finished'">保存草稿</button>
                 </div>
             </div>
         </div>
-	</div>
+    </div>
 </template>
 
 <script>

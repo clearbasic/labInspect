@@ -1,43 +1,36 @@
 <template>
-    <div class="room">
-        <VueHead></VueHead>
-        <div class="main-container" id="main-container">
-            <!-- 左侧菜单 -->
-            <VueLeft show=""></VueLeft>
-            <!-- 右侧内容 -->
-            <div class="main-content">
-                <div class="main-content-inner">
-                    <!-- 面包屑 -->
-                    <div class="breadcrumbs" id="breadcrumbs">
-                        <ul class="breadcrumb">
-                            <li>
-                                <i class="ace-icon fa fa-home home-icon"></i>
-                                <router-link :to="pathName+'/'">首页</router-link>
-                            </li>
-                            <li>
-                                <router-link :to="pathName+'/room'" class="active">{{title}}</router-link>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- 右侧主要内容 -->
-                    <div class="page-content">
-                        <div class="page-header">
-                            <h1>
-                                {{title}}
-                                <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">添加房间</button>
-                                    <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">分组管理</router-link>
-                                </div>
-                            </h1>
+    <!-- 右侧内容 -->
+    <div class="main-content room">
+        <div class="main-content-inner">
+            <!-- 面包屑 -->
+            <div class="breadcrumbs" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <router-link :to="pathName+'/'">首页</router-link>
+                    </li>
+                    <li>
+                        <router-link :to="pathName+'/room'" class="active">{{title}}</router-link>
+                    </li>
+                </ul>
+            </div>
+            <!-- 右侧主要内容 -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        {{title}}
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">添加房间</button>
+                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">分组管理</router-link>
                         </div>
-                        <RoomList v-if="showComponentType == 'roomList'"
-                            :showRoomEdit = "showRoomEdit"
-                        ></RoomList>
-                        <RoomEdit v-if="showComponentType == 'roomEdit'"
-                            :showRoomList="showRoomList"
-                        ></RoomEdit>
-                    </div>
+                    </h1>
                 </div>
+                <RoomList v-if="showComponentType == 'roomList'"
+                    :showRoomEdit = "showRoomEdit"
+                ></RoomList>
+                <RoomEdit v-if="showComponentType == 'roomEdit'"
+                    :showRoomList="showRoomList"
+                ></RoomEdit>
             </div>
         </div>
     </div>
