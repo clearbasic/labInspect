@@ -3,7 +3,7 @@
         <ul class="list-group">
             <div class="list-group-item list-group-item-info">
                 <h4 style="margin:0;">
-                    自查计划 <small>共{{labArray.length}}次</small>
+                    自查安排 <small>共{{labArray.length}}次</small>
                     <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('lab')"></i>
                 </h4>
             </div>
@@ -20,8 +20,8 @@
             </li>
             <li v-show="newTaskLevel==='lab'" class="list-group-item">
                 {{newTaskName}}，
-                自 <datepicker v-model="newTaskDtBegin"  placeholder="输入计划开始时间" width="140"></datepicker>
-                至 <datepicker v-model="newTaskDtEnd"  placeholder="输入计划结束时间" width="140"></datepicker>
+                自 <datepicker v-model="newTaskDtBegin"  placeholder="输入安排开始时间" width="140"></datepicker>
+                至 <datepicker v-model="newTaskDtEnd"  placeholder="输入安排结束时间" width="140"></datepicker>
                 <button class="btn btn-success btn-sm" @click="createNewTask()"><i class="ace-icon glyphicon glyphicon-ok"></i></button>
                 <button class="btn btn-danger btn-sm" @click="addTask('')"><i class="ace-icon glyphicon glyphicon-remove"></i></button>
             </li>
@@ -29,7 +29,7 @@
         <ul class="list-group">
             <div class="list-group-item list-group-item-info">
                 <h4 style="margin:0;">
-                    复查计划 <small>共{{collegeArray.length}}次</small>
+                    复查安排 <small>共{{collegeArray.length}}次</small>
                     <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('college')"></i>
                 </h4>
             </div>
@@ -46,8 +46,8 @@
             </li>
             <li v-show="newTaskLevel==='college'" class="list-group-item">
                 {{newTaskName}}，
-                自 <datepicker v-model="newTaskDtBegin" placeholder="输入计划开始时间" width="140"></datepicker>
-                至 <datepicker v-model="newTaskDtEnd" placeholder="输入计划结束时间" width="140"></datepicker>
+                自 <datepicker v-model="newTaskDtBegin" placeholder="输入安排开始时间" width="140"></datepicker>
+                至 <datepicker v-model="newTaskDtEnd" placeholder="输入安排结束时间" width="140"></datepicker>
                 <button class="btn btn-success btn-sm" @click="createNewTask()"><i class="ace-icon glyphicon glyphicon-ok"></i></button>
                 <button class="btn btn-danger btn-sm" @click="addTask('')"><i class="ace-icon glyphicon glyphicon-remove"></i></button>
             </li>
@@ -55,7 +55,7 @@
         <ul class="list-group">
             <div class="list-group-item list-group-item-info">
                 <h4 style="margin:0;" class="clearfix">
-                    抽查计划 <small>共{{schoolArray.length}}次</small>
+                    抽查安排 <small>共{{schoolArray.length}}次</small>
                     <i class="ace-icon glyphicon glyphicon-plus pull-right" @click="addTask('school')"></i>
                 </h4>
             </div>
@@ -71,8 +71,8 @@
             </li>
             <li v-show="newTaskLevel==='school'" class="list-group-item">
                 {{newTaskName}}，
-                自 <datepicker v-model="newTaskDtBegin"  placeholder="输入计划开始时间" width="140"></datepicker>
-                至 <datepicker v-model="newTaskDtEnd"  placeholder="输入计划结束时间" width="140"></datepicker>
+                自 <datepicker v-model="newTaskDtBegin"  placeholder="输入安排开始时间" width="140"></datepicker>
+                至 <datepicker v-model="newTaskDtEnd"  placeholder="输入安排结束时间" width="140"></datepicker>
                 <button class="btn btn-success btn-sm" @click="createNewTask()"><i class="ace-icon glyphicon glyphicon-ok"></i></button>
                 <button class="btn btn-danger btn-sm" @click="addTask('')"><i class="ace-icon glyphicon glyphicon-remove"></i></button>
             </li>
@@ -102,9 +102,15 @@ export default {
             return this.$store.state.checkPlan
         }
     },
+    props:{
+        showToast:{
+            type:Function,
+            default:null
+        }
+    },
     methods:{
         addTask(type){
-            //显示添加计划输入框
+            //显示添加安排输入框
             this.newTaskLevel = type;
             if(type === ''){
                 this.newTaskName = '';
@@ -123,7 +129,7 @@ export default {
             }
         },
         createNewTask(){
-            //创建新计划
+            //创建新安排
             if(this.newTaskName === '' || this.newTaskLevel === '' || this.newTaskDtBegin === '' || this.newTaskDtEnd === ''){
                 alert("请填写完整的信息");
                 return false
@@ -142,6 +148,7 @@ export default {
                 dt_end:this.moment(this.newTaskDtEnd).format("YYYY-MM-DD"),
             }
             this.emitAjax(URL, data, function(result) {
+                _SELF.showToast();
                 _SELF.getCheckPlanData();
             });
             this.addTask("")
@@ -166,6 +173,7 @@ export default {
                 dt_end:changedEnd
             }
             this.emitAjax(URL, data, function(result) {
+                _this.showToast();
                 _this.getCheckPlanData();
             });
         },
@@ -199,11 +207,12 @@ export default {
                 dt_end:end
             }
             this.emitAjax(URL, data, function(result) {
+                _this.showToast();
                 _this.getCheckPlanData();
             });
         },
         setCount(){
-            //计划分类
+            //安排分类
             const _this = this;
             _this.schoolArray = [];
             _this.collegeArray = [];

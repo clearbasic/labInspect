@@ -22,9 +22,6 @@
                         <th>用户名</th>
                         <th class="center little">姓名</th>
                         <th class="hidden-640">单位名称</th>
-                        <th class="center little">移动电话</th>
-                        <th class="hidden-640">电子邮箱</th>
-                        <th class="center little hidden-640">状态</th>
                         <th class="center little">操作</th>
                     </tr>
                 </thead>
@@ -35,19 +32,11 @@
                         </td>
                         <td class="center little">{{user.name}}</td>
                         <td class="hidden-640">{{user.org_name}}</td>
-                        <td class="center little">{{user.mobile}}</td>
-                        <td class="hidden-640">{{user.email}}</td>
-                        <td class="center little hidden-640">
-                            {{user.person_state == 'yes'?"开启":"禁用"}}   
-                        </td>
                         <td class="center little">
                             <span v-if="user.username == 'admin'">系统账户不能操作</span>
                             <div class="hidden-xs btn-group" v-if="user.username != 'admin'">
                                 <button class="btn btn-success btn-xs" @click="sure(user)">
-                                    <i class="ace-icon glyphicon glyphicon-edit"></i>
-                                </button>
-                                <button class="btn btn-danger btn-xs" @click="delUser(user)">
-                                    <i class="ace-icon fa fa-trash-o"></i>
+                                    <i class="ace-icon glyphicon glyphicon-ok"></i>
                                 </button>
                             </div>
                             <div class="hidden-sm hidden-md hidden-lg" v-if="user.username != 'admin'">
@@ -58,12 +47,7 @@
                                     <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
                                         <li>
                                             <a class="tooltip-info blue" data-rel="tooltip" data-original-title="View"  @click="sure(user)">
-                                                <i class="ace-icon glyphicon glyphicon-edit"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="tooltip-info red" data-rel="tooltip" data-original-title="View"  @click="delUser(user)">
-                                                <i class="ace-icon fa fa-trash-o"></i>
+                                                <i class="ace-icon glyphicon glyphicon-ok"></i>
                                             </a>
                                         </li>
                                     </ul>

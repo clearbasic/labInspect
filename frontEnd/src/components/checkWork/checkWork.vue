@@ -69,9 +69,9 @@
                                                 <th class="center little">检查安排</th>
                                                 <th>学校要求时间</th>
                                                 <th class="center little">开展情况</th>
-                                                <th class="center little">检查分配</th>
-                                                <th class="center little">查看进度</th>
-                                                <th class="center little">查看结果</th>
+                                                <th class="center little">分配</th>
+                                                <th class="center little">进度</th>
+                                                <th class="center little">结果/反馈</th>
                                             </tr>
                                         </thead>
                                         <!-- 循环每个实验室的具体任务 -->

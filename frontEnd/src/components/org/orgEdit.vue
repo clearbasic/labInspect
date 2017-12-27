@@ -299,8 +299,8 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="form-group">
-                                    <router-link :to="pathName+'/orgList'" class="btn btn-default btn-sm" tag="button">返回</router-link>
                                     <button class="btn btn-success btn-sm" @click="editOrgInfo">保存</button>
+                                    <router-link :to="pathName+'/orgList'" class="btn btn-default btn-sm" tag="button">返回</router-link>
                                 </div>
                             </div>
                         </div>

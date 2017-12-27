@@ -92,7 +92,7 @@ export default [
                 icon:'',
             },
             {
-                name:"用户管理",
+                name:"人员管理",
                 url:pathName+"/userList",
                 permission:5,
                 icon:'',
@@ -106,9 +106,29 @@ export default [
         ]
     },
     {
-        name:"退出系统",
-        url:pathName+"/logout",
-        icon:"ace-icon glyphicon glyphicon-off",
-        permission:0,
+        name:"系统基础数据设置",
+        url:pathName+"",
+        icon:"ace-icon fa fa-cog",
+        permission:5,
+        child:[
+            {
+                name:"菜单栏设置",
+                url:pathName+"/menu",
+                permission:5,
+                icon:'',
+            },
+            {
+                name:"角色设置",
+                url:pathName+"/role",
+                permission:5,
+                icon:'',
+            },
+            {
+                name:"权限点设置",
+                url:pathName+"/permission",
+                permission:5,
+                icon:'',
+            }
+        ]
     }
 ]

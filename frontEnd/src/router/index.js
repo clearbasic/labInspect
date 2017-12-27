@@ -21,6 +21,9 @@ import Zone from "../components/room/zone.vue";
 import RoomZoneList from "../components/room/roomZoneList.vue";
 import Login from "../components/login/login.vue";
 import Feedback from "../components/feedback/feedback.vue";
+import Menu from "../components/admin/menu.vue";
+import Permission from "../components/admin/permission.vue";
+import Role from "../components/admin/role.vue";
 
 
 Vue.use(Router)
@@ -207,6 +210,33 @@ export default new Router({
 			meta:{
 				title:"问题反馈 - "+title,
 				active:pathName+"/feedback",
+				permission:1,
+			}
+		},{
+			path:pathName+"/menu",
+			name:"menu",
+			component:Menu,
+			meta:{
+				title:"菜单设置 - "+title,
+				active:pathName+"/menu",
+				permission:1,
+			}
+		},{
+			path:pathName+"/permission",
+			name:"permission",
+			component:Permission,
+			meta:{
+				title:"权限点设置 - "+title,
+				active:pathName+"/ermission",
+				permission:1,
+			}
+		},{
+			path:pathName+"/role",
+			name:"role",
+			component:Role,
+			meta:{
+				title:"角色设置 - "+title,
+				active:pathName+"/role",
 				permission:1,
 			}
 		}

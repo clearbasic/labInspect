@@ -61,22 +61,23 @@
                         </div>
                         <div class="tabbable">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#checkPlan" data-toggle="tab" class="bigger-130">检查计划</a></li>
+                                <li class="active"><a href="#checkPlan" data-toggle="tab" class="bigger-130">检查安排</a></li>
                                 <li><a href="#checkRule" data-toggle="tab" class="bigger-130">检查规则</a></li>
                                 <li><a href="#workDescription" data-toggle="tab" class="bigger-130">工作说明</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div id="checkPlan" class="tab-pane fade active in">
-                                    <CheckTask></CheckTask>
+                                    <CheckTask :showToast="showToast"></CheckTask>
                                 </div>
                                 <div id="checkRule" class="tab-pane fade">
-                                    <CheckRule></CheckRule>
+                                    <CheckRule :showToast="showToast"></CheckRule>
                                 </div>
                                 <div id="workDescription" class="tab-pane fade">
-                                    <CheckDescription></CheckDescription>
+                                    <CheckDescription :showToast="showToast"></CheckDescription>
                                 </div>
                             </div>
                         </div>  
+                        <Toast :show="isShow" :msg="msg" :hide="hideToast"></Toast>
                     </div>
                 </div>
             </div>
@@ -90,6 +91,7 @@ import VueLeft from "../../common/leftMenu";
 import CheckTask from './checkTask';
 import CheckRule from './checkRule';
 import CheckDescription from './checkDescription';
+import Toast from '../../common/toast.vue';
 
 export default {
     name: "checkPlanDetail",
@@ -99,16 +101,14 @@ export default {
         CheckTask,
         CheckRule,
         CheckDescription,
-        checkPlan:{
-            plan:{},
-            task_list:[],
-            rule_list:[],
-        },
-        flag:"",
+        Toast,
     },
     data() {
         return {
             title: "检查期次管理编辑",
+            flag:"",
+            isShow:false,
+            msg:"保存成功"
         };
     },
     computed:{
@@ -142,7 +142,9 @@ export default {
                 intro:this.checkPlan.plan.intro,
             }
             this.flag = "";
-            this.emitAjax(URL, data, null,function(){
+            this.emitAjax(URL, data, function(){
+               _SELF.showToast();
+            },function(){
                 //修改失败刷新页面
                 _SELF.$router.push(pathName+'/checkPlan/'+this.$route.params.id);
             });
@@ -159,6 +161,15 @@ export default {
         },
         setFlag(value){
             this.flag = value;
+        },
+        hideToast(){
+            this.isShow = false;
+        },
+        showToast(msg){
+            if(msg){
+                this.msg = msg;
+            }
+            this.isShow = true;
         }
     },
     mounted(){

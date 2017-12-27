@@ -122,6 +122,12 @@ export default {
         this.getCheckList();
         this.getOrgList();
     },
+    props:{
+        showToast:{
+            type:Function,
+            default:null
+        }
+    },
     data() {
         return {
             checkListArray: [], //指标库列表
@@ -255,7 +261,9 @@ export default {
                 //修改规则
                 if(type){
                     const URL = _this.serverUrl + "/admin/rule/edit";
-                    _this.emitAjax(URL, rule, null,function(result) {
+                    _this.emitAjax(URL, rule, function(){
+                        _this.showToast();
+                    },function(result) {
                         _this.getCheckPlan();
                     });
                 }else {
@@ -283,6 +291,7 @@ export default {
             })
             
             this.emitAjax(URL, data, function(result) {
+                _SELF.showToast("添加成功");
                 _SELF.newRule={
                     plan_id:0,
                     level:"lab",

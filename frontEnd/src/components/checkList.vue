@@ -132,7 +132,7 @@ export default {
     name: "checkList",
     components: {
         VueHead,
-        VueLeft
+        VueLeft,
     },
     data() {
         return {

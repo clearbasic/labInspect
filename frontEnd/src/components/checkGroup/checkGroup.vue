@@ -37,7 +37,7 @@
                                         <th class="center" width="60px">小组ID</th>
                                         <th>小组名称</th>
                                         <th class="center">单位级别</th>
-                                        <th class="center hidden-640">组长名称</th>
+                                        <th class="center hidden-640">组长姓名</th>
                                         <th class="center little hidden-640">组长电话</th>
                                         <th class="center hidden-640">所属单位</th>
                                         <th class="center little">排序</th>
