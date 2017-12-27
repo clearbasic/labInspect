@@ -88,9 +88,9 @@
             <div class="modal-dialog modal-lg" role="document" aria-hidden="true">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <UserList 
+                        <UserModal 
                             :sure="selectUser"
-                        ></UserList>
+                        ></UserModal>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
     import VueHead from "../common/header";
     import VueLeft from "../common/leftMenu";
     import GroupModal from './groupModal';
-    import UserList from '../user/userList';
+    import UserModal from '../user/userModal';
 
     export default {
         name:"checkGroup",
@@ -112,7 +112,7 @@
                 checkGroupArray:[]
             }
         },
-        components:{VueHead,VueLeft,GroupModal,UserList},
+        components:{VueHead,VueLeft,GroupModal,UserModal},
         computed:{
             orgList(){
                 return this.$store.state.orgList;

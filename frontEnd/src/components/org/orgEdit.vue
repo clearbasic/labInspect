@@ -316,9 +316,9 @@
                         <h4 class="modal-title" id="myModalLabel">用户管理</h4>
                     </div>
                     <div class="modal-body">
-                        <UserList 
+                        <UserModal 
                             :sure="selectUser"
-                        ></UserList>
+                        ></UserModal>
                     </div>
                 </div>
             </div>
@@ -328,7 +328,7 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
-import UserList from "../user/userList";
+import UserModal from "../user/userModal";
 
 export default {
     name: "checkorg",
@@ -346,7 +346,7 @@ export default {
             key: "" //保存当前要改变的字段
         };
     },
-    components: { VueHead, VueLeft, UserList },
+    components: { VueHead, VueLeft, UserModal },
     computed: {
         orgList() {
             return this.$store.state.orgList;

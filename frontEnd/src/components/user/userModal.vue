@@ -68,7 +68,7 @@
 <script>
     import CreateUser from './createUser';
     export default {
-        name:"userList",
+        name:"userModal",
         props:["sure"],
         components:{CreateUser},
         data(){

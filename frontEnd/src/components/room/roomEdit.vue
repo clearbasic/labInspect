@@ -115,9 +115,9 @@
                         <h4 class="modal-title" id="myModalLabel">用户管理</h4>
                     </div>
                     <div class="modal-body">
-                        <UserList 
+                        <UserModal 
                             :sure="selectUser"
-                        ></UserList>
+                        ></UserModal>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@
     </div>
 </template>
 <script>
-import UserList from '../user/userList'
+import UserModal from '../user/userModal'
     export default {
         name:"roowEdit",
         props:{
@@ -151,7 +151,7 @@ import UserList from '../user/userList'
                 default:null,
             }
         },
-        components:{UserList},
+        components:{UserModal},
         computed:{
             room(){return this.$store.state.currentRoom},
             orgList(){ return this.$store.state.orgList}
