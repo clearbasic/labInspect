@@ -1,10 +1,11 @@
 <template>
     <li :class="[{'tree-item':!data.child},{'tree-branch':data.child},'tree-open']">
         <div @click="parentFn(data.id)" :class="[{'tree-branch-name':!data.child},{'tree-branch-header':data.child}]">
-            <i class="icon-folder ace-icon tree-minus" v-if="data.child"></i>
+            <i class="icon-folder ace-icon tree-minus" v-if="data.child&&secondOpen" @click.stop="secondOpen = !secondOpen"></i>
+            <i class="icon-folder ace-icon tree-plus" v-if="data.child&&!secondOpen" @click.stop="secondOpen = !secondOpen"></i>
             <span>{{data.title}}({{data.id}})</span>
         </div>
-        <ul class="tree-branch-children" v-if="data.child&&data.child.length>0">
+        <ul :class="['tree-branch-children',{hide:!secondOpen}]" v-if="data.child&&data.child.length>0">
             <navItem :data = "menu" v-for="(menu,index) in data.child" :key="'nav'+index" :parentFn="parentFn"></navItem>
         </ul>
     </li>
@@ -16,6 +17,7 @@
             return {
                 open:false,
                 isActive:false,
+                secondOpen:false
             }
         },
         props:{

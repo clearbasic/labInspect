@@ -1,6 +1,6 @@
 <template>
     <!-- 右侧内容 -->
-    <div class="main-content menu">
+    <div class="main-content menu" @click="closeSelect">
         <div class="main-content-inner">
             <!-- 面包屑 -->
             <div class="breadcrumbs" id="breadcrumbs">
@@ -26,64 +26,93 @@
                 </div>
                 <transition name="fade">
                     <div class="addMenu" v-if="showAdd">
-                        <div class="form">
-                            <div class="form-group">
-                                <label for="title" class="control-label">菜单名称</label>
-                                <input type="text" class="form-control" v-model="newMenu.title" id="title" placeholder="菜单名称">
-                            </div>
-                            <div class="form-group">
-                                <label for="rule_id" class="control-label">权限点标识</label>
-                                <input type="text" class="form-control" v-model="newMenu.rule_id" id="rule_id" placeholder="权限点标识">
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">上级菜单</label>
-                                <div class="position-relative">
-                                    <input type="text" class="form-control"  v-model="newMenu.pid" @focus="select=true">
-                                    <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
-                                        <ul class="tree tree-selectable">
-                                            <li class="tree-item" @click="selectPid(0)">
-                                                <div class="tree-branch-name">无</div>
-                                            </li>
-                                            <MenuSelect :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "selectPid"></MenuSelect>
-                                        </ul>
+                        <div class="row">
+                            <div class="form-horizontal col-lg-8">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">菜单名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newMenu.title" id="title" placeholder="菜单名称">
                                     </div>
                                 </div>
-                                
-                            </div>
-                            <div class="form-group">
-                                <label for="url" class="control-label">链接</label>
-                                <input type="text" class="form-control" v-model="newMenu.url" id="url" placeholder="菜单链接">
-                            </div>
-                            <div class="form-group">
-                                <label for="icon" class="control-label">图标</label>
-                                <input type="text" class="form-control" v-model="newMenu.icon" id="icon" placeholder="图标">
-                            </div>
-                            <div class="form-group">
-                                <label for="module" class="control-label">模块</label>
-                                <input type="text" class="form-control" v-model="newMenu.module" id="module" placeholder="模块">
-                            </div>
-                            <div class="form-group">
-                                <label for="sort" class="control-label">排序</label>
-                                <input type="text" class="form-control" v-model="newMenu.sort" id="sort" placeholder="排序">
-                            </div>
-                            <div class="form-group">
-                                <label for="sort" class="control-label">状态</label>
-                                <label>
-                                    <input type="radio" v-model="newMenu.status" value="1" class="ace">
-                                    <span class="lbl">
-                                        开启
-                                    </span>
-                                </label>
-                                <label>
-                                    <input type="radio" v-model="newMenu.status" value="0" class="ace">
-                                    <span class="lbl">
-                                        禁用
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <button class="btn btn-success btn-sm" @click="addMenu">保存</button>
-                                <button class="btn btn-default btn-sm" @click="setHideAdd">取消</button>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">权限点标识</label>
+                                    <div class="col-sm-10">
+                                        <div class="position-relative has-feedback">
+                                            <input type="text" class="form-control"  v-model="newMenu.rule_id" @click.stop="selectrule=true">
+                                            <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
+                                            <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="selectrule">
+                                                <ul class="tree tree-selectable">
+                                                    <li class="tree-item" @click="selectRuleId(0)">
+                                                        <div class="tree-branch-name">无</div>
+                                                    </li>
+                                                    <selectItem :data = "rule" v-for="(rule,index) in rule_tree" :key="'rule'+index" :parentFn = "selectRuleId"></selectItem>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">上级菜单</label>
+                                    <div class="col-sm-10">
+                                        <div class="position-relative has-feedback">
+                                            <input type="text" class="form-control"  v-model="newMenu.pid" @click.stop="select=true">
+                                            <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
+                                            <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
+                                                <ul class="tree tree-selectable">
+                                                    <li class="tree-item" @click="selectPid(0)">
+                                                        <div class="tree-branch-name">无</div>
+                                                    </li>
+                                                    <selectItem :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "selectPid"></selectItem>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="url" class="col-sm-2 control-label">链接</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newMenu.url" id="url" placeholder="菜单链接">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="icon" class="col-sm-2 control-label">图标</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newMenu.icon" id="icon" placeholder="图标">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="module" class="col-sm-2 control-label">模块</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newMenu.module" id="module" placeholder="模块">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sort" class="col-sm-2 control-label">排序</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newMenu.sort" id="sort" placeholder="排序">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sort" class="col-sm-2 control-label">状态</label>
+                                    <label  class="control-label">
+                                        <input type="radio" v-model="newMenu.status" value="1" class="ace">
+                                        <span class="lbl">
+                                            开启
+                                        </span>
+                                    </label>
+                                    <label class="control-label">
+                                        <input type="radio" v-model="newMenu.status" value="0" class="ace">
+                                        <span class="lbl">
+                                            禁用
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button class="btn btn-success btn-sm" @click="addMenu">保存</button>
+                                        <button class="btn btn-default btn-sm" @click="setHideAdd">取消</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,14 +134,15 @@ import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
 import leftMenu from '../../config/leftMenu.js';
 import NavItem from './menuItem.vue';
-import MenuSelect from './menuSelect.vue';
+import selectItem from './selectItem.vue';
+
 export default {
     name: "menu",
     components: {
         VueHead,
         VueLeft,
         NavItem,
-        MenuSelect
+        selectItem,
     },
     data() {
         return {
@@ -120,10 +150,13 @@ export default {
             newMenu:{
                 status:"1",
                 pid:0,
-                module:"Admin"
+                module:"Admin",
+                rule_id:0,
             },
             showAdd:false,
             select:false,
+            selectrule:false,
+            rule_tree:[]
         };
     },
     computed:{
@@ -132,6 +165,14 @@ export default {
         }
     },
     methods: {
+        getRuleTree(){
+            //获取权限点树状结构
+            const URL = this.serverUrl + '/admin/rules/index';
+            const _this = this;
+            this.emitAjax(URL,{type:"tree"},function(result){
+                _this.rule_tree = result;
+            })
+        },
         addMenu(){
             this.setShowAdd();
             const _this = this;
@@ -163,34 +204,26 @@ export default {
             this.newMenu = {
                 status:"1",
                 module:"Admin",
-                pid:0,  
+                pid:0,
+                rule_id:0, 
             };
         },
         selectPid(id){
             this.newMenu.pid = id;
+        },
+        selectRuleId(id){
+            this.newMenu.rule_id = id;
+        },
+        closeSelect(){
+            this.selectrule = false;
             this.select = false;
         }
     },
+    mounted(){
+        if(this.checkPermission(this)){
+            this.getRuleTree();
+        }
+    }
 };
 </script>
-
-<style>
-    .dd-item button {
-        line-height: 1px;
-        outline: none;
-    }
-    .dd {
-        max-width: 1980px;
-    }
-    .selectMenu {
-        width: 100%;
-        position: absolute;
-        left: 0;
-        top:30px;
-        background: #fff;
-        z-index: 10;
-        max-height:300px;
-        overflow-y:auto;
-    }
-</style>
 

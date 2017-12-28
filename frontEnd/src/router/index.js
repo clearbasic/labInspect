@@ -22,7 +22,7 @@ import RoomZoneList from "../components/room/roomZoneList.vue";
 import Login from "../components/login/login.vue";
 import Feedback from "../components/feedback/feedback.vue";
 import Menu from "../components/admin/menu.vue";
-import Permission from "../components/admin/permission.vue";
+import Rule from "../components/admin/rule.vue";
 import Role from "../components/admin/role.vue";
 
 
@@ -214,12 +214,12 @@ export default new Router({
 						permission:1,
 					}
 				},{
-					path:pathName+"/permission",
-					name:"permission",
-					component:Permission,
+					path:pathName+"/rule",
+					name:"rule",
+					component:Rule,
 					meta:{
 						title:"权限点设置 - "+title,
-						active:pathName+"/permission",
+						active:pathName+"/rule",
 						permission:1,
 					}
 				},{

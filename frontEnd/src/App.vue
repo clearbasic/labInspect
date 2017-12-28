@@ -53,7 +53,6 @@ export default {
 a:hover {
     cursor: pointer;
 }
-
 .inlineInput {
     display: inline-block;
     width: 100%;
@@ -85,6 +84,23 @@ input[readonly]:hover {
 	
 .fade-enter,.fade-leave-active {
     opacity: 0
+}
+.dd-item button {
+        line-height: 1px;
+        outline: none;
+    }
+.dd {
+    max-width: 1980px;
+}
+.selectMenu {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top:30px;
+    background: #fff;
+    z-index: 10;
+    max-height:300px;
+    overflow-y:auto;
 }
 @media only screen and (max-width: 640px) {
     .hidden-640 {
