@@ -174,22 +174,19 @@ export default {
             })
         },
         addMenu(){
-            this.setShowAdd();
             const _this = this;
             let url = this.serverUrl + "/admin/menus/add";
             if(this.newMenu.id){
                 url = this.serverUrl + "/admin/menus/edit";
             }
-            console.log(this.newMenu)
             this.emitAjax(url,this.newMenu,function(result){
                 _this.setHideAdd();
                 _this.$store.dispatch("getMenu");
             })
         } ,
         editMenu(menu){
-            this.showAdd = true;
+            this.setShowAdd();
             let obj = Object.assign({},menu);
-            console.log(obj);
             delete obj.child;
             this.newMenu = obj;
             if(this.newMenu.url.search("http")<0){
