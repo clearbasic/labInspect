@@ -19,5 +19,8 @@ export default {
             zone_name:"",
             org_id:0,
         },data);
+    },
+    getMenu(state,data){
+        state.leftMenu = data;
     }
 }

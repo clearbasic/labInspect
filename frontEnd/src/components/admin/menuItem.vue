@@ -3,7 +3,7 @@
         <button data-action="collapse" :class="[{show:open},{hidden:!open}]" v-if="data.child&&data.child.length>0" @click="open = false"></button>
         <button data-action="expand" :class="[{show:!open},{hidden:open}]" v-if="data.child&&data.child.length>0" @click="open = true"></button>
         <div class="dd-handle" >
-            {{data.name}}
+            {{data.title}}({{data.id}})
             <div class="pull-right action-buttons">
                 <a class="blue" @click="editMenu">
                     <i class="ace-icon fa fa-pencil bigger-130"></i>

@@ -21,5 +21,11 @@ export default {
             delLocalData();
             window.location.href = pathName+"/login";
         })
+    },
+    getMenu(context,data){
+        const url = serverUrl +"/admin/menus/index";
+        emitAjax(url,null,function(result){
+            context.commit("getMenu",result);
+        })
     }
 }

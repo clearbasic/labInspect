@@ -16,21 +16,28 @@
 </template>
 <script>
 import leftMenuData from '../../config/leftMenu';
-import { setLocalData,delLocalData } from "../../assets/common.js";
 import navItem from './navItem.vue';
 export default {
     data() {
         return {
-            leftMenuData:leftMenuData, //菜单数据
+            
         }
     },
     components:{navItem},
+    computed:{
+        leftMenuData(){
+            return this.$store.state.leftMenu.length>0?this.$store.state.leftMenu:leftMenuData;
+        }
+    },
     methods: {
         logout(){
             if(window.confirm("是否要退出本系统！")){
                 this.$store.dispatch("logout");
             }
         }
+    },
+    mounted(){
+        this.$store.dispatch("getMenu");
     }
 };
 </script>

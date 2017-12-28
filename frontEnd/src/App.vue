@@ -80,7 +80,7 @@ input[readonly]:hover {
     cursor: pointer;
 }
 .fade-enter-active {
-    transition: opacity 1s
+    transition: opacity 0.5s
 }
 	
 .fade-enter,.fade-leave-active {

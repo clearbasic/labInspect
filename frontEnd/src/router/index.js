@@ -43,15 +43,6 @@ export default new Router({
 			},
 			children:[
 				{
-					path: pathName+'/login',
-					name: 'login',
-					component: Login,
-					meta:{
-						title:"登录 - "+title,
-						active:pathName+"/login",
-						permission:0,
-					}
-				},{
 					path:pathName+"/checkList",
 					name:"checkList",
 					component:CheckList,
@@ -242,6 +233,16 @@ export default new Router({
 					}
 				}
 			]
+		},
+		{
+			path: pathName+'/login',
+			name: 'login',
+			component: Login,
+			meta:{
+				title:"登录 - "+title,
+				active:pathName+"/login",
+				permission:0,
+			}
 		}
 	]
 })

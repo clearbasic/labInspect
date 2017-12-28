@@ -2,19 +2,22 @@ import { pathName } from "./server";
 //左侧菜单配置
 export default [
     {
-        name:"检查安排",
+        title:"检查安排",
+        id:1,
         url:pathName+"",
         icon:"ace-icon fa fa-book",
         permission:9,
         child:[
             {
-                name:"检查指标",
+                title:"检查指标",
+                id:2,
                 url:pathName+"/checkList",
                 permission:9,
                 icon:"",
             },
             {
-                name:"检查期次",
+                title:"检查期次",
+                id:3,
                 url:pathName+"/checkPlan",
                 permission:9,
                 icon:"",
@@ -22,31 +25,36 @@ export default [
         ]
     },
     {
-        name:"检查工作",
+        title:"检查工作",
+        id:4,
         url:pathName+"",
         icon:"ace-icon glyphicon glyphicon-check",
         permission:1,
         child:[
             {
-                name:"检查小组",
+                title:"检查小组",
+                id:5,
                 url:pathName+"/checkGroup",
                 permission:5,
                 icon:"",
             },
             {
-                name:"检查工作",
+                title:"检查工作",
+                id:6,
                 url:pathName+"/checkWork",
                 permission:5,
                 icon:"",
             },
             {
-                name:"我的检查工作",
+                title:"我的检查工作",
+                id:7,
                 url:pathName+"/myCheck",
                 permission:1,
                 icon:"",
             },
             {
-                name:"问题反馈",
+                title:"问题反馈",
+                id:8,
                 url:pathName+"/feedback",
                 permission:1,
                 icon:"",
@@ -54,25 +62,29 @@ export default [
         ]
     },
     {
-        name:"统计总结",
+        title:"统计总结",
+        id:9,
         url:pathName+"",
         icon:"ace-icon fa fa-bar-chart-o",
         permission:7,
         child:[
             {
-                name:"安全责任人登录表",
+                title:"安全责任人登录表",
+                id:10,
                 url:pathName+"",
                 permission:7,
                 icon:"",
             },
             {
-                name:"检查统计表",
+                title:"检查统计表",
+                id:11,
                 url:pathName+"",
                 permission:7,
                 icon:"",
             },
             {
-                name:"评奖评优",
+                title:"评奖评优",
+                id:12,
                 url:pathName+"",
                 permission:7,
                 icon:"",
@@ -80,25 +92,29 @@ export default [
         ]
     },
     {
-        name:"基础数据管理",
+        title:"基础数据管理",
+        id:13,
         url:pathName+"",
         icon:"ace-icon fa fa-cog",
         permission:5,
         child:[
             {
-                name:"实验室单位管理",
+                title:"实验室单位管理",
+                id:14,
                 url:pathName+"/orgList",
                 permission:5,
                 icon:'',
             },
             {
-                name:"人员管理",
+                title:"人员管理",
+                id:15,
                 url:pathName+"/userList",
                 permission:5,
                 icon:'',
             },
             {
-                name:"房间及分组管理",
+                title:"房间及分组管理",
+                id:16,
                 url:pathName+"/zone",
                 permission:5,
                 icon:'',
@@ -106,25 +122,29 @@ export default [
         ]
     },
     {
-        name:"系统基础数据设置",
+        title:"系统基础数据设置",
+        id:17,
         url:pathName+"",
         icon:"ace-icon fa fa-cog",
         permission:5,
         child:[
             {
-                name:"菜单栏设置",
+                title:"菜单栏设置",
+                id:18,
                 url:pathName+"/menu",
                 permission:5,
                 icon:'',
             },
             {
-                name:"角色设置",
+                title:"角色设置",
+                id:19,
                 url:pathName+"/role",
                 permission:5,
                 icon:'',
             },
             {
-                name:"权限点设置",
+                title:"权限点设置",
+                id:20,
                 url:pathName+"/permission",
                 permission:5,
                 icon:'',

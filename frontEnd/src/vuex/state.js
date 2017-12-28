@@ -6,5 +6,6 @@ export default {
     },
     orgList:[],
     currentRoom:{},
-    currentZone:{}
+    currentZone:{},
+    leftMenu:[],
 }

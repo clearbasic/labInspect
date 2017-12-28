@@ -7,6 +7,26 @@
             <VueLeft></VueLeft>
             <!-- 右侧内容 -->
             <transition name="fade">
+                <div class="main-content" v-if="$route.name=='index'">
+                    <div class="main-content-inner">
+                        <!-- 面包屑 -->
+                        <div class="breadcrumbs" id="breadcrumbs">
+                            <ul class="breadcrumb">
+                                <li>
+                                    <i class="ace-icon fa fa-home home-icon"></i>
+                                    <a href="/">首页</a>
+                                </li>
+                                <li>
+                                    <a href="/" class="active">welcome</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 右侧主要内容 -->
+                        <div class="page-content">
+                            <h1 class="text-center">{{msg}}</h1>
+                        </div>
+                    </div>
+                </div>
                 <router-view />
             </transition>
         </div>
