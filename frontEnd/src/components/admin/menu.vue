@@ -41,6 +41,9 @@
                                     <input type="text" class="form-control"  v-model="newMenu.pid" @focus="select=true">
                                     <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
                                         <ul class="tree tree-selectable">
+                                            <li class="tree-item" @click="selectPid(0)">
+                                                <div class="tree-branch-name">无</div>
+                                            </li>
                                             <MenuSelect :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "selectPid"></MenuSelect>
                                         </ul>
                                     </div>
@@ -54,6 +57,10 @@
                             <div class="form-group">
                                 <label for="icon" class="control-label">图标</label>
                                 <input type="text" class="form-control" v-model="newMenu.icon" id="icon" placeholder="图标">
+                            </div>
+                            <div class="form-group">
+                                <label for="module" class="control-label">模块</label>
+                                <input type="text" class="form-control" v-model="newMenu.module" id="module" placeholder="模块">
                             </div>
                             <div class="form-group">
                                 <label for="sort" class="control-label">排序</label>
@@ -113,6 +120,7 @@ export default {
             newMenu:{
                 status:"1",
                 pid:0,
+                module:"Admin"
             },
             showAdd:false,
             select:false,
@@ -154,6 +162,8 @@ export default {
             this.showAdd = false;
             this.newMenu = {
                 status:"1",
+                module:"Admin",
+                pid:0,  
             };
         },
         selectPid(id){

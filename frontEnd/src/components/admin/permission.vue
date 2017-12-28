@@ -69,11 +69,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="dd">
-                    <ol class="dd-list">
-                        <NavItem :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "editMenu"></NavItem>
-                    </ol>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -82,14 +78,11 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
-import leftMenu from '../../config/leftMenu.js';
-import NavItem from './menuItem.vue';
 export default {
     name: "permission",
     components: {
         VueHead,
         VueLeft,
-        NavItem
     },
     data() {
         return {
@@ -97,7 +90,6 @@ export default {
             newMenu:{
                 status:"yes"
             },
-            leftMenu:leftMenu,
             showAdd:false
         };
     },

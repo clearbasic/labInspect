@@ -295,6 +295,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <button class="btn btn-success btn-sm" @click="editOrgInfo">保存</button>
+                            <button class="btn btn-danger btn-sm" @click="delOrg" v-if="orgInfo.org_id">删除</button>
                             <router-link :to="pathName+'/orgList'" class="btn btn-default btn-sm" tag="button">返回</router-link>
                         </div>
                     </div>
@@ -436,6 +437,16 @@ export default {
             this.orgInfo[this.key] = user.name + "(" + user.username + ")";
             this.key = "";
             $("#userModal").modal("hide");
+        },
+        delOrg(){
+            //删除单位
+            const _this = this;
+            const URL = this.serverUrl+'/admin/org/del';
+            if(window.confirm("是否要删除单位<"+this.orgInfo.org_name+">,此操作不可逆，请慎重！")){
+                this.emitAjax(URL,{org_id:this.orgInfo.org_id},function(result){
+                    _this.$router.push(_this.pathName+'/orgList');
+                })
+            }
         }
     },
     watch: {
