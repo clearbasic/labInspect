@@ -108,6 +108,7 @@
                         </div>
                     </div>
                 </transition>
+                
                 <transition name="fade">
                     <table class="table table-bordered table-hover" v-if="!showAdd">
                         <thead>
@@ -178,8 +179,8 @@
 <script>
 import VueHead from "../common/header";
 import VueLeft from "../common/leftMenu";
-import selectItem from './selectItem.vue';
-import selectRule from './selectRule.vue';
+import selectItem from "./selectItem.vue";
+import selectRule from "./selectRule.vue";
 
 export default {
     name: "role",
@@ -192,72 +193,84 @@ export default {
     data() {
         return {
             title: "角色设置",
-            newRole:{
-                status:1,
-                level:'lab',
-                pid:0
+            newRole: {
+                status: 1,
+                level: "lab",
+                pid: 0,
+                rules: ""
             },
-            showAdd:false,
-            select:false,
-            role_list:[],
-            role_tree:[],
+            showAdd: false,
+            select: false,
+            role_list: [],
+            role_tree: []
         };
     },
     methods: {
-        init(){
+        init() {
             this.getRoleList();
             this.getRoleTree();
         },
-        getRoleList(){
+        getRoleList() {
             //获取角色列表
-            const URL = this.serverUrl + '/admin/groups/index';
+            const URL = this.serverUrl + "/admin/groups/index";
             const _this = this;
-            this.emitAjax(URL,null,function(result){
+            this.emitAjax(URL, null, function(result) {
                 _this.role_list = result;
-            })
+            });
         },
-        getRoleTree(){
+        getRoleTree() {
             //获取角色树状列表
-            const URL = this.serverUrl + '/admin/groups/index';
+            const URL = this.serverUrl + "/admin/groups/index";
             const _this = this;
-            this.emitAjax(URL,{type:'tree'},function(result){
+            this.emitAjax(URL, { type: "tree" }, function(result) {
                 _this.role_tree = result;
-            })
+            });
         },
-        addRole(){
-            let URL = this.serverUrl + '/admin/groups/add';
-            if(this.newRole.id){
-                URL = this.serverUrl + '/admin/groups/edit';
+        addRole() {
+            //添加角色
+            let URL = this.serverUrl + "/admin/groups/add";
+            if (this.newRole.id) {
+                URL = this.serverUrl + "/admin/groups/edit";
             }
             const _this = this;
-            this.emitAjax(URL,this.newRole,function(result){
+            this.emitAjax(URL, this.newRole, function(result) {
                 _this.setHideAdd();
                 _this.init();
-            })
+            });
         },
-        getRules(rules){
+        editRole(role) {
+            this.newRole = Object.assign({}, role);
+            this.setShowAdd();
+        },
+        getRules(rules) {
+            //获取权限列表
             this.newRole.rules = rules;
         },
-        selectPidId(id){
+        selectPidId(id) {
+            //选择父级权限
             this.newRole.pid = id;
         },
-        setShowAdd(){
+        setShowAdd() {
+            //显示添加 编辑权限
             this.showAdd = true;
         },
-        setHideAdd(){
+        setHideAdd() {
+            //显示角色列表
             this.showAdd = false;
             this.newRole = {
-                status:1,
-                level:'lab',
-                pid:0
+                status: 1,
+                level: "lab",
+                pid: 0,
+                rules: ""
             };
         },
-        colseSelect(){
+        colseSelect() {
+            //关闭下拉菜单
             this.select = false;
         }
     },
-    mounted(){
-        if(this.checkPermission(this)){
+    mounted() {
+        if (this.checkPermission(this)) {
             this.init();
         }
     }
