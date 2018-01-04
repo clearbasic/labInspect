@@ -45,7 +45,12 @@
                                                     <li class="tree-item" @click="selectRuleId(0)">
                                                         <div class="tree-branch-name">无</div>
                                                     </li>
-                                                    <selectItem :data = "rule" v-for="(rule,index) in rule_tree" :key="'rule'+index" :parentFn = "selectRuleId"></selectItem>
+                                                    <selectItem :data = "rule" 
+                                                        v-for="(rule,index) in rule_tree" 
+                                                        :key="'rule'+index" 
+                                                        :parentFn = "selectRuleId"
+                                                        :currentLevel = "100"
+                                                    ></selectItem>
                                                 </ul>
                                             </div>
                                         </div>
@@ -62,7 +67,12 @@
                                                     <li class="tree-item" @click="selectPid(0)">
                                                         <div class="tree-branch-name">无</div>
                                                     </li>
-                                                    <selectItem :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "selectPid"></selectItem>
+                                                    <selectItem :data = "menu" 
+                                                        v-for="(menu,index) in leftMenu" 
+                                                        :key="'nav'+index" 
+                                                        :parentFn = "selectPid"
+                                                        :currentLevel = "newMenu.level"
+                                                    ></selectItem>
                                                 </ul>
                                             </div>
                                         </div>
@@ -187,7 +197,6 @@ export default {
         editMenu(menu){
             this.setShowAdd();
             let obj = Object.assign({},menu);
-            delete obj.child;
             this.newMenu = obj;
             if(this.newMenu.url.search("http")<0){
                 this.newMenu.url = this.pathName + this.newMenu.url;
@@ -206,6 +215,10 @@ export default {
             };
         },
         selectPid(id){
+            if(this.newMenu.id == id){
+                alert("不能选择自身");
+                return false;
+            }
             this.newMenu.pid = id;
         },
         selectRuleId(id){

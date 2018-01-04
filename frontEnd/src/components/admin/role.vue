@@ -25,91 +25,6 @@
                     </h1>
                 </div>
                 <transition name="fade">
-                    <div class="addRole" v-if="showAdd">
-                        <div class="row">
-                            <div class="form-horizontal col-lg-8">
-                                <div class="form-group">
-                                    <label for="title" class="col-sm-2 control-label">角色名称</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" v-model="newRole.title" id="title" placeholder="菜单名称">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">父角色</label>
-                                    <div class="col-sm-10">
-                                        <div class="position-relative has-feedback">
-                                            <input type="text" class="form-control"  v-model="newRole.pid" @click.stop="select=true">
-                                            <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
-                                            <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
-                                                <ul class="tree tree-selectable">
-                                                    <li class="tree-item" @click="selectPidId(0)">
-                                                        <div class="tree-branch-name">无</div>
-                                                    </li>
-                                                    <selectItem :data = "role" v-for="(role,index) in role_tree" :key="'role'+index" :parentFn = "selectPidId"></selectItem>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sort" class="col-sm-2 control-label">角色级别</label>
-                                    <label  class="control-label">
-                                        <input type="radio" v-model="newRole.level" value="lab" class="ace">
-                                        <span class="lbl">
-                                            实验室级别
-                                        </span>
-                                    </label>
-                                    <label class="control-label">
-                                        <input type="radio" v-model="newRole.level" value="college" class="ace">
-                                        <span class="lbl">
-                                            院系级别
-                                        </span>
-                                    </label>
-                                    <label class="control-label">
-                                        <input type="radio" v-model="newRole.level" value="school" class="ace">
-                                        <span class="lbl">
-                                            学校级别
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sort" class="col-sm-2 control-label">状态</label>
-                                    <label  class="control-label">
-                                        <input type="radio" v-model="newRole.status" value="1" class="ace">
-                                        <span class="lbl">
-                                            开启
-                                        </span>
-                                    </label>
-                                    <label class="control-label">
-                                        <input type="radio" v-model="newRole.status" value="0" class="ace">
-                                        <span class="lbl">
-                                            禁用
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="url" class="col-sm-2 control-label">备注</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" v-model="newRole.remark"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <selectRule :returnRules="getRules" :rules="this.newRole.rules"></selectRule>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button class="btn btn-success btn-sm" @click="addRole">保存</button>
-                                        <button class="btn btn-default btn-sm" @click="setHideAdd">取消</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </transition>
-                
-                <transition name="fade">
                     <table class="table table-bordered table-hover" v-if="!showAdd">
                         <thead>
                             <tr>
@@ -125,7 +40,8 @@
                             <tr v-for="role in role_list" :key="'role'+role.id">
                                 <td class="center little">{{role.id}}</td>
                                 <td>
-                                    <span v-for="pRole in role_list" :key="'pRole'+pRole.id" v-if="pRole.id == role.pid">{{pRole.else}}</span>
+                                    <span v-if="role.pid == 0">无</span>
+                                    <span v-for="pRole in role_list" :key="'pRole'+pRole.id" v-if="pRole.id == role.pid">{{pRole.title}}</span>
                                 </td>
                                 <td>{{role.title}}</td>
                                 <td class="center little">{{role.remark}}</td>
@@ -135,10 +51,10 @@
                                 </td>
                                 <td class="center little">
                                     <div class="hidden-xs btn-group">
-                                        <button class="btn btn-xs btn-success" @click="editRole(role)">
+                                        <button class="btn btn-xs btn-success" @click="editRole(role)" title="编辑">
                                             <i class="ace-icon glyphicon glyphicon-edit"></i>
                                         </button>
-                                        <button class="btn btn-xs btn-danger" @click="delRole(role)">
+                                        <button class="btn btn-xs btn-danger" @click="delRole(role)" title="删除">
                                             <i class="ace-icon fa fa-trash-o"></i>
                                         </button>
                                     </div>
@@ -171,6 +87,114 @@
                         </tbody>
                     </table>
                 </transition>
+                <transition name="fade">
+                    <div class="addRole" v-if="showAdd">
+                        <div class="row">
+                            <div class="form-horizontal col-lg-8">
+                                <div class="form-group">
+                                    <label for="title" class="col-sm-2 control-label">角色名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" v-model="newRole.title" id="title" placeholder="角色名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">父角色</label>
+                                    <div class="col-sm-10">
+                                        <div class="position-relative has-feedback">
+                                            <input type="text" class="form-control"  v-model="newRole.pid" @click.stop="select=true">
+                                            <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
+                                            <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
+                                                <ul class="tree tree-selectable">
+                                                    <li class="tree-item" @click="selectPidId(0)">
+                                                        <div class="tree-branch-name">无</div>
+                                                    </li>
+                                                    <selectItem :data = "role" 
+                                                        v-for="(role,index) in role_tree" 
+                                                        :key="'role'+index" 
+                                                        :parentFn = "selectPidId"
+                                                        :currentLevel = "1"
+                                                        v-if="newRole.group_level == 'school'"
+                                                    ></selectItem>
+                                                    <selectItem :data = "role" 
+                                                        v-for="(role,index) in role_tree" 
+                                                        :key="'role'+index" 
+                                                        :parentFn = "selectPidId"
+                                                        :currentLevel = "2"
+                                                        v-if="newRole.group_level == 'college'"
+                                                    ></selectItem>
+                                                    <selectItem :data = "role" 
+                                                        v-for="(role,index) in role_tree" 
+                                                        :key="'role'+index" 
+                                                        :parentFn = "selectPidId"
+                                                        :currentLevel = "3"
+                                                        v-if="newRole.group_level == 'lab'"
+                                                    ></selectItem>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sort" class="col-sm-2 control-label">角色级别</label>
+                                    <div class="col-sm-10">
+                                        <label  class="control-label">
+                                            <input type="radio" v-model="newRole.group_level" value="lab" class="ace">
+                                            <span class="lbl">
+                                                实验室级别
+                                            </span>
+                                        </label>
+                                        <label class="control-label">
+                                            <input type="radio" v-model="newRole.group_level" value="college" class="ace">
+                                            <span class="lbl">
+                                                院系级别
+                                            </span>
+                                        </label>
+                                        <label class="control-label">
+                                            <input type="radio" v-model="newRole.group_level" value="school" class="ace">
+                                            <span class="lbl">
+                                                学校级别
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sort" class="col-sm-2 control-label">状态</label>
+                                    <div class="col-sm-10">
+                                        <label  class="control-label">
+                                            <input type="radio" v-model="newRole.status" value="1" class="ace">
+                                            <span class="lbl">
+                                                开启
+                                            </span>
+                                        </label>
+                                        <label class="control-label">
+                                            <input type="radio" v-model="newRole.status" value="0" class="ace">
+                                            <span class="lbl">
+                                                禁用
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="url" class="col-sm-2 control-label">备注</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" v-model="newRole.remark"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <selectRule :returnRules="getRules" :rules="this.newRole.rules" :pid="newRole.pid"></selectRule>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button class="btn btn-success btn-sm" @click="addRole">保存</button>
+                                        <button class="btn btn-default btn-sm" @click="setHideAdd">取消</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
     </div>
@@ -195,9 +219,8 @@ export default {
             title: "角色设置",
             newRole: {
                 status: 1,
-                level: "lab",
-                pid: 0,
-                rules: ""
+                group_level: "lab",
+                pid: 0
             },
             showAdd: false,
             select: false,
@@ -242,12 +265,25 @@ export default {
             this.newRole = Object.assign({}, role);
             this.setShowAdd();
         },
+        delRole(role){
+            if(confirm("是否要删除<"+role.title+">这个角色，此操作不可逆，请慎重！")){
+                const URL = this.serverUrl + "/admin/groups/del";
+                const _this = this;
+                this.emitAjax(URL, {id:role.id}, function(result) {
+                    _this.init();
+                });
+            }
+        },
         getRules(rules) {
             //获取权限列表
             this.newRole.rules = rules;
         },
         selectPidId(id) {
             //选择父级权限
+            if(this.newRole.id == id){
+                alert("不能选择自身");
+                return false;
+            }
             this.newRole.pid = id;
         },
         setShowAdd() {
@@ -259,9 +295,8 @@ export default {
             this.showAdd = false;
             this.newRole = {
                 status: 1,
-                level: "lab",
-                pid: 0,
-                rules: ""
+                group_level: "lab",
+                pid: 0
             };
         },
         colseSelect() {

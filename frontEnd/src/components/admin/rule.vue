@@ -46,7 +46,12 @@
                                                     <li class="tree-item" @click="selectPid(0)">
                                                         <div class="tree-branch-name">无</div>
                                                     </li>
-                                                    <selectItem :data="rule" v-for="(rule,index) in rule_tree" :key="'nav'+index" :parentFn="selectPid"></selectItem>
+                                                    <selectItem :data="rule" 
+                                                        v-for="(rule,index) in rule_tree" 
+                                                        :key="'nav'+index" 
+                                                        :parentFn="selectPid"
+                                                        :currentLevel = "newRule.level"
+                                                    ></selectItem>
                                                 </ul>
                                             </div>
                                         </div>
@@ -122,7 +127,8 @@
                                 <tr v-for="rule in rule_list" :key="'rule'+rule.id">
                                     <td class="center little">{{rule.id}}</td>
                                     <td>
-                                        <span v-for="pRule in rule_list" :key="'pRule'+pRule.id" v-if="pRule.id == rule.pid">{{pRule.else}}</span>
+                                        <span v-if="rule.pid==0">无</span>
+                                        <span v-for="pRule in rule_list" :key="'pRule'+pRule.id" v-if="pRule.id == rule.pid">{{pRule.title}}</span>
                                     </td>
                                     <td>{{rule.title}}</td>
                                     <td class="center little">{{rule.name}}</td>
@@ -238,7 +244,7 @@ export default {
             this.newRule = Object.assign({},rule);
         },
         delRule(rule){
-            if(confirm("是否要删除"+rule.else+"权限点，此操作不可逆，请慎重！")){
+            if(confirm("是否要删除"+rule.title+"权限点，此操作不可逆，请慎重！")){
                 const URL = this.serverUrl + '/admin/rules/del';
                 const _this = this;
                 this.emitAjax(URL,{id:rule.id},function(result){
@@ -261,6 +267,10 @@ export default {
         },
         selectPid(id){
             //选择父节点
+            if(this.newRule.id == id){
+                alert("不能选择自身");
+                return false;
+            }
             this.newRule.pid = id;
         },
         closeSelect(){

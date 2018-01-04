@@ -65,21 +65,3 @@ export default {
     }
 };
 </script>
-<style>
-    .sysSelect {
-        height: 45px;
-        line-height: 45px;
-        background: #5db7e9;
-        padding: 0 10px;
-        position: relative;
-        margin-left:6px;
-    }
-    .sysSelect a {
-        color:#fff;
-    }
-    @media screen and (max-width:480px){
-        .sysSelect li {
-            text-align:right;
-        }
-    }
-</style>

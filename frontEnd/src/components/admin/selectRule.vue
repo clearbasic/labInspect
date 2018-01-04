@@ -8,7 +8,7 @@
                 <h4>
                     <label>
                         <input type="checkbox" class="ace" :value="rule.id" v-model="rule.checked" @change="firstRuleSelect(rule)">
-                        <span class="lbl">{{rule.title}}</span>
+                        <span class="lbl"> {{rule.title}}</span>
                     </label>
                 </h4>
                 <ul class="list-group" v-if="rule.child&&rule.child.length>0">
@@ -16,12 +16,12 @@
                         <h5>
                             <label>
                                 <input type="checkbox" class="ace" :value="secondRule.id" v-model="secondRule.checked" @change="selectModule(secondRule,rule_tree,ruleIndex)">
-                                <span class="lbl">{{secondRule.else}}</span>
+                                <span class="lbl"> {{secondRule.title}}</span>
                             </label>
                         </h5>
                         <label v-if="secondRule.child&&secondRule.child.length>0" v-for="threeRule in secondRule.child" :key="'rule'+threeRule.id">
                             <input type="checkbox" class="ace" :value="threeRule.id" v-model="threeRule.checked" @change="selectModule(threeRule,rule.child,index,rule_tree,ruleIndex)">
-                            <span class="lbl">{{threeRule.else}}</span>
+                            <span class="lbl"> {{threeRule.title}}</span>
                         </label>
                     </li>
                 </ul>
@@ -41,6 +41,10 @@ export default {
         rules: {
             type: String,
             default: ""
+        },
+        pid:{
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -52,9 +56,9 @@ export default {
     methods: {
         getRuleTree() {
             //获取权限点树状结构
-            const URL = this.serverUrl + "/admin/rules/index";
+            const URL = this.serverUrl + "/admin/groups/getRules";
             const _this = this;
-            this.emitAjax(URL, { type: "tree" }, function(result) {
+            this.emitAjax(URL, {group_id:this.pid}, function(result) {
                 _this.rule_tree = result;
                 _this.initChecked(_this.rule_tree);
             });
@@ -82,7 +86,7 @@ export default {
                     psRules,
                     pIndex,
                     Object.assign({}, psRules[pIndex], {
-                        checked: isTure
+                        checked: isTure``
                     })
                 );
             }
@@ -136,8 +140,7 @@ export default {
         initChecked(rule) {
             //根据规则回显
             for (let index = 0; index < rule.length; index++) {
-                console.log(this.rules.indexOf(rule[index].id));
-                if (this.rules.indexOf(rule[index].id) >= 0) {
+                if (this.rulesString.indexOf(rule[index].id) >= 0) {
                     Vue.set(
                         rule,
                         index,
@@ -155,9 +158,14 @@ export default {
     watch: {
         rulesString() {
             this.returnRules(this.rulesString);
+        },
+        pid(){
+            this.rulesString = "";
+            this.getRuleTree();
         }
     },
     mounted() {
+        this.rulesString = this.rules;
         this.getRuleTree();
     }
 };

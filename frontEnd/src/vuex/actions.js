@@ -24,7 +24,7 @@ export default {
     },
     getMenu(context,data){
         const url = serverUrl +"/admin/menus/index";
-        emitAjax(url,null,function(result){
+        emitAjax(url,{type:"tree"},function(result){
             context.commit("getMenu",result);
         })
     }

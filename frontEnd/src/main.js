@@ -7,6 +7,7 @@ import { serverUrl,pathName } from "./config/server.js";
 import { emitAjax,checkPermission ,getUserInfo} from "./assets/common.js";
 import store from './vuex';
 import moment from "moment";
+import './assets/common.css';
 
 Vue.config.productionTip = false;
 Vue.prototype.pathName = pathName;
