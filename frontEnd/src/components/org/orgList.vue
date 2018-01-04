@@ -20,12 +20,12 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <router-link class="btn btn-primary btn-sm" tag="button" v-if="permission[loginUser.user_level] >= permission.college"
+                            <router-link class="btn btn-primary btn-sm" tag="button" v-if="permission[loginUser.group_level] >= permission.college"
                             :to="{path:pathName+'/orgEdit'}">添加</router-link>
                         </div>
                     </h1>
                 </div>
-                <div class="table-responsive" v-if="loginUser.user_level != 'school'">
+                <div class="table-responsive" v-if="loginUser.group_level != 'school'">
                     <table class="table table-striped table-bordered table-hover dataTable">
                         <thead>
                             <tr>
@@ -87,7 +87,7 @@
                         </tbody>
                     </table>
                 </div>
-                <ul class="list-group orgList" v-for="school in schoolOrg" :key="school.org_id" v-if="loginUser.user_level == 'school'">
+                <ul class="list-group orgList" v-for="school in schoolOrg" :key="school.org_id" v-if="loginUser.group_level == 'school'">
                     <li class="list-group-item">
                         <router-link :to="{path:pathName+'/orgEdit',query:{org_id:school.org_id}}">
                             <h4><i class="ace-icon fa fa-home"></i> {{school.org_name}}</h4>
@@ -169,7 +169,7 @@
                 this.schoolOrg=[];
                 for (let index = 0; index < this.orgList.length; index++) {
                     const org = this.orgList[index];
-                    switch (this.loginUser.user_level) {
+                    switch (this.loginUser.group_level) {
                         case "lab":
                             if(org.org_level == "lab"){
                                 this[org.org_level+'Org'].push(org);

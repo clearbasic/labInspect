@@ -143,7 +143,7 @@
                 const _this = this;
                 for (let index = 0; index < this.orgList.length; index++) {
                     const element = this.orgList[index];
-                    switch (this.loginUser.user_level) {
+                    switch (this.loginUser.group_level) {
                         case 'lab':
                             if(element.org_level =="lab"&&element.org_state !="no"){
                                 _this.userOrgList.push(Object.assign({},element));

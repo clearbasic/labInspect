@@ -61,7 +61,7 @@ export default {
             if(this.changeObj.group_id){
                 URL = this.serverUrl + "/admin/group/edit";
             }
-            this.changeObj.level = this.loginUser.user_level;
+            this.changeObj.level = this.loginUser.group_level;
             this.changeObj.org_id = this.loginUser.org_id;
             this.emitAjax(URL, this.changeObj, function(result) {
                 _SELF.getCheckGroupList();

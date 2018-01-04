@@ -111,20 +111,20 @@ function getUserInfo(){
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     let data = {};
     if(userInfo){
-        switch (userInfo.user_level) {
+        switch (userInfo.group_level) {
             case md5("lab_level").toString():
                 data = Object.assign({},userInfo,{
-                    user_level:"lab"
+                    group_level:"lab"
                 })
                 break;
             case md5("college_level").toString():
                 data = Object.assign({},userInfo,{
-                    user_level:"college"
+                    group_level:"college"
                 })
                 break;
             case md5("school_level").toString():
                 data = Object.assign({},userInfo,{
-                    user_level:"school"
+                    group_level:"school"
                 })
                 break;
             default:

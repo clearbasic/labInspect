@@ -24,7 +24,7 @@
                                 <option value="0">--当前期次--</option>
                                 <option :value="plan.plan_id" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
                             </select>
-                            <select v-model="college_id" style="font-size:14px" v-if="permission[loginUser.user_level] >= permission.school"> 
+                            <select v-model="college_id" style="font-size:14px" v-if="permission[loginUser.group_level] >= permission.school"> 
                                 <option value="0">--请选择--</option>
                                 <option :value="org.org_id" v-for="org in college_list" :key="'org'+org.org_id">{{org.org_name}}</option>
                             </select>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <!-- 循环实验室三种任务 -->
-                <h5 v-if="permission[loginUser.user_level] > permission.college && college_id==0" class="center red">
+                <h5 v-if="permission[loginUser.group_level] > permission.college && college_id==0" class="center red">
                     请于右上角选择要查看的期次和学院
                 </h5>
                 <div class="widget-box  widget-color-blue" v-for="(tasks,key) in task_list" :key="'taskItem'+key" v-if="tasks.length>0 && college_id!=0">
@@ -78,8 +78,8 @@
                                             <span v-if="task.sum != '0'">{{task.state}}</span>
                                         </td>
                                         <td class="center">
-                                            <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}" v-if="loginUser.user_level == key&&(task.sum>task.finished || !task.sum)">分配</router-link>
-                                            <span v-if="loginUser.user_level != key || (task.sum==task.finished&&task.sum>0)">分配</span>
+                                            <router-link :to="{path:pathName+'/checkWork/setting/'+task.task_id,query:{college_id}}" v-if="loginUser.group_level == key&&(task.sum>task.finished || !task.sum)">分配</router-link>
+                                            <span v-if="loginUser.group_level != key || (task.sum==task.finished&&task.sum>0)">分配</span>
                                         </td>
                                         <td class="center">
                                             <router-link :to="{path:pathName+'/checkWork/progress/'+task.task_id,query:{college_id}}" v-if="task.sum > 0">检查进度</router-link>
@@ -137,7 +137,7 @@ export default {
         init(){
             this.getPlanList();
             //学院用户
-            if(this.permission[this.loginUser.user_level] == this.permission.college){
+            if(this.permission[this.loginUser.group_level] == this.permission.college){
                 this.college_id = this.loginUser.org_id;
             }
             this.getOrgList();
@@ -155,7 +155,7 @@ export default {
             const _this = this;
             const URl = this.serverUrl + "/admin/org/index";
             this.emitAjax(URl,null,function(result){
-                if(_this.loginUser.user_level == "lab"){
+                if(_this.loginUser.group_level == "lab"){
                     _this.setLabCollegeId(result);
                 }else{
                     _this.getCollegeList(result);
@@ -226,7 +226,7 @@ export default {
                 _this.task_list[task.task_level].push(Object.assign({},task));
             }
             //过滤自查、复查、抽查
-            switch (this.permission[this.loginUser.user_level]) {
+            switch (this.permission[this.loginUser.group_level]) {
                 case this.permission.college:
                     this.task_list.school = [];
                     break;

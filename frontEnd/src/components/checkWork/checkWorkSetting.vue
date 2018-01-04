@@ -43,7 +43,7 @@
                 </div>
                 <div class="clearfix position-relative">
                     <p class="pull-right">
-                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" v-if="loginUser.user_level == currentTask.task_level">添加</button>
+                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" v-if="loginUser.group_level == currentTask.task_level">添加</button>
                         <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                             <li v-for="lab in lab_list" :key="'lab'+lab.org_id" v-if="lab.org_state !='no'">
                                 <a @click="addLabSetting(lab)">{{lab.org_name}}</a>
@@ -110,7 +110,7 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr v-if="loginUser.user_level == currentTask.task_level">
+                                    <tr v-if="loginUser.group_level == currentTask.task_level">
                                         <td colspan="2" class="center">
                                             <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
                                             <router-link class="btn btn-default btn-sm" 
@@ -177,7 +177,7 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr v-if="loginUser.user_level == currentTask.task_level">
+                                    <tr v-if="loginUser.group_level == currentTask.task_level">
                                         <td colspan="2" class="center">
                                             <button class="btn btn-success btn-sm" @click="saveCheckTask">添加</button>
                                             <button class="btn btn-default btn-sm" @click="addLab = false">取消</button>
