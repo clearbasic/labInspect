@@ -51,7 +51,6 @@
     </div>
 </template>
 <script>
-import { setLocalData,delLocalData } from "../../assets/common.js";
 export default {
     data() {
         return {};

@@ -240,9 +240,7 @@ export default {
         }
     },
     mounted() {
-        if(this.checkPermission(this)){
-            this.getMyCheckList();
-        }
+        this.getMyCheckList();
     }
 };
 </script>

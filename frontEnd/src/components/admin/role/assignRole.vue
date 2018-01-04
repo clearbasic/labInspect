@@ -64,7 +64,6 @@
                                         <label class="col-sm-2 control-label">选择角色</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" v-model="newAssign.group_id" @change="selectGroupLevel">
-                                                <option value="0">无</option>
                                                 <option :value="role.id" v-for="role in role_list" :key="'role'+role.id">{{role.title}}</option>
                                             </select>
                                         </div>

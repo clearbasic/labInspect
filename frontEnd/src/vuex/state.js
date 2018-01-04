@@ -1,11 +1,12 @@
 export default {
-    checkPlan:{
+    checkPlan:{ //检查期次信息
         plan:{},
         task_list:[],
         rule_list:[],
     },
-    orgList:[],
-    currentRoom:{},
-    currentZone:{},
-    leftMenu:[],
+    orgList:[], //单位列表
+    currentRoom:{}, //当前选中的房间
+    currentZone:{}, //当前选中的房间组
+    leftMenu:[], //左侧菜单栏
+    rule_list:[],
 }

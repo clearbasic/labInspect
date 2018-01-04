@@ -137,10 +137,8 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {  
-            this.getCheckInfo();
-            this.getProgressList();
-        }
+        this.getCheckInfo();
+        this.getProgressList();
     }
 };
 </script>

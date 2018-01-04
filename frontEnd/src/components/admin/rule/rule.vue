@@ -275,9 +275,7 @@ export default {
         }
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.init();
-        }
+        this.init();
     }
 };
 </script>

@@ -199,11 +199,9 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {  
-            this.getCheckInfo();
-            this.getResultList();
-            this.getUserList();
-        }
+        this.getCheckInfo();
+        this.getResultList();
+        this.getUserList();
     }
 };
 </script>

@@ -101,10 +101,8 @@ export default {
         },
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.getZoneRoomList();
-            this.getZoneList();
-        };
+        this.getZoneRoomList();
+        this.getZoneList();
     }
 };
 </script>

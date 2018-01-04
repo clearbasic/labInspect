@@ -66,9 +66,6 @@ export default {
                 this.$store.commit("setCurrentZone",{zone_order:length+1});
             }
         }
-    },
-    mounted(){
-        this.checkPermission(this);
     }
 };
 </script>

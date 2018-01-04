@@ -252,9 +252,7 @@ export default {
         }
     },
     mounted() {
-        if(this.checkPermission(this)){
-            this.getCheckList();
-        }
+        this.getCheckList();
     }
 };
 </script>

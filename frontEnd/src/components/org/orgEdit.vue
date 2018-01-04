@@ -456,9 +456,7 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {
-            this.getOrgList();
-        }
+        this.getOrgList();
     }
 };
 </script>

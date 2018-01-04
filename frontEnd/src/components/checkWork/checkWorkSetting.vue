@@ -337,10 +337,8 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {
-            this.getCheckInfo();
-            this.getCheckList();
-        }
+        this.getCheckInfo();
+        this.getCheckList();
     }
 };
 </script>

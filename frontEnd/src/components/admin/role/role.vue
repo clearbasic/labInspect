@@ -32,7 +32,7 @@
                                 <th class="center little">角色ID</th>
                                 <th>角色名称</th>
                                 <th>父级名称</th>
-                                <th class="center little">备注</th>
+                                <th>备注</th>
                                 <th class="center little">状态</th>
                                 <th class="center little">操作</th>
                             </tr>
@@ -45,7 +45,7 @@
                                     <span v-if="role.pid == 0">无</span>
                                     <span v-for="pRole in role_list" :key="'pRole'+pRole.id" v-if="pRole.id == role.pid">{{pRole.title}}</span>
                                 </td>
-                                <td class="center little">{{role.remark}}</td>
+                                <td>{{role.remark}}</td>
                                 <td class="center little">
                                     <span v-if="role.status == 1">开启</span>
                                     <span v-if="role.status == 0">禁用</span>
@@ -303,9 +303,7 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {
-            this.init();
-        }
+        this.init();
     }
 };
 </script>

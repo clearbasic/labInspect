@@ -128,10 +128,14 @@
                     </div>
                 </transition>
                 <transition name="fade">
-                    <div class="dd" v-if="!showAdd">
-                        <ol class="dd-list">
-                            <NavItem :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "editMenu"></NavItem>
-                        </ol>
+                    <div class="row" v-if="!showAdd">
+                        <div class="col-md-7">
+                            <div class="dd">
+                                <ol class="dd-list">
+                                    <NavItem :data = "menu" v-for="(menu,index) in leftMenu" :key="'nav'+index" :parentFn = "editMenu"></NavItem>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
                 </transition>
             </div>
@@ -187,6 +191,7 @@ export default {
             }
             this.emitAjax(url,this.newMenu,function(result){
                 _this.setHideAdd();
+                window.localStorage.removeItem("leftMune");
                 _this.$store.dispatch("getMenu");
             })
         } ,
@@ -226,9 +231,7 @@ export default {
         }
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.getRuleTree();
-        }
+        this.getRuleTree();
     }
 };
 </script>

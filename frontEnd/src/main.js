@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router';
 import { serverUrl,pathName } from "./config/server.js";
-import { emitAjax,checkPermission ,getUserInfo} from "./assets/common.js";
+import { emitAjax ,getUserInfo} from "./assets/common.js";
 import store from './vuex';
 import moment from "moment";
 import './assets/common.css';
@@ -13,7 +13,6 @@ Vue.config.productionTip = false;
 Vue.prototype.pathName = pathName;
 Vue.prototype.serverUrl = serverUrl;
 Vue.prototype.emitAjax = emitAjax;
-Vue.prototype.checkPermission = checkPermission;
 Vue.prototype.permission = {
   school:10,
   college:8,

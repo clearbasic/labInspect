@@ -47,9 +47,7 @@ export default {
         }
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.getCurrentPlan();
-        }
+        this.getCurrentPlan();
     }
 };
 </script>

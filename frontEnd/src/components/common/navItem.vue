@@ -1,6 +1,6 @@
 <template>
     <li :class="[{open:open&&data.child&&data.child.length>0},{active:isActive}]">
-        <router-link :to="data.url" @click="openMenu" v-if="data.url != pathName">
+        <router-link :to="pathName+data.url" @click="openMenu" v-if="data.url != pathName">
             <i :class="'menu-icon '+data.icon"></i>
             <span class="menu-text">{{data.title}}</span>
             <b class="arrow fa fa-angle-down" v-if="data.child&&data.child.length>0"></b>

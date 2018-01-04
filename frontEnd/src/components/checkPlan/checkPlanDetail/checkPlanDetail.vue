@@ -162,9 +162,7 @@ export default {
         }
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.getCheckPlan();
-        }
+        this.getCheckPlan();
     }
 };
 </script>

@@ -43,10 +43,7 @@
                 this.$refs.userList.currentUser = user;
             }
         },
-        components:{UserList},
-        mounted(){
-            this.checkPermission(this)
-        }
+        components:{UserList}
     };
 </script>
 <style>

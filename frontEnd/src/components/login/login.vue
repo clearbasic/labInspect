@@ -11,7 +11,7 @@
             <div class="space-6"></div>
             <div class="position-relative">
                 <div id="login-box" class="login-box visible widget-box no-border">
-                    <div class="widget-body">
+                    <div class="widget-body" v-if="isSingle">
                         <div class="widget-main">
                             <h4 class="header blue lighter bigger">
                                 <i class="ace-icon fa fa-coffee green"></i>
@@ -60,6 +60,29 @@
                             <span class="col-xs-12"><h5>如果没有帐号，请联系相关管理人员添加帐号。</h5></span>
                         </div>
                     </div>
+                    <div class="widget-body" v-if="!isSingle">
+                        <div class="widget-main">
+                            <h4 class="header blue lighter bigger">
+                                <i class="ace-icon fa fa-coffee green"></i>
+                                请选择一个身份登录
+                            </h4>
+                            <div class="space-6"></div>
+                                <fieldset>
+                                    <label  v-if="role_list" v-for="role in role_list" :key="'role'+role.org_id" class="block">
+                                        <input type="radio" class="ace" @click="selectRoleLogin(role)">
+                                        <span class="lbl"> {{role.o_name}}-{{role.g_name}}</span>
+                                    </label>
+                                    <div class="space"></div>
+                                    <div class="clearfix">
+                                        <button type="button" class="width-35 btn btn-sm btn-primary" @click="submitRoleLogin">
+                                            <span class="bigger-110">确定</span>
+                                        </button>
+                                    </div>
+                                    <div class="space-4"></div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,6 +98,14 @@
                 password:"",
                 verifyCode:"",
                 remeberme:false,
+                role_list:[
+                    {
+                        org_id:19,
+                        org_name:"研究生院"
+                    }
+                ],
+                isSingle:true,
+                selectRole:{},
             }
         },
         methods:{
@@ -90,8 +121,40 @@
                 this.remeberMe();
                 const url = this.serverUrl +"/admin/login/login";
                 this.emitAjax(url,data,function(result){
+                    _this.loginSuccess(result);
+                },function(){
+                    delLocalData();
+                    _this.refreshVerifyCode();
+                })
+            },
+            loginSuccess(result){
+                //登录成功做处理
+                if(Array.isArray(result)){
+                    this.isSingle = false;
+                    this.role_list = result;
+                }else{
                     setLocalData(result);
-                    window.location.href = _this.pathName+"/";
+                    if(result.menusList[0].url != ''){
+                        window.location.href = this.pathName+result.menusList[0].url
+                    }else if(result.menusList[0].url == ''&&result.menusList[0].child){
+                        window.location.href = this.pathName+result.menusList[0].child[0].url;
+                    }else{
+                        window.location.href = this.pathName+'/';   
+                    }
+                }
+                
+            },
+            selectRoleLogin(role){
+                this.selectRole = role;
+            },
+            submitRoleLogin(){
+                const _this = this;
+                let data=Object.assign({},this.selectRole,{
+                    flag:true,
+                })
+                const url = this.serverUrl +"/admin/login/login";
+                this.emitAjax(url,data,function(result){
+                    _this.loginSuccess(result);
                 },function(){
                     delLocalData();
                     _this.refreshVerifyCode();

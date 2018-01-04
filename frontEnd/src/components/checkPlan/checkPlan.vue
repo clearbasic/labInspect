@@ -170,9 +170,7 @@ export default {
         }
     },
     mounted(){
-        if(this.checkPermission(this)){
-            this.getPlanData();
-        }
+        this.getPlanData();
     }
 };
 </script>

@@ -23,9 +23,15 @@ export default {
         })
     },
     getMenu(context,data){
-        const url = serverUrl +"/admin/menus/index";
-        emitAjax(url,{type:"tree"},function(result){
-            context.commit("getMenu",result);
-        })
+        const leftMune = JSON.parse(window.localStorage.getItem("leftMune"));
+        if(leftMune){
+            context.commit("getMenu",leftMune);
+        }else{
+            const url = serverUrl +"/admin/menus/index";
+            emitAjax(url,{type:"tree"},function(result){
+                window.localStorage.setItem("leftMune",JSON.stringify(result));
+                context.commit("getMenu",result);
+            })
+        }
     }
 }

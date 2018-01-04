@@ -36,13 +36,5 @@ export default {
             title: "问题反馈",
         };
     },
-    methods: {
-        
-    },
-    mounted() {
-        if(this.checkPermission(this)){
-           
-        }
-    }
 };
 </script>

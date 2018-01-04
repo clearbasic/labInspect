@@ -162,10 +162,8 @@ export default {
         }
     },
     mounted() {
-        if (this.checkPermission(this)) {
-            this.getCheckGroupList();
-            this.getOrgList();
-        }
+        this.getCheckGroupList();
+        this.getOrgList();
     }
 };
 </script>
