@@ -335,7 +335,9 @@ export default {
         },
         getOrgList(){
             //获取单位信息
-            this.$store.dispatch("getOrgList");
+            if(this.$store.state.orgList.length == 0){
+                this.$store.dispatch("getOrgList");
+            }
         },
         getOrgInfo(){
             //获取单位信息

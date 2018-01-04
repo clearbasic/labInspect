@@ -91,79 +91,83 @@
     </div>
 </template>
 <script>
-    import VueHead from "../common/header";
-    import VueLeft from "../common/leftMenu";
-    import GroupModal from './groupModal';
-    import UserModal from '../user/userModal';
+import VueHead from "../common/header";
+import VueLeft from "../common/leftMenu";
+import GroupModal from "./groupModal";
+import UserModal from "../user/userModal";
 
-    export default {
-        name:"checkGroup",
-        data(){
-            return {
-                title:"检查小组管理",
-                changeObj:{},
-                checkGroupArray:[]
-            }
-        },
-        components:{VueHead,VueLeft,GroupModal,UserModal},
-        computed:{
-            orgList(){
-                return this.$store.state.orgList;
-            }
-        },
-        methods:{
-            delGroup(group){
-                if(confirm("是否要删除<"+group.group_name+">检查小组，此操作不可逆，请慎重！")){
-                    const _this = this;
-                    const URL = this.serverUrl + "/admin/group/del";
-                    this.emitAjax(URL,{group_id:group.group_id},function(result){
-                        _this.getCheckGroupList();
-                    })
-                }
-            },
-            addGroup(){
-                //添加新小组
-                $("#groupModal").modal("show");
-                this.changeGroup({
-                    org_id:0,
-                    group_name: "",
-                    level: "lab",
-                    leader_name: "",
-                    leader_id: "",
-                    phone: "",
-                    members: "",
-                    group_order:this.checkGroupArray.length+1
-                });
-            },
-            changeGroup(obj){
-                //编辑小组
-                this.changeObj = Object.assign({},obj);
-            },
-            getCheckGroupList(){
-                //获取检查小组列表
+export default {
+    name: "checkGroup",
+    data() {
+        return {
+            title: "检查小组管理",
+            changeObj: {},
+            checkGroupArray: []
+        };
+    },
+    components: { VueHead, VueLeft, GroupModal, UserModal },
+    computed: {
+        orgList() {
+            return this.$store.state.orgList;
+        }
+    },
+    methods: {
+        delGroup(group) {
+            if (confirm("是否要删除<" + group.group_name + ">检查小组，此操作不可逆，请慎重！")) {
                 const _this = this;
-                const URL = this.serverUrl + "/admin/group/index";
-                this.emitAjax(URL,null,function(result){
-                    _this.checkGroupArray = result;
-                })
-            },
-            selectUser(user){
-                //选择用户作为组长
-                this.changeObj.leader_name = user.name;
-                this.changeObj.leader_id = user.username;
-                this.changeObj.phone = user.mobile;
-                $("#userModal").modal("hide");
-            },
-            getOrgList(data){
-                //获取单位列表
-                this.$store.dispatch("getOrgList",data);
+                const URL = this.serverUrl + "/admin/group/del";
+                this.emitAjax(URL, { group_id: group.group_id }, function(
+                    result
+                ) {
+                    _this.getCheckGroupList();
+                });
             }
         },
-        mounted(){
-            if(this.checkPermission(this)){
-                this.getCheckGroupList();
-                this.getOrgList();
+        addGroup() {
+            //添加新小组
+            $("#groupModal").modal("show");
+            this.changeGroup({
+                org_id: 0,
+                group_name: "",
+                level: "lab",
+                leader_name: "",
+                leader_id: "",
+                phone: "",
+                members: "",
+                group_order: this.checkGroupArray.length + 1
+            });
+        },
+        changeGroup(obj) {
+            //编辑小组
+            this.changeObj = Object.assign({}, obj);
+        },
+        getCheckGroupList() {
+            //获取检查小组列表
+            const _this = this;
+            const URL = this.serverUrl + "/admin/group/index";
+            this.emitAjax(URL, null, function(result) {
+                _this.checkGroupArray = result;
+            });
+        },
+        selectUser(user) {
+            //选择用户作为组长
+            this.changeObj.leader_name = user.name;
+            this.changeObj.leader_id = user.username;
+            this.changeObj.phone = user.mobile;
+            $("#userModal").modal("hide");
+        },
+        getOrgList(data) {
+            //获取单位列表
+            if (this.$store.state.orgList.length == 0) {
+                this.$store.dispatch("getOrgList", data);
             }
         }
-    };
+    },
+    mounted() {
+        if (this.checkPermission(this)) {
+            this.getCheckGroupList();
+            this.getOrgList();
+        }
+    }
+};
 </script>

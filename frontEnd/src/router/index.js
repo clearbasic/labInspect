@@ -24,6 +24,7 @@ import Feedback from "../components/feedback/feedback.vue";
 import Menu from "../components/admin/menu/menu.vue";
 import Rule from "../components/admin/rule/rule.vue";
 import Role from "../components/admin/role/role.vue";
+import AssignRole from "../components/admin/role/assignRole.vue";
 
 
 Vue.use(Router)
@@ -229,6 +230,15 @@ export default new Router({
 					meta:{
 						title:"角色设置 - "+title,
 						active:pathName+"/role",
+						permission:1,
+					}
+				},{
+					path:pathName+"/assignRole",
+					name:"assignRole",
+					component:AssignRole,
+					meta:{
+						title:"分配角色 - "+title,
+						active:pathName+"/assignRole",
 						permission:1,
 					}
 				}

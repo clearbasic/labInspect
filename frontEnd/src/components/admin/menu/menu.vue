@@ -162,6 +162,7 @@ export default {
                 pid:0,
                 module:"Admin",
                 rule_id:0,
+                level:10,
             },
             showAdd:false,
             select:false,

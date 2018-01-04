@@ -52,9 +52,6 @@
                                 </td>
                                 <td class="center little">
                                     <div class="hidden-xs btn-group">
-                                        <button class="btn btn-xs btn-primary" @click="roleJoinUser" title="给角色加人">
-                                            <i class="ace-icon glyphicon glyphicon-plus"></i>
-                                        </button>
                                         <button class="btn btn-xs btn-success" @click="editRole(role)" title="编辑">
                                             <i class="ace-icon glyphicon glyphicon-edit"></i>
                                         </button>
@@ -200,28 +197,18 @@
                         </div>
                     </div>
                 </transition>
-                <!-- 给角色添加人员 -->
-                <transition name="fade">
-                    <div class="addUser" v-if="showType=='join'">
-                        1
-                    </div>
-                </transition>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import VueHead from "../../common/header";
-import VueLeft from "../../common/leftMenu";
 import selectItem from "../selectItem.vue";
 import selectRule from "./selectRule.vue";
 
 export default {
     name: "role",
     components: {
-        VueHead,
-        VueLeft,
         selectItem,
         selectRule
     },
@@ -237,7 +224,6 @@ export default {
             select: false,
             role_list: [],
             role_tree: [],
-            currentRole:{},
         };
     },
     methods: {
@@ -285,11 +271,6 @@ export default {
                     _this.init();
                 });
             }
-        },
-        roleJoinUser(){
-            //给角色加人
-            this.setShowType('join');
-            
         },
         getRules(rules) {
             //获取权限列表

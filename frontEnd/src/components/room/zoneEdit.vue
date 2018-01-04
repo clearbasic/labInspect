@@ -85,7 +85,9 @@
             },
             getOrgList(data){
                 //获取单位列表
-                this.$store.dispatch("getOrgList",data);
+                if(this.$store.state.orgList.length == 0){
+                    this.$store.dispatch("getOrgList",data);
+                }
             },
         },
         mounted(){
