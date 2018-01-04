@@ -112,15 +112,9 @@
 </template>
 
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 
 export default {
     name: "checkPlan",
-    components: {
-        VueHead,
-        VueLeft
-    },
     data() {
         return {
             title: "检查期次管理",

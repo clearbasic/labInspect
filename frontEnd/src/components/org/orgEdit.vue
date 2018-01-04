@@ -320,8 +320,6 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import UserModal from "../user/userModal";
 
 export default {
@@ -340,7 +338,7 @@ export default {
             key: "" //保存当前要改变的字段
         };
     },
-    components: { VueHead, VueLeft, UserModal },
+    components: { UserModal },
     computed: {
         orgList() {
             return this.$store.state.orgList;

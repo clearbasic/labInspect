@@ -15,18 +15,15 @@
     </div>
 </template>
 <script>
-import leftMenuData from '../../config/leftMenu';
 import navItem from './navItem.vue';
 export default {
     data() {
-        return {
-            
-        }
+        return {}
     },
     components:{navItem},
     computed:{
         leftMenuData(){
-            return this.$store.state.leftMenu.length>0?this.$store.state.leftMenu:leftMenuData;
+            return this.$store.state.leftMenu;
         }
     },
     methods: {
@@ -37,7 +34,9 @@ export default {
         }
     },
     mounted(){
-        this.$store.dispatch("getMenu");
+        if(this.$store.state.leftMenu.length == 0){
+            this.$store.dispatch("getMenu");
+        }
     }
 };
 </script>

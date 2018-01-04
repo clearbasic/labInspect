@@ -140,17 +140,12 @@
 </template>
 
 <script>
-import VueHead from "../../common/header";
-import VueLeft from "../../common/leftMenu";
-import leftMenu from '../../../config/leftMenu.js';
 import NavItem from './menuItem.vue';
 import selectItem from '../selectItem.vue';
 
 export default {
     name: "menu",
     components: {
-        VueHead,
-        VueLeft,
         NavItem,
         selectItem,
     },
@@ -172,7 +167,7 @@ export default {
     },
     computed:{
         leftMenu(){
-            return this.$store.state.leftMenu.length>0?this.$store.state.leftMenu:leftMenu;
+            return this.$store.state.leftMenu;
         }
     },
     methods: {

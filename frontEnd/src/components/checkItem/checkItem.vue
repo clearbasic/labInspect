@@ -117,15 +117,11 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import CheckItemModal from "./checkItemModal";
 
 export default {
     name: "checkItem",
     components: {
-        VueHead,
-        VueLeft,
         CheckItemModal
     },
     data() {

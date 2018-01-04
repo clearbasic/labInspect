@@ -107,9 +107,6 @@
     </div>
 </template>
 <script>
-    import VueHead from "../common/header";
-    import VueLeft from "../common/leftMenu";
-
     export default {
         name:"checkorg",
         data(){
@@ -124,7 +121,6 @@
                 schoolOrg:[],
             }
         },
-        components:{VueHead,VueLeft},
         computed:{
             orgList(){
                 return this.$store.state.orgList;

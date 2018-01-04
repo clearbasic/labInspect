@@ -115,15 +115,9 @@
     </div>
 </template>
 <script>
-import VueHead from "./common/header";
-import VueLeft from "./common/leftMenu";
 
 export default {
     name: "checkList",
-    components: {
-        VueHead,
-        VueLeft,
-    },
     data() {
         return {
             title: "检查指标类别管理",

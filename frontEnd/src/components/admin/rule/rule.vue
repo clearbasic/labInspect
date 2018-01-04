@@ -181,14 +181,10 @@
 </template>
 
 <script>
-import VueHead from "../../common/header";
-import VueLeft from "../../common/leftMenu";
 import selectItem from '../selectItem.vue';
 export default {
     name: "rule",
     components: {
-        VueHead,
-        VueLeft,
         selectItem
     },
     data() {

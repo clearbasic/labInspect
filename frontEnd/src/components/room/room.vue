@@ -36,13 +36,11 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import RoomList from './roomList';
 import RoomEdit from './roomEdit.vue';
 export default {
     name:"room",
-    components: { VueHead,VueLeft,RoomList,RoomEdit },
+    components: { RoomList,RoomEdit },
     data(){
         return {
             title:"房间管理",

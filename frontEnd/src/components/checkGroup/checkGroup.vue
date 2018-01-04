@@ -91,8 +91,6 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import GroupModal from "./groupModal";
 import UserModal from "../user/userModal";
 
@@ -105,7 +103,7 @@ export default {
             checkGroupArray: []
         };
     },
-    components: { VueHead, VueLeft, GroupModal, UserModal },
+    components: { GroupModal, UserModal },
     computed: {
         orgList() {
             return this.$store.state.orgList;

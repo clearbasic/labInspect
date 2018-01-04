@@ -28,8 +28,6 @@
     </div>
 </template>
 <script>
-    import VueHead from "../common/header";
-    import VueLeft from "../common/leftMenu";
     import UserList from './userList';
 
     export default {
@@ -45,7 +43,7 @@
                 this.$refs.userList.currentUser = user;
             }
         },
-        components:{VueHead,VueLeft,UserList},
+        components:{UserList},
         mounted(){
             this.checkPermission(this)
         }

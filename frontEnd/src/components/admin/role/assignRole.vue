@@ -48,6 +48,9 @@
                                         </button>
                                     </td>
                                 </tr>
+                                <tr v-if="assign_user_list.length ==0">
+                                    <td colspan="5" class="center">暂无人员分配</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -219,9 +222,9 @@ export default {
                 const URL = this.serverUrl + "/admin/roles/del";
                 const _this = this;
                 const data = {
-                    username:this.newAssign.username,
-                    group_id:this.newAssign.group_id,
-                    org_id:this.newAssign.org_id,
+                    username:assign.username,
+                    group_id:assign.group_id,
+                    org_id:assign.org_id,
                 }
                 this.emitAjax(URL, data, function(result) {
                     _this.getAssignRoleList();

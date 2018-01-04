@@ -1,5 +1,5 @@
 <template>
-	<div class="welcome">
+	<div class="wrap">
         <!-- 头部 -->
         <VueHead></VueHead>
         <div class="main-container" id="main-container">

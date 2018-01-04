@@ -28,15 +28,9 @@
 </template>
 
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 
 export default {
     name: "feedback",
-    components: {
-        VueHead,
-        VueLeft
-    },
     data() {
         return {
             title: "问题反馈",

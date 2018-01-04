@@ -105,11 +105,9 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
+
 export default {
     name: "checkWork",
-    components: { VueHead, VueLeft },
     data() {
         return {
             title: "检查工作",

@@ -79,8 +79,6 @@
 </template>
 
 <script>
-import VueHead from "../../common/header";
-import VueLeft from "../../common/leftMenu";
 import CheckTask from './checkTask';
 import CheckRule from './checkRule';
 import CheckDescription from './checkDescription';
@@ -89,8 +87,6 @@ import Toast from '../../common/toast.vue';
 export default {
     name: "checkPlanDetail",
     components: {
-        VueHead,
-        VueLeft,
         CheckTask,
         CheckRule,
         CheckDescription,

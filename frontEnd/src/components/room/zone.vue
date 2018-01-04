@@ -38,14 +38,12 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import ZoneList from "./zoneList";
 import zoneEdit from "./zoneEdit";
 
 export default {
     name: "zone",
-    components: { VueHead, VueLeft, ZoneList, zoneEdit },
+    components: { ZoneList, zoneEdit },
     data() {
         return {
             title: "房间分组管理",

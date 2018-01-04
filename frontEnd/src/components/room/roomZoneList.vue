@@ -64,12 +64,9 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 
 export default {
     name: "roomZone",
-    components: { VueHead, VueLeft},
     data() {
         return {
             title:"",

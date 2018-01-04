@@ -194,12 +194,10 @@
     </div>
 </template>
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
 import datepicker from "vue2-datepicker";
 export default {
     name: "checkWork",
-    components: { VueHead, VueLeft, datepicker },
+    components: { datepicker },
     data() {
         return {
             title: "分配检查工作",
