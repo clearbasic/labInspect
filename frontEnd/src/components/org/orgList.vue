@@ -52,11 +52,11 @@
                                 </td>
                                 <td class="center">
                                     <div class="hidden-xs btn-group">
-                                        <router-link class="btn btn-success btn-xs" tag="button" 
+                                        <router-link class="btn btn-success btn-xs" tag="button" title="编辑" 
                                             :to="{path:pathName+'/orgEdit',query:{org_id:org.org_id}}">
                                             <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>    
                                         </router-link>
-                                        <button class="btn btn-danger btn-xs" @click="delOrg(org)">
+                                        <button class="btn btn-danger btn-xs" @click="delOrg(org)" title="删除">
                                             <i class="ace-icon fa fa-trash-o bigger-110"></i>
                                         </button>
                                     </div>

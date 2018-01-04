@@ -138,10 +138,10 @@
                                     </td>
                                     <td class="center little">
                                         <div class="hidden-xs btn-group">
-                                            <button class="btn btn-xs btn-success" @click="editRule(rule)">
+                                            <button class="btn btn-xs btn-success" @click="editRule(rule)" title="编辑">
                                                 <i class="ace-icon glyphicon glyphicon-edit"></i>
                                             </button>
-                                            <button class="btn btn-xs btn-danger" @click="delRule(rule)">
+                                            <button class="btn btn-xs btn-danger" @click="delRule(rule)" title="删除">
                                                 <i class="ace-icon fa fa-trash-o"></i>
                                             </button>
                                         </div>
@@ -181,9 +181,9 @@
 </template>
 
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
-import selectItem from './selectItem.vue';
+import VueHead from "../../common/header";
+import VueLeft from "../../common/leftMenu";
+import selectItem from '../selectItem.vue';
 export default {
     name: "rule",
     components: {

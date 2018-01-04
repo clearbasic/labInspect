@@ -33,10 +33,10 @@
                     </td>
                     <td class="center little">
                         <div class="hidden-xs btn-group">
-                            <button class="btn btn-xs btn-success" @click="showZoneEdit(zone)">
+                            <button class="btn btn-xs btn-success" @click="showZoneEdit(zone)" title="编辑">
                                 <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
                             </button>
-                            <button class="btn btn-xs btn-danger" @click="deleteZone(zone)">
+                            <button class="btn btn-xs btn-danger" @click="deleteZone(zone)" title="删除">
                                 <i class="ace-icon fa fa-trash-o bigger-100"></i>
                             </button>
                         </div>

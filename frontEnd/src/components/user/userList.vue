@@ -43,10 +43,10 @@
                         <td class="center little">
                             <span v-if="user.username == 'admin'">系统账户不能操作</span>
                             <div class="hidden-xs btn-group" v-if="user.username != 'admin'">
-                                <button class="btn btn-success btn-xs" @click="sure(user)">
+                                <button class="btn btn-success btn-xs" @click="sure(user)" title="编辑">
                                     <i class="ace-icon glyphicon glyphicon-edit"></i>
                                 </button>
-                                <button class="btn btn-danger btn-xs" @click="delUser(user)">
+                                <button class="btn btn-danger btn-xs" @click="delUser(user)" title="删除">
                                     <i class="ace-icon fa fa-trash-o"></i>
                                 </button>
                             </div>

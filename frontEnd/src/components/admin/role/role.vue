@@ -20,17 +20,18 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" @click="setShowAdd">添加</button>
+                            <button class="btn btn-primary btn-sm" @click="setShowType('add')">添加</button>
                         </div>
                     </h1>
                 </div>
+                <!-- 角色列表 -->
                 <transition name="fade">
-                    <table class="table table-bordered table-hover" v-if="!showAdd">
+                    <table class="table table-bordered table-hover" v-if="showType=='list'">
                         <thead>
                             <tr>
                                 <th class="center little">角色ID</th>
-                                <th>父级名称</th>
                                 <th>角色名称</th>
+                                <th>父级名称</th>
                                 <th class="center little">备注</th>
                                 <th class="center little">状态</th>
                                 <th class="center little">操作</th>
@@ -39,11 +40,11 @@
                         <tbody>
                             <tr v-for="role in role_list" :key="'role'+role.id">
                                 <td class="center little">{{role.id}}</td>
+                                <td>{{role.title}}</td>
                                 <td>
                                     <span v-if="role.pid == 0">无</span>
                                     <span v-for="pRole in role_list" :key="'pRole'+pRole.id" v-if="pRole.id == role.pid">{{pRole.title}}</span>
                                 </td>
-                                <td>{{role.title}}</td>
                                 <td class="center little">{{role.remark}}</td>
                                 <td class="center little">
                                     <span v-if="role.status == 1">开启</span>
@@ -51,6 +52,9 @@
                                 </td>
                                 <td class="center little">
                                     <div class="hidden-xs btn-group">
+                                        <button class="btn btn-xs btn-primary" @click="roleJoinUser" title="给角色加人">
+                                            <i class="ace-icon glyphicon glyphicon-plus"></i>
+                                        </button>
                                         <button class="btn btn-xs btn-success" @click="editRole(role)" title="编辑">
                                             <i class="ace-icon glyphicon glyphicon-edit"></i>
                                         </button>
@@ -87,8 +91,9 @@
                         </tbody>
                     </table>
                 </transition>
+                <!-- 新添角色 -->
                 <transition name="fade">
-                    <div class="addRole" v-if="showAdd">
+                    <div class="addRole" v-if="showType=='add'">
                         <div class="row">
                             <div class="form-horizontal col-lg-8">
                                 <div class="form-group">
@@ -188,11 +193,17 @@
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
                                         <button class="btn btn-success btn-sm" @click="addRole">保存</button>
-                                        <button class="btn btn-default btn-sm" @click="setHideAdd">取消</button>
+                                        <button class="btn btn-default btn-sm" @click="setShowList">取消</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </transition>
+                <!-- 给角色添加人员 -->
+                <transition name="fade">
+                    <div class="addUser" v-if="showType=='join'">
+                        1
                     </div>
                 </transition>
             </div>
@@ -201,9 +212,9 @@
 </template>
 
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
-import selectItem from "./selectItem.vue";
+import VueHead from "../../common/header";
+import VueLeft from "../../common/leftMenu";
+import selectItem from "../selectItem.vue";
 import selectRule from "./selectRule.vue";
 
 export default {
@@ -222,10 +233,11 @@ export default {
                 group_level: "lab",
                 pid: 0
             },
-            showAdd: false,
+            showType: 'list',
             select: false,
             role_list: [],
-            role_tree: []
+            role_tree: [],
+            currentRole:{},
         };
     },
     methods: {
@@ -257,13 +269,13 @@ export default {
             }
             const _this = this;
             this.emitAjax(URL, this.newRole, function(result) {
-                _this.setHideAdd();
+                _this.setShowList();
                 _this.init();
             });
         },
         editRole(role) {
             this.newRole = Object.assign({}, role);
-            this.setShowAdd();
+            this.setShowType('add');
         },
         delRole(role){
             if(confirm("是否要删除<"+role.title+">这个角色，此操作不可逆，请慎重！")){
@@ -273,6 +285,11 @@ export default {
                     _this.init();
                 });
             }
+        },
+        roleJoinUser(){
+            //给角色加人
+            this.setShowType('join');
+            
         },
         getRules(rules) {
             //获取权限列表
@@ -286,13 +303,13 @@ export default {
             }
             this.newRole.pid = id;
         },
-        setShowAdd() {
-            //显示添加 编辑权限
-            this.showAdd = true;
+        setShowType(type) {
+            //页面显示切换
+            this.showType = type;
         },
-        setHideAdd() {
+        setShowList() {
             //显示角色列表
-            this.showAdd = false;
+            this.setShowType('list');
             this.newRole = {
                 status: 1,
                 group_level: "lab",

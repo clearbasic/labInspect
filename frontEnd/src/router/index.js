@@ -21,9 +21,9 @@ import Zone from "../components/room/zone.vue";
 import RoomZoneList from "../components/room/roomZoneList.vue";
 import Login from "../components/login/login.vue";
 import Feedback from "../components/feedback/feedback.vue";
-import Menu from "../components/admin/menu.vue";
-import Rule from "../components/admin/rule.vue";
-import Role from "../components/admin/role.vue";
+import Menu from "../components/admin/menu/menu.vue";
+import Rule from "../components/admin/rule/rule.vue";
+import Role from "../components/admin/role/role.vue";
 
 
 Vue.use(Router)

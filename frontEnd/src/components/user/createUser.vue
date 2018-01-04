@@ -68,8 +68,8 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-10 col-sm-offset-2">
-                    <button class="btn btn-default btn-sm" @click="showUserList">返回</button>
                     <button class="btn btn-success btn-sm" @click="saveUser">保存</button>
+                    <button class="btn btn-default btn-sm" @click="showUserList">返回</button>
                 </div>  
             </div>
         </div>

@@ -41,10 +41,10 @@
                     </td>
                     <td class="center little">
                         <div class="hidden-xs btn-group">
-                            <button class="btn btn-xs btn-success" @click="showRoomEdit(room)">
+                            <button class="btn btn-xs btn-success" @click="showRoomEdit(room)" title="编辑">
                                 <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
                             </button>
-                            <button class="btn btn-xs btn-danger" @click="deleteRoom(room)">
+                            <button class="btn btn-xs btn-danger" @click="deleteRoom(room)" title="删除">
                                 <i class="ace-icon fa fa-trash-o bigger-100"></i>
                             </button>
                         </div>

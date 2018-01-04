@@ -98,7 +98,7 @@
                                 >
                             </td>
                             <td class="center">
-                                <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.item_name)">
+                                <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.item_name)" title="删除">
                                     <i class="ace-icon fa fa-trash-o bigger-110"></i>
                                 </button>
                             </td>

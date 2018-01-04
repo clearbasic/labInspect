@@ -140,11 +140,11 @@
 </template>
 
 <script>
-import VueHead from "../common/header";
-import VueLeft from "../common/leftMenu";
-import leftMenu from '../../config/leftMenu.js';
+import VueHead from "../../common/header";
+import VueLeft from "../../common/leftMenu";
+import leftMenu from '../../../config/leftMenu.js';
 import NavItem from './menuItem.vue';
-import selectItem from './selectItem.vue';
+import selectItem from '../selectItem.vue';
 
 export default {
     name: "menu",

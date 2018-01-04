@@ -51,10 +51,10 @@
                             </td>
                             <td class="center">
                                 <div class="hidden-xs btn-group">
-                                    <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button">
+                                    <router-link class="btn btn-xs btn-success" :to="pathName+'/checkPlan/'+item.plan_id" tag="button" title="编辑">
                                         <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
                                     </router-link>
-                                    <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id,item.plan_name)">
+                                    <button class="btn btn-xs btn-danger" @click="deleteCheckPlan(item.plan_id,item.plan_name)" title="删除">
                                         <i class="ace-icon fa fa-trash-o bigger-100"></i>
                                     </button>
                                 </div>

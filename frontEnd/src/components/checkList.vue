@@ -78,7 +78,7 @@
                                 <router-link :to="pathName+'/checkList/'+item.id">{{item.count}}</router-link>
                             </td>
                             <td class="center">
-                                <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name,item.count)">
+                                <button class="btn btn-xs btn-danger" @click="deleteCheckItem(item.id,item.name,item.count)" title="删除">
                                     <i class="ace-icon fa fa-trash-o bigger-110"></i>
                                 </button>
                             </td>
@@ -98,7 +98,7 @@
                             </td>
                             <td class="center"></td>
                             <td class="center">
-                                <button class="btn btn-xs btn-success" @click="addCheckList">
+                                <button class="btn btn-xs btn-success" @click="addCheckList" title="添加">
                                     <i class="ace-icon glyphicon glyphicon-ok bigger-110"></i>
                                 </button>
                             </td>
