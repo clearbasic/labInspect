@@ -57,7 +57,9 @@ function emitAjax(url,opt,success,error){
             }
         });
     }else{
-        alert("您没有权限做此操作！"+isOk.pathName);
+        console.log(isOk.pathName);
+        alert("您没有权限做此操作！");
+        if(this){this.$router.back()}
     }
 }
 //生存密钥

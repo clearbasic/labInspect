@@ -34,7 +34,7 @@
         name:"user",
         data(){
             return {
-                title:"用户管理"
+                title:"人员管理"
             }
         },
         methods:{

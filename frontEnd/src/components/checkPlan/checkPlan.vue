@@ -165,7 +165,6 @@ export default {
             const _SELF = this;
             this.emitAjax(URL, null, function(result) {
                 _SELF.checkPlan = result;
-
             });
         }
     },

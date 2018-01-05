@@ -47,7 +47,7 @@
             delMenu(){
                 const URl = this.serverUrl+'/admin/menus/del';
                 const _this = this;
-                if(confirm("是否要删除菜单"+this.data.title+",此操作不可逆，请慎重！")){
+                if(confirm("是否要删除菜单<"+this.data.title+">,此操作不可逆，请慎重！")){
                     this.emitAjax(URl,{id:this.data.id},function(){
                         window.localStorage.removeItem("leftMune");
                         _this.$store.dispatch("getMenu");
