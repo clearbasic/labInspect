@@ -51,7 +51,7 @@
                                     <span v-if="role.status == 0">禁用</span>
                                 </td>
                                 <td class="center little">
-                                    <div class="hidden-xs btn-group">
+                                    <div class="hidden-xs btn-group" v-if="role.id != 1">
                                         <button class="btn btn-xs btn-success" @click="editRole(role)" title="编辑">
                                             <i class="ace-icon glyphicon glyphicon-edit"></i>
                                         </button>
@@ -59,7 +59,7 @@
                                             <i class="ace-icon fa fa-trash-o"></i>
                                         </button>
                                     </div>
-                                    <div class="hidden-sm hidden-md hidden-lg">
+                                    <div class="hidden-sm hidden-md hidden-lg" v-if="role.id != 1">
                                         <div class="inline pos-rel">
                                             <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto" aria-expanded="false">
                                                 <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
@@ -78,11 +78,12 @@
                                             </ul>
                                         </div>
                                     </div>
+                                    <span v-if="role.id == 1">不可操作</span>
                                 </td>
                             </tr>
                             <tr v-if="role_list.length == 0">
                                 <td colspan="6" class="center">
-                                    暂无权限
+                                    暂无角色
                                 </td>
                             </tr>
                         </tbody>

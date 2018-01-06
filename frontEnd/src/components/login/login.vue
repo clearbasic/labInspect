@@ -69,7 +69,7 @@
                             <div class="space-6"></div>
                                 <fieldset>
                                     <label  v-if="role_list" v-for="role in role_list" :key="'role'+role.org_id" class="block">
-                                        <input type="radio" class="ace" @click="selectRoleLogin(role)">
+                                        <input type="radio" class="ace" @click="selectRoleLogin(role)" name="role">
                                         <span class="lbl"> {{role.o_name}}-{{role.g_name}}</span>
                                     </label>
                                     <div class="space"></div>

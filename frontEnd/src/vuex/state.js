@@ -9,4 +9,5 @@ export default {
     currentZone:{}, //当前选中的房间组
     leftMenu:[], //左侧菜单栏
     rule_list:[],
+    plan_list:[],
 }

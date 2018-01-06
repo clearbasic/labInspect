@@ -3,7 +3,7 @@
         <div @click="parentFn(data.id)" :class="[{'tree-branch-name':!data.child},{'tree-branch-header':data.child}]">
             <i class="icon-folder ace-icon tree-minus" v-if="data.level<currentLevel&&data.child&&secondOpen" @click.stop="secondOpen = !secondOpen"></i>
             <i class="icon-folder ace-icon tree-plus" v-if="data.level<currentLevel&&data.child&&!secondOpen" @click.stop="secondOpen = !secondOpen"></i>
-            <span>{{data.level}},{{currentLevel}},{{data.title}}({{data.id}})</span>
+            <span>{{data.title}}({{data.id}})</span>
         </div>
         <ul :class="['tree-branch-children',{hide:!secondOpen}]" v-if="data.level<currentLevel&&data.child&&data.child.length>0">
             <navItem :data = "menu" 

@@ -38,7 +38,7 @@
                                     <label class="col-sm-2 control-label">权限点标识</label>
                                     <div class="col-sm-10">
                                         <div class="position-relative has-feedback">
-                                            <input type="text" class="form-control"  v-model="newMenu.rule_id" @click.stop="selectrule=true">
+                                            <input type="text" class="form-control"  v-model="newMenu.rule_id" @click.stop="setSelectrule">
                                             <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="selectrule">
                                                 <ul class="tree tree-selectable">
@@ -60,7 +60,7 @@
                                     <label class="col-sm-2 control-label">上级菜单</label>
                                     <div class="col-sm-10">
                                         <div class="position-relative has-feedback">
-                                            <input type="text" class="form-control"  v-model="newMenu.pid" @click.stop="select=true">
+                                            <input type="text" class="form-control"  v-model="newMenu.pid" @click.stop="setSelect">
                                             <span class="glyphicon glyphicon-chevron-down form-control-feedback"></span>
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
                                                 <ul class="tree tree-selectable">
@@ -213,6 +213,7 @@ export default {
                 module:"Admin",
                 pid:0,
                 rule_id:0, 
+                level:10,
             };
         },
         selectPid(id){
@@ -228,6 +229,14 @@ export default {
         closeSelect(){
             this.selectrule = false;
             this.select = false;
+        },
+        setSelectrule(){
+            this.selectrule = true;
+            this.select = false;
+        },
+        setSelect(){
+            this.selectrule = false;
+            this.select = true;
         }
     },
     mounted(){

@@ -25,9 +25,12 @@ import Menu from "../components/admin/menu/menu.vue";
 import Rule from "../components/admin/rule/rule.vue";
 import Role from "../components/admin/role/role.vue";
 import AssignRole from "../components/admin/role/assignRole.vue";
-
+import PersonStatistics from "../components/statistics/person.vue";
+import CheckStatistics from "../components/statistics/check.vue";
+import Awards from "../components/statistics/awards.vue";
 
 Vue.use(Router)
+
 let title = "实验室安全检查管理系统";
 
 export default new Router({
@@ -40,7 +43,6 @@ export default new Router({
 			meta:{
 				title:"首页 - "+title,
 				active:pathName+"/",
-				permission:0,
 			},
 			children:[
 				{
@@ -50,7 +52,6 @@ export default new Router({
 					meta:{
 						title:"检查指标类别管理 - "+title,
 						active:pathName+"/checkList",
-						permission:9,
 					}
 				},{
 					path:pathName+"/checkList/:id",
@@ -59,7 +60,6 @@ export default new Router({
 					meta:{
 						title:"检查指标管理 - "+title,
 						active:pathName+"/checkList",
-						permission:9,
 					}
 				},{
 					path:pathName+"/checkPlan",
@@ -68,7 +68,6 @@ export default new Router({
 					meta:{
 						title:"检查期次 - "+title,
 						active:pathName+"/checkPlan",
-						permission:9,
 					}
 				},{
 					path:pathName+"/checkPlan/:id",
@@ -77,7 +76,6 @@ export default new Router({
 					meta:{
 						title:"检查期次 - "+title,
 						active:pathName+"/checkPlan",
-						permission:9,
 					}
 				},{
 					path:pathName+"/checkPlanSummary",
@@ -86,7 +84,6 @@ export default new Router({
 					meta:{
 						title:"工作说明 - "+title,
 						active:pathName+"/checkWork",
-						permission:0,
 					}
 				},{
 					path:pathName+"/orgList",
@@ -95,7 +92,6 @@ export default new Router({
 					meta:{
 						title:"实验室单位列表 - "+title,
 						active:pathName+"/orgList",
-						permission:5,
 					}
 				},{
 					path:pathName+"/orgEdit",
@@ -104,7 +100,6 @@ export default new Router({
 					meta:{
 						title:"实验室单位编辑 - "+title,
 						active:pathName+"/orgList",
-						permission:5,
 					}
 				},{
 					path:pathName+"/userList",
@@ -113,7 +108,6 @@ export default new Router({
 					meta:{
 						title:"实验室用户管理 - "+title,
 						active:pathName+"/userList",
-						permission:5,
 					}
 				},{
 					path:pathName+"/checkGroup",
@@ -122,7 +116,6 @@ export default new Router({
 					meta:{
 						title:"检查小组 - "+title,
 						active:pathName+"/checkGroup",
-						permission:5,
 					}
 				},{
 					path:pathName+"/checkWork",
@@ -131,7 +124,6 @@ export default new Router({
 					meta:{
 						title:"检查工作 - "+title,
 						active:pathName+"/checkWork",
-						permission:5,
 					}
 				},{
 					path:pathName+"/checkWork/setting/:id",
@@ -140,7 +132,6 @@ export default new Router({
 					meta:{
 						title:"检查工作分配 - "+title,
 						active:pathName+"/checkWork",
-						permission:5,
 					}
 				},{
 					path:pathName+"/checkWork/progress/:id",
@@ -149,7 +140,6 @@ export default new Router({
 					meta:{
 						title:"检查工作进度 - "+title,
 						active:pathName+"/checkWork",
-						permission:5,
 					}
 				},{
 					path:pathName+"/checkWork/result/:id",
@@ -158,7 +148,6 @@ export default new Router({
 					meta:{
 						title:"检查工作结果 - "+title,
 						active:pathName+"/checkWork",
-						permission:5,
 					}
 				},{
 					path:pathName+"/myCheck",
@@ -167,7 +156,6 @@ export default new Router({
 					meta:{
 						title:"我的检查工作 - "+title,
 						active:pathName+"/myCheck",
-						permission:1,
 					}
 				},{
 					path:pathName+"/room",
@@ -176,7 +164,6 @@ export default new Router({
 					meta:{
 						title:"房间列表 - "+title,
 						active:pathName+"/zone",
-						permission:5,
 					}
 				},{
 					path:pathName+"/zone",
@@ -185,7 +172,6 @@ export default new Router({
 					meta:{
 						title:"房间分组列表 - "+title,
 						active:pathName+"/zone",
-						permission:5,
 					}
 				},{
 					path:pathName+"/zone/:id",
@@ -194,7 +180,6 @@ export default new Router({
 					meta:{
 						title:"房间分组 - "+title,
 						active:pathName+"/zone",
-						permission:5,
 					}
 				},{
 					path:pathName+"/feedback",
@@ -203,7 +188,6 @@ export default new Router({
 					meta:{
 						title:"问题反馈 - "+title,
 						active:pathName+"/feedback",
-						permission:1,
 					}
 				},{
 					path:pathName+"/menu",
@@ -212,7 +196,6 @@ export default new Router({
 					meta:{
 						title:"菜单设置 - "+title,
 						active:pathName+"/menu",
-						permission:1,
 					}
 				},{
 					path:pathName+"/rule",
@@ -221,7 +204,6 @@ export default new Router({
 					meta:{
 						title:"权限点设置 - "+title,
 						active:pathName+"/rule",
-						permission:1,
 					}
 				},{
 					path:pathName+"/role",
@@ -230,7 +212,6 @@ export default new Router({
 					meta:{
 						title:"角色设置 - "+title,
 						active:pathName+"/role",
-						permission:1,
 					}
 				},{
 					path:pathName+"/assignRole",
@@ -239,9 +220,32 @@ export default new Router({
 					meta:{
 						title:"分配角色 - "+title,
 						active:pathName+"/assignRole",
-						permission:1,
 					}
-				}
+				},{
+					path:pathName+"/personStatistics",
+					name:"personStatistics",
+					component:PersonStatistics,
+					meta:{
+						title:"安全责任人统计 - "+title,
+						active:pathName+"/personStatistics",
+					}
+				},{
+					path:pathName+"/checkStatistics",
+					name:"checkStatistics",
+					component:CheckStatistics,
+					meta:{
+						title:"检查统计表 - "+title,
+						active:pathName+"/checkStatistics",
+					}
+				},{
+					path:pathName+"/awards",
+					name:"awards",
+					component:Awards,
+					meta:{
+						title:"评奖评优 - "+title,
+						active:pathName+"/awards",
+					}
+				},
 			]
 		},
 		{
@@ -251,7 +255,6 @@ export default new Router({
 			meta:{
 				title:"登录 - "+title,
 				active:pathName+"/login",
-				permission:0,
 			}
 		}
 	]

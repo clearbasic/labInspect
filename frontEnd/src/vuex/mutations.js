@@ -22,5 +22,8 @@ export default {
     },
     getMenu(state,data){
         state.leftMenu = data;
+    },
+    getPlanList(state,data){
+        state.plan_list = data;
     }
 }

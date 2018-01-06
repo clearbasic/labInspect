@@ -33,5 +33,11 @@ export default {
                 context.commit("getMenu",result);
             })
         }
+    },
+    getPlanList(context,data){
+        const url = serverUrl + "/admin/plan/index";
+        emitAjax(url,null,function(result){
+            context.commit("getPlanList",result);
+        })
     }
 }

@@ -12,9 +12,10 @@
                         v-for="(ruleConfig,ruleIndex) in ruleTemplateConfig" :key="'ruleconfig'+ruleIndex">
                     <div class="clearfix">
                         <button class="btn btn-primary btn-sm" @click="showAddRule(ruleConfig.type)">添加{{ruleConfig.name}}</button>
+                        <button class="btn btn-primary btn-xs pull-right" v-if="ruleConfig.copy" @click="sureCopy(ruleConfig)">确定拷贝</button>
                         <p class="pull-right">
                             从
-                            <select name="" id="">
+                            <select v-model="ruleConfig.copy">
                                 <option :value="copy.value" v-for="copy in ruleConfig.other" :key="'copy'+copy.value">{{copy.name}}</option>
                             </select>
                             拷贝
@@ -149,7 +150,12 @@ export default {
                     type:"lab",
                     dataArray:[],
                     name:"自查规则",
+                    copy:"",
                     other:[
+                        {
+                            name:"请选择",
+                            value:"",
+                        },
                         {
                             name:"复查规则",
                             value:"college",
@@ -164,7 +170,12 @@ export default {
                     type:"college",
                     dataArray:[],
                     name:"复查规则",
+                    copy:"",
                     other:[
+                        {
+                            name:"请选择",
+                            value:"",
+                        },
                         {
                             name:"自查规则",
                             value:"lab",
@@ -179,7 +190,12 @@ export default {
                     type:"school",
                     dataArray:[],
                     name:"抽查规则",
+                    copy:"",
                     other:[
+                        {
+                            name:"请选择",
+                            value:"",
+                        },
                         {
                             name:"自查规则",
                             value:"lab",
@@ -317,8 +333,41 @@ export default {
                     level:rule.level,
                 }
                 this.emitAjax(URL, data, function(result) {
+                    _SELF.showToast("删除成功");
                     _SELF.getCheckPlan();
                 });
+            }
+        },
+        sureCopy(ruleConfig){
+            //拷贝规则
+            if(confirm("是否拷贝")){
+                const URL = this.serverUrl  + "/admin/rule/copy";
+                const _this = this;
+                const data = {
+                    plan_id:this.$route.params.id,
+                    level:ruleConfig.type,
+                    old_level:ruleConfig.copy,
+                }
+                let ruleCopyLength = 0;
+                let ruleCopyName = 0;
+                for (let index = 0; index < this.ruleTemplateConfig.length; index++) {
+                    const rule_config = this.ruleTemplateConfig[index];
+                    if(ruleConfig.copy == rule_config.type){
+                        ruleCopyLength = rule_config.dataArray.length;
+                        ruleCopyName = rule_config.name
+                        break;
+                    }
+                }
+                if(ruleCopyLength == 0){
+                    alert('您要复制的目标'+ruleCopyName+"的条数是0，先去设置吧！");
+                    ruleConfig.copy = '';
+                    return false;
+                }
+                this.emitAjax(URL,data,function(){
+                    ruleConfig.copy = '';
+                    _this.showToast("拷贝成功");
+                    _this.getCheckPlan();
+                })
             }
         },
         getCheckPlan(){

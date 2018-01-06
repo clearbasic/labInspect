@@ -15,12 +15,12 @@
                     <li v-for="(secondRule,index) in rule.child" :key="'rule'+secondRule.id" class="list-group-item">
                         <h5>
                             <label>
-                                <input type="checkbox" class="ace" :value="secondRule.id" v-model="secondRule.checked" @change="selectModule(secondRule,rule_tree,ruleIndex)">
+                                <input type="checkbox" class="ace" :value="secondRule.id" v-model="secondRule.checked" @change="selectRules(secondRule,rule_tree,ruleIndex)">
                                 <span class="lbl"> {{secondRule.title}}</span>
                             </label>
                         </h5>
                         <label v-if="secondRule.child&&secondRule.child.length>0" v-for="threeRule in secondRule.child" :key="'rule'+threeRule.id">
-                            <input type="checkbox" class="ace" :value="threeRule.id" v-model="threeRule.checked" @change="selectModule(threeRule,rule.child,index,rule_tree,ruleIndex)">
+                            <input type="checkbox" class="ace" :value="threeRule.id" v-model="threeRule.checked" @change="selectRules(threeRule,rule.child,index,rule_tree,ruleIndex)">
                             <span class="lbl"> {{threeRule.title}}</span>
                         </label>
                     </li>
@@ -50,7 +50,8 @@ export default {
     data() {
         return {
             rule_tree: [],
-            rulesString: ""
+            rulesString: "",
+            relesArray:[],
         };
     },
     methods: {
@@ -63,7 +64,7 @@ export default {
                 _this.initChecked(_this.rule_tree);
             });
         },
-        selectModule(rule, pRules, index, psRules, pIndex) {
+        selectRules(rule, pRules, index, psRules, pIndex) {
             //rule选中的权限，pRules选中的权限父级所属的数组，index父级的索引,psRules第一级的权限
             let isTure = rule.checked;
             rule = Object.assign({}, rule, {
@@ -73,29 +74,20 @@ export default {
                 this.forEachChild(rule.child, isTure);
             }
             if (isTure && pRules) {
-                Vue.set(
-                    pRules,
-                    index,
-                    Object.assign({}, pRules[index], {
+                Vue.set(pRules,index,Object.assign({}, pRules[index], {
                         checked: isTure
                     })
                 );
             }
             if (isTure && psRules) {
-                Vue.set(
-                    psRules,
-                    pIndex,
-                    Object.assign({}, psRules[pIndex], {
-                        checked: isTure``
+                Vue.set(psRules,pIndex,Object.assign({}, psRules[pIndex], {
+                        checked: isTure
                     })
                 );
             }
             //重置rules
             this.rulesString = this.resetRules(this.rule_tree);
-            this.rulesString = this.rulesString.substring(
-                0,
-                this.rulesString.length - 1
-            );
+            this.rulesString = this.rulesString.substring(0,this.rulesString.length - 1);
         },
         forEachChild(rule, bool) {
             for (let index = 0; index < rule.length; index++) {
@@ -128,19 +120,16 @@ export default {
         firstRuleSelect(rule) {
             //第一级权限没有  其他的都没有
             if (!rule.checked) {
-                this.selectModule(rule);
+                this.selectRules(rule);
             } else {
                 this.rulesString = this.resetRules(this.rule_tree);
-                this.rulesString = this.rulesString.substring(
-                    0,
-                    this.rulesString.length - 1
-                );
+                this.rulesString = this.rulesString.substring(0,this.rulesString.length - 1);
             }
         },
         initChecked(rule) {
             //根据规则回显
             for (let index = 0; index < rule.length; index++) {
-                if (this.rulesString.indexOf(rule[index].id) >= 0) {
+                if (this.relesArray.indexOf(""+rule[index].id) >= 0) {
                     Vue.set(
                         rule,
                         index,
@@ -160,12 +149,12 @@ export default {
             this.returnRules(this.rulesString);
         },
         pid(){
-            this.rulesString = "";
+            this.relesArray = [];
             this.getRuleTree();
         }
     },
     mounted() {
-        this.rulesString = this.rules;
+        this.relesArray = this.rules.split(",");
         this.getRuleTree();
     }
 };

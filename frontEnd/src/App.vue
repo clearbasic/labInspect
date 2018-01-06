@@ -37,7 +37,6 @@ export default {
         if(this.$route.name != "login"){
             this.isLogin();
         }
-        console.log(this.loginUser)
     }
 };
 </script>
