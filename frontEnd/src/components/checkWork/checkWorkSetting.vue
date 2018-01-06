@@ -268,7 +268,6 @@ export default {
             }
         },
         editCheckTask(checkTask) {
-            console.log(checkTask)
             //修改检查工作
             const _this = this;
             const URL = this.serverUrl + "/admin/check/handle";

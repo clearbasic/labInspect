@@ -59,7 +59,11 @@ function emitAjax(url,opt,success,error){
     }else{
         console.log(isOk.pathName);
         alert("您没有权限做此操作！");
-        if(this){this.$router.back()}
+        if(this){
+            this.$router.go({
+                path:this.$route.fullPath,
+            })
+        }
     }
 }
 //生存密钥
@@ -70,22 +74,16 @@ function setSign(a,b,c){
 //判断权限
 function checkPermission(url){
     const urlArray = url.split("/");
-    const authList = JSON.parse(localStorage.getItem("authList"));
+    const authList = localStorage.getItem("authList");
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const pathName = urlArray[urlArray.length-3]+'/'+urlArray[urlArray.length-2]+'/'+urlArray[urlArray.length-1];
     let flag = false;
-
     if(authList){
-        for (let index = 0; index < authList.length; index++) {
-            const auth = authList[index];
-            if(auth == pathName){
-                flag = true;
-                break;
-            }
-        }
+        flag = authList.indexOf(pathName)>=0?true:false;
     }else{
         flag = true;
     }
+    
     //admin帐号不过滤
     if(userInfo && userInfo.username == "admin"){
         flag = true;

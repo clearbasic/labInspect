@@ -454,11 +454,11 @@ export default {
     watch: {
         orgList() {
             this.getOrgInfo();
-            this.showParentId();
         }
     },
     mounted() {
         this.getOrgList();
+        this.showParentId();
     }
 };
 </script>

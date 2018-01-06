@@ -1,8 +1,12 @@
 <template>
-    <li :class="['dd-item',{'dd-collapsed':!open}]">
+    <li :class="['dd-item dd2-item',{'dd-collapsed':!open}]">
+        <div :class="['dd-handle dd2-handle',color]">
+            <i :class="['bigger-130',data.icon]" v-if="data.icon"></i>
+            <i class="normal-icon ace-icon fa fa-bars bigger-130" v-if="!data.icon"></i>
+        </div>
         <button data-action="collapse" :class="[{show:open},{hidden:!open}]" v-if="data.child&&data.child.length>0" @click="open = false"></button>
         <button data-action="expand" :class="[{show:!open},{hidden:open}]" v-if="data.child&&data.child.length>0" @click="open = true"></button>
-        <div class="dd-handle" >
+        <div class="dd2-content">
             {{data.title}}({{data.id}})
             <div class="pull-right action-buttons">
                 <a class="blue" @click="editMenu">
@@ -25,6 +29,7 @@
             return {
                 open:true,
                 isActive:false,
+                color:"",
             }
         },
         props:{
@@ -53,7 +58,15 @@
                         _this.$store.dispatch("getMenu");
                     })
                 }
+            },
+            setColor(){
+                let color = ["red","green","pink","orange"];
+                let index = Math.floor(Math.random()*3);
+                this.color = color[index];
             }
+        },
+        mounted(){
+            this.setColor()
         }
     };
 </script>

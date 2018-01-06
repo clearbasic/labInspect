@@ -42,6 +42,7 @@
                     </div>
                 </div>
                 <div class="accordion-style1 panel-group" id="accordion">
+                    <!-- 按实验室循环列表 -->
                     <div class="panel panel-default" v-for="(org,index) in result_list" :key="'org'+org.org_id">
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -130,6 +131,38 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div class="review">
+                                        <button class="btn btn-primary btn-sm" v-if="org.check.review_state == 'no-start'" @click="setReview(org,'pending')">发起整改通知</button>
+                                        <button class="btn btn-success btn-sm" v-if="org.check.review_state == 'no-start'" @click="setReview(org,'no-need')">不需要整改</button>
+                                        <ul class="list-group" v-if="org.check.review_state == 'pending'||org.check.review_state == 'finished'">
+                                            <li class="list-group-item">
+                                                <span class="align-top">整改要求：</span>
+                                                <textarea v-model="org.check.review" v-if="org.check.review_state != 'finished'"></textarea>
+                                                <span v-if="org.check.review_state == 'finished'">{{org.check.review}}</span>
+                                            </li>
+                                            <li class="list-group-item" v-if="org.check.review_state == 'finished'">
+                                                整改通知人：{{org.check.review_staff}}，整改通知时间：{{org.check.dt_inform.substring(0,10)}}
+                                            </li>
+                                            <li class="list-group-item" v-if="org.check.review">
+                                                <span class="align-top">整改反馈内容：</span>
+                                                <textarea v-model="org.check.reply" v-if="org.check.review_state != 'finished'"></textarea>
+                                                <span v-if="org.check.review_state == 'finished'">{{org.check.reply}}</span>
+                                                <span class="red" v-if="org.check.review_state != 'finished'">
+                                                    注意：如果反馈内容添加了，就默认整改完成！
+                                                </span>
+                                            </li>
+                                            <li class="list-group-item" v-if="org.check.review_state == 'finished'">
+                                                整改反馈人：{{org.check.reply_staff}}，整改反馈时间：{{org.check.dt_reply.substring(0,10)}}
+                                            </li>
+                                            <li class="list-group-item" v-if="org.check.review_state != 'finished'">
+                                                <button class="btn btn-primary btn-sm" @click="saveReview(org)">提交</button>
+                                                <button class="btn btn-default btn-sm" @click="org.check.review_state='no-start'">取消</button>
+                                            </li>
+                                        </ul>
+                                        <span v-if="org.check.review_state == 'no-need'">
+                                            不需要整改
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,13 +170,15 @@
                 </div>
             </div>
         </div>
+        <Toast :show="isShow" :msg="msg" :hide="hideToast"></Toast>
     </div>
 </template>
 <script>
 import datepicker from "vue2-datepicker";
+import Toast from '../common/toast.vue';
 export default {
     name: "checkWork",
-    components: { datepicker },
+    components: { datepicker,Toast },
     data() {
         return {
             title: "检查工作进度",
@@ -156,7 +191,9 @@ export default {
             zone_list: [],
             room_list: [],
             result_list:[],
-            user_list:[]
+            user_list:[],
+            isShow:false,
+            msg:"提交成功",
         };
     },
     methods: {
@@ -186,7 +223,6 @@ export default {
                 task_id: this.$route.params.id
             }
             this.emitAjax(URL,data,function(result){
-                console.log(result)
                 _this.result_list = result;
             })
         },
@@ -196,6 +232,45 @@ export default {
             this.emitAjax(URL,null,function(result){
                 _this.user_list = result;
             })
+        },
+        setReview(org,type){
+            if(type == 'no-need'){
+                if(confirm("是否确定不需要整改？")){
+                    org.check.review="";
+                    org.check.reply="";
+                    org.check.review_state =  type;
+                    this.saveReview(org);
+                }
+            }else{
+                org.check.review_state =  type;
+            }
+        },
+        saveReview(org){
+            //保存整改通知
+            if(org.check.reply){
+                org.check.review_state = 'finished';
+            }
+            const data = {
+                check_id:org.check.check_id,
+                review:org.check.review,
+                reply:org.check.reply,
+                review_state:org.check.review_state
+            }
+            const URL = this.serverUrl + "/admin/check/feedback";
+            const _this = this;
+            this.emitAjax(URL,data,function(){
+                _this.showToast();
+                _this.getResultList();
+            })
+        },
+        hideToast(){
+            this.isShow = false;
+        },
+        showToast(msg){
+            if(msg){
+                this.msg = msg;
+            }
+            this.isShow = true;
         }
     },
     mounted() {

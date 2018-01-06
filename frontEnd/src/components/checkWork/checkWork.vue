@@ -113,7 +113,6 @@ export default {
             title: "检查工作",
             currentPlan:{},
             plan_id:0,
-            plan_list:[],
             college_list:[],
             college_id:0,
             college_name:"",
@@ -123,6 +122,11 @@ export default {
                 school:[],
             }
         };
+    },
+    computed:{
+        plan_list(){
+            return this.$store.state.plan_list;
+        }
     },
     watch:{
         college_id(){
@@ -135,20 +139,15 @@ export default {
     },
     methods: {
         init(){
-            this.getPlanList();
+            //获取期次列表
+            if (this.$store.state.plan_list.length == 0) {
+                this.$store.dispatch("getPlanList");
+            }
             //学院用户
             if(this.permission[this.loginUser.group_level] == this.permission.college){
                 this.college_id = this.loginUser.org_id;
             }
             this.getOrgList();
-        },
-        getPlanList(){
-            //获取期次列表
-            const _this = this;
-            const URl = this.serverUrl + "/admin/plan/index";
-            this.emitAjax(URl,null,function(result){
-                _this.plan_list = result;
-            });
         },
         getOrgList(){
             //获取单位信息
