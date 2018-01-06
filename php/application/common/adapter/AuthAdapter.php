@@ -25,20 +25,20 @@ class AuthAdapter
 		return self::$_instance; 
 	}
 	//登录认证
-	public function checkLogin($names, $uid, $relation='or') 
+	public function checkLogin($names, $group_id , $relation='or')
 	{
 		self::getInstance($this->auth_key)->_config['AUTH_TYPE'] = 2;
-		if ($uid == 1){ 
+		if ($group_id == 1){
 			return true;
 		}
-		if (!self::getInstance($this->auth_key)->check($names, $uid, $relation)) {
+		if (!self::getInstance($this->auth_key)->check($names, $group_id,$relation)) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	//实时认证
-	public function checkIntime($names, $uid, $relation='or') 
+	public function checkIntime($names, $uid, $org_id = '' ,$relation='or')
 	{
 		self::getInstance($this->auth_key)->_config['AUTH_TYPE'] = 1;
 		if ($uid == 1) {

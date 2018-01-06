@@ -14,16 +14,6 @@ use app\common\controller\Common;
 
 class Check extends Checklogin
 {
-    public function index()
-    {
-        $Model = model('check');
-        $param = $this->param;
-        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        $page = !empty($param['page']) ? $param['page']: '';
-        $limit = !empty($param['limit']) ? $param['limit']: '';
-        $data = $Model->getDataList($keywords, $page, $limit);
-        return resultArray(['data' => $data]);
-    }
 
     public function checkindex()
     {
@@ -58,6 +48,16 @@ class Check extends Checklogin
         return resultArray(['data' => $data]);
     }
 
+    public function feedback(){
+        $Model = model('check');
+        $param = $this->param;
+        $data = $Model->feedback($param);
+        if (!$data) {
+            return resultArray(['error' => $Model->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
+
     public function handle()
     {
         $Model = model('check');
@@ -83,6 +83,7 @@ class Check extends Checklogin
 
     public function mycheck()
     {
+
         $Model = model('check');
         $param = $this->param;
         $data = $Model->mycheck($param);

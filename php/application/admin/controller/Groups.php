@@ -7,14 +7,17 @@
 
 namespace app\admin\controller;
 
-class Groups extends ApiCommon
+use app\common\controller\Common;
+
+class Groups extends Checklogin
 {
     
     public function index()
     {   
         $groupModel = model('Group');
         $param = $this->param;
-        $data = $groupModel->getDataList();
+        $type = !empty($param['type'])? $param['type']: '';
+        $data = $groupModel->getDataList($type);
         return resultArray(['data' => $data]);
     }
 
@@ -29,7 +32,19 @@ class Groups extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-    public function save()
+    public function getRules()
+    {
+        $groupModel = model('Group');
+        $param = $this->param;
+        $data = $groupModel->getRules($param);
+        if (!$data) {
+            return resultArray(['error' => $groupModel->getError()]);
+        }
+        return resultArray(['data' => $data]);
+//        return $data;
+    }
+
+    public function add()
     {
         $groupModel = model('Group');
         $param = $this->param;
@@ -40,7 +55,7 @@ class Groups extends ApiCommon
         return resultArray(['data' => '添加成功']);
     }
 
-    public function update()
+    public function edit()
     {
         $groupModel = model('Group');
         $param = $this->param;
@@ -51,7 +66,7 @@ class Groups extends ApiCommon
         return resultArray(['data' => '编辑成功']);
     }
 
-    public function delete()
+    public function del()
     {
         $groupModel = model('Group');
         $param = $this->param;

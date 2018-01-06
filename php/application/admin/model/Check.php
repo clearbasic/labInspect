@@ -26,64 +26,6 @@ class Check extends Common
     {
         return $GLOBALS['userInfo']['username'];
     }
-    /**
-     * [getDataList 获取列表]
-     * @return    [array]
-     */
-    public function getDataList($param, $page, $limit)
-    {
-
-        $arr['plan'] = db::name('ck_plan')
-            ->where(array('current'=>'yes'))
-            ->field(['dt_create','creator'],'true')
-            ->find();
-        $lab_list = db::name('dc_org')
-            ->field('org_id,pid,org_name,org_level')
-            ->where('org_level','lab')
-            ->select();
-
-        $task_list = db::name('ck_task')
-            ->where('plan_id',$arr['plan']['plan_id'])
-            ->field(['dt_create','creator'],'true')
-            ->select();
-
-        foreach ($lab_list as $k => $v){
-            $arr['task_list'][$k]['org'] = $v;
-
-            foreach ($task_list as $key => $value){
-                $res = db::name('ck_task task')
-                    ->join('ck_check check','check.task_id=task.task_id', 'LEFT')
-                    ->where(array('task.task_id'=>$value['task_id']))
-                    ->field('task.task_id,task.task_name,task.task_level,task.dt_begin,task.dt_end,check.check_id,
-                        check.check_state,check.check_score,check.problem_fatal,
-                        check.problem_common,
-                        check.review_state,
-                        check.review')
-                    ->find();
-                $b = db::name('ck_check')
-                    ->alias('check')
-                    ->join('ck_task task','check.task_id=task.task_id', 'LEFT')
-                    ->join('dc_org org','check.org_id=org.org_id', 'LEFT')
-                    ->where(array('check.task_id'=>$value['task_id'],'check.org_id'=>$v['org_id']))
-                    ->field('check.check_id,check.check_state,
-                                 check.check_score,check.problem_fatal,
-                                 check.problem_common,check.review_state,
-                                check.review')
-                    ->find();
-                if (!empty($b))$res = array_merge($res,$b);
-
-                if ($value['task_level'] == 'lab'){
-                    $arr['task_list'][$k]['tasks']['lab'][] = $res;
-                }elseif ($value['task_level'] == 'college'){
-                    $arr['task_list'][$k]['tasks']['college'][] =$res;
-                }elseif ($value['task_level'] == 'school'){
-                    $arr['task_list'][$k]['tasks']['school'][] = $res;
-                }
-            }
-
-        }
-        return $arr;
-    }
 
     public function  baseinfo($param){
         $task_id = !empty($param['task_id'])? $param['task_id']: '';
@@ -93,17 +35,21 @@ class Check extends Common
         }
 
         $college_id = !empty($param['college_id'])? $param['college_id']: '';
-
         if (!$college_id) {
             $this->error = '学院ID不能为空';
             return false;
         }
 
         //获取登录用户的子单位ID组
-        $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-        $childIds[]=$GLOBALS['userInfo']['org_id'];
+        $map =[];
+        $childIds = [];
+        if ($GLOBALS['userInfo']['org_id'] != '1'){
+            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
+            $childIds[]=$GLOBALS['userInfo']['org_id'];
+        }
+        if (!empty($childIds))$map['org_id'] = ['in', $childIds];
 
-        $lab_ids = model('org')->where('pid',$college_id)->where('org_id',['in',$childIds])->column('org_id');
+        $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
 
         $checklist['task'] = model('task')->field(['creator', 'dt_create'], true)->where('task_id', $task_id)->find();
 
@@ -142,10 +88,15 @@ class Check extends Common
 
 
         //获取登录用户的子单位ID组
-        $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-        $childIds[]=$GLOBALS['userInfo']['org_id'];
+        $map =[];
+        $childIds = [];
+        if ($GLOBALS['userInfo']['org_id'] != '1'){
+            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
+            $childIds[]=$GLOBALS['userInfo']['org_id'];
+        }
+        if (!empty($childIds))$map['org_id'] = ['in', $childIds];
 
-        $lab_ids = model('org')->where('pid',$college_id)->where('org_id',['in',$childIds])->column('org_id');
+        $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
 
 
         $checklist = $this->field('check_id,check_level,org_id,task_id,dt_begin,dt_end,check_state')
@@ -288,11 +239,16 @@ class Check extends Common
             $this->error = '学院ID不能为空';
             return false;
         }
-
         //获取登录用户的子单位ID组
-        $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-        $childIds[]=$GLOBALS['userInfo']['org_id'];
-        $lab_ids = model('org')->where('pid',$college_id)->where('org_id',['in',$childIds])->column('org_id');
+        $map =[];
+        $childIds = [];
+        if ($GLOBALS['userInfo']['org_id'] != '1'){
+            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
+            $childIds[]=$GLOBALS['userInfo']['org_id'];
+        }
+        if (!empty($childIds))$map['org_id'] = ['in', $childIds];
+
+        $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
 
         $checklist = $this->alias('check')
             ->field('check.*,org.org_name as org_name')
@@ -310,7 +266,8 @@ class Check extends Common
             //一个检查ID对应一个实验室的一次检查任务
             $ckgroup = model('effort')->where(array('check_id'=>$v['check_id']))->group('group_id')->column('group_id');
             foreach ($ckgroup as $key=>$val){
-                $arr[$k]['group_list'][$key]=model('CkGroup')->field('group_id,group_name,leader_name,phone,members')->where(array('group_id'=>$val))->find();
+                $arr[$k]['group_list'][$key]=model('CkGroup')->field('group_id,group_name,leader_id,phone,members')->where(array('group_id'=>$val))->find();
+                $arr[$k]['group_list'][$key]['leader_name']=model('Person')->where(array('username'=>$arr[$k]['group_list'][$key]['leader_id']))->value('name');
                 $arr[$k]['group_list'][$key]['sum'] = model('effort')->where(array('check_id'=>$v['check_id'],'group_id'=>$val))->count();
                 $arr[$k]['group_list'][$key]['finished'] = model('effort')->where(array('check_id'=>$v['check_id'],'effort_state'=>'finished','group_id'=>$val))->count();
                 $arr[$k]['group_list'][$key]['progress'] = $arr[$k]['group_list'][$key]['finished'].'/'.$arr[$k]['group_list'][$key]['sum'];
@@ -336,6 +293,7 @@ class Check extends Common
         //获取登录用户的子单位ID组
         $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
         $childIds[]=$GLOBALS['userInfo']['org_id'];
+
 //        $lab_ids = model('org')->where('pid',$college_id)->where('org_id',['in',$childIds])->column('org_id');
         $lab_ids = $this->alias('check')->where('check.task_id',$task_id)
             ->join('dc_org org','check.org_id = org.org_id')
@@ -354,11 +312,17 @@ class Check extends Common
                     ->where('task_id',$task_id)
                     ->find();
                 $check_id = $data[$i]['check']['check_id'];
-                $data[$i]['problem_list'] = model('Problem')->where(array('check_id'=>$check_id,'room_id'=>['in',$room_ids]))->select();
+                $data[$i]['problem_list'] = model('Problem')
+                    ->alias('problem')->field('problem.*,room.room_name')
+                    ->join('dc_room room','problem.room_id = room.room_id','left')
+                    ->where(array('problem.check_id'=>$check_id,'problem.room_id'=>['in',$room_ids],'problem.problem_level'=>'no'))
+                    ->select();
                 if ($check_id){
                     $data[$i]['result'] = model('Effort')
-                        ->where('check_id',$check_id)
-                        ->where('room_id',['in',$room_ids])
+                        ->alias('effort')->field('effort.*,room.room_name')
+                        ->join('dc_room room','effort.room_id = room.room_id','left')
+                        ->where('effort.check_id',$check_id)
+                        ->where('effort.room_id',['in',$room_ids])
                         ->select();
                     if (!empty($data[$i]['result'])){
                         foreach ($data[$i]['result'] as $key=>$val){
@@ -428,7 +392,7 @@ class Check extends Common
 
 
         $choose = [
-            ['plan_id'=>$plan_id,'level'=>$level,'college_id'=>$college_id,'lab_id'=>$lab_id],
+            ['plan_id'=>$plan_id,'level'=>$level,'lab_id'=>$lab_id],
             ['plan_id'=>$plan_id,'level'=>$level,'college_id'=>$college_id,'lab_id'=>'0'],
             ['plan_id'=>$plan_id,'level'=>$level,'college_id'=>'0','lab_id'=>'0']
         ];
@@ -540,11 +504,13 @@ class Check extends Common
                     $updateData['problem_fatal'] = model('Problem')
                         ->where('check_id',$check_id)
                         ->where('item_level','fatal')
+                        ->where('problem_level','no')
                         ->count();
 
                     $updateData['problem_common'] = model('Problem')
                         ->where('check_id',$check_id)
                         ->where('item_level','common')
+                        ->where('problem_level','no')
                         ->count();
                     $updateData['dt_finish'] = date("Y-m-d H:i:s",time());
                     $updateData['check_state'] = 'finished';
@@ -564,7 +530,44 @@ class Check extends Common
     }
 
     /**
-     * 通过id修改用户信息
+     * 检查反馈
+     * @param  array   $param  [description]
+     */
+    public function  feedback($param){
+        $check_id = !empty($param['check_id']) ? $param['check_id'] : '';
+        if (empty($check_id)){ $this->error = '缺少检查ID';return false;}
+        $review = !empty($param['review']) ? $param['review'] : '';
+
+        $reply = !empty($param['reply']) ? $param['reply'] : '';
+
+        $review_state = !empty($param['review_state']) ? $param['review_state'] : '';
+        if (!$review)$review_state = 'no-need';
+
+
+        if ($review_state != 'no-need'){
+            $param['review_staff'] = $GLOBALS['userInfo']['username'];
+            $param['dt_inform'] = date("Y-m-d H:i:s",time());
+            $param['reply_staff'] = $GLOBALS['userInfo']['username'];
+            $param['dt_reply'] = date("Y-m-d H:i:s",time());
+        }
+
+        $this->startTrans();
+        try {
+            $this->allowField(true)->save($param,['check_id' => $check_id]);
+            $this->commit();
+            return '整改提交成功';
+        } catch(\Exception $e) {
+            $this->rollback();
+            $this->error = '整改提交失败';
+            return false;
+        }
+
+
+    }
+
+
+    /**
+     * 通过id删除用户信息
      * @param  array   $param  [description]
      */
     public function delById($id,$delSon = false)

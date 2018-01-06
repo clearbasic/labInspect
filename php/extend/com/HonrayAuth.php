@@ -38,10 +38,11 @@ class HonrayAuth{
       * @param uid  int           认证用户的id
       * @return boolean           通过验证返回true;失败返回false
      */
-    public function check($name, $uid, $relation = 'or') {
+    public function check($name, $group_id , $relation = 'or') {
         if (!$this->_config['AUTH_ON'])
             return true;
-        $authList = $this->getAuthList($uid); //获取用户需要验证的所有有效规则列表
+
+        $authList = $this->getAuthList($group_id); //获取用户需要验证的所有有效规则列表
 
         if (is_string($name)) {
             $name = strtolower($name);
@@ -82,11 +83,12 @@ class HonrayAuth{
      *     array('uid'=>'用户id','group_id'=>'用户组id','title'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),
      *     ...)   
      */
-    public function getGroups($uid) { 
+    public function getGroups($uid, $org_id = '') {
         static $groups = array();
         if (isset($groups[$uid]))
             return $groups[$uid];
-        $user_groups = model('admin/User')->get($uid)->groups;
+//        $user_groups = model('admin/User')->get($uid)->groups;
+        $user_groups = get_groups($uid, $org_id);
         $groups[$uid] = $user_groups?:array();
         return $groups[$uid];
     }
@@ -95,14 +97,16 @@ class HonrayAuth{
      * 获得权限列表
      * @param integer $uid  用户id
      */
-    protected function getAuthList($uid) {
+    protected function getAuthList($group_id) {
+
         $temp = cache('Auth_'.$this->auth_key);
         $authList = $temp['_AUTH_LIST_'];
         if( $this->_config['AUTH_TYPE'] == 2 && isset($authList)){
+
             return $authList;
         }
         //读取用户所属用户组
-        $groups = $this->getGroups($uid);
+        $groups = db::name('admin_group')->where('id',['in',$group_id])->select();
         $ids = [];//保存用户所属用户组设置的所有权限规则id
         foreach ($groups as $g) {
             $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
@@ -134,7 +138,6 @@ class HonrayAuth{
             $cache_info['_AUTH_LIST_'] = $authList;
             cache('Auth_'.$this->auth_key, $cache_info, config('LOGIN_SESSION_VALID'));
         }
-
         return $authList; 
     }
 

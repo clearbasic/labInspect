@@ -76,6 +76,7 @@ class Tree{
                 $refer[$data[$pk]] =& $list[$key];
             }
             foreach($list as $key => $data){
+
                 // 判断是否存在parent
                 $parent_id = $data[$pid];
                 if($parent_id === null || (int)$root === $parent_id){
@@ -91,6 +92,7 @@ class Tree{
                     }
                 }
             }
+
             //剔除数据
             if(count($filter) > 0){
                 foreach($refer as $key => $data){

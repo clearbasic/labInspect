@@ -200,7 +200,7 @@ class Common extends Model
 		return $data;
 	}
     /**
-     * 获取所有子孙
+     * 获取所有父级
      */
     public function getAllParent($id, &$data = [])
     {

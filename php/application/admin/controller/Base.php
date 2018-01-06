@@ -81,7 +81,11 @@ class Base extends Common
         } 
         return resultArray(['data' => $data]);
     }
-
+    public function aptitude()
+    {
+        $aptitude = lab_aptitude();
+        return resultArray(['data' => $aptitude]);
+    }
     // miss 路由：处理没有匹配到的路由规则
     public function miss()
     {

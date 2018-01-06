@@ -116,6 +116,41 @@ class Plan extends Common
         }
     }
     /**
+     * [delDataById 根据id删除数据]
+     * @linchuangbin
+     * @DateTime  2017-02-11T20:57:55+0800
+     * @param     string                   $id     [主键]
+     * @param     boolean                  $delSon [是否删除子孙数据]
+     * @return    [type]                           [description]
+     */
+    public function delDataById($id = '', $delSon = false)
+    {
+
+        $task_ids =  model('task')->where('plan_id',$id)->column('task_id');
+        $count = model('check')->where('task_id',['in',$task_ids])->count('check_id');
+        if ($count > 0){
+            $this->error = '该期次下已有检查任务进行，不能删除';
+            return false;
+        }
+        $this->startTrans();
+        try {
+            $this->where($this->getPk(), $id)->delete();
+            if ($delSon && is_numeric($id)) {
+                // 删除子孙
+                $childIds = $this->getAllChild($id);
+                if($childIds){
+                    $this->where($this->getPk(), 'in', $childIds)->delete();
+                }
+            }
+            $this->commit();
+            return true;
+        } catch(\Exception $e) {
+            $this->error = '删除失败';
+            $this->rollback();
+            return false;
+        }
+    }
+    /**
      * 通过id修改指标体系
      * @param  array   $param  [description]
      */
@@ -169,13 +204,13 @@ class Plan extends Common
                 ->where(array('level'=>$v['level'],'college_id'=>$v['college_id'],'lab_id'=>$v['lab_id'],'plan_id'=>$plan_id))
                 ->select();
             $arr = [];
-           foreach ($v['checklist'] as $key => $val){
-               $arr[$val['checklist_id']] = $val;
+            foreach ($v['checklist'] as $key => $val){
+                $arr[$val['checklist_id']] = $val;
 
-           }
-           unset($v['rule_id']);
-           unset($v['checklist_id']);
-           unset($v['score']);
+            }
+            unset($v['rule_id']);
+            unset($v['checklist_id']);
+            unset($v['score']);
             $arr = array_to_object($arr);
             $v['checklist'] = $arr;
         }

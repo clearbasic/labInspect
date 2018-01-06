@@ -22,7 +22,7 @@ class Login extends Common
         $password = $param['password'];
         $verifyCode = !empty($param['verifyCode'])? $param['verifyCode']: '';
         $isRemember = !empty($param['isRemember'])? $param['isRemember']: '';
-        $data = $model->login($username, $password, $verifyCode, $isRemember);
+        $data = $model->login($param,$username, $password, $verifyCode, $isRemember);
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }

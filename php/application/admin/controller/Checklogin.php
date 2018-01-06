@@ -58,6 +58,16 @@ class Checklogin extends Common
         }
 
         cache('Auth_'.$authKey, $cache, 3600);
+        if ($cache['userInfo']['username'] !== 'admin'){
+            $authAdapter = new AuthAdapter($authKey);
+            $request = Request::instance();
+            $ruleName = $request->module().'/'.$request->controller() .'/'.$request->action();
+            if (!$authAdapter->checkLogin($ruleName, $cache['group_id'])) {
+                header('Content-Type:application/json; charset=utf-8');
+                exit(json_encode(['code'=>102,'error'=>'没有权限']));
+            }
+        }
         $GLOBALS['userInfo'] = $userInfo;
+        $GLOBALS['group_id'] = $cache['group_id'];
     }
 }

@@ -7,14 +7,15 @@
 
 namespace app\admin\controller;
 
-class Menus extends ApiCommon
+class Menus extends Checklogin
 {
     
     public function index()
     {   
         $menuModel = model('Menu');
         $param = $this->param;
-        $data = $menuModel->getDataList();
+        $type = !empty($param['type'])? $param['type']: '';
+        $data = $menuModel->getDataList($type);
         return resultArray(['data' => $data]);
     }
 
@@ -29,7 +30,7 @@ class Menus extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-    public function save()
+    public function add()
     {
         $menuModel = model('Menu');
         $param = $this->param;
@@ -40,7 +41,7 @@ class Menus extends ApiCommon
         return resultArray(['data' => '添加成功']);
     }
 
-    public function update()
+    public function edit()
     {
         $menuModel = model('Menu');
         $param = $this->param;
@@ -51,7 +52,7 @@ class Menus extends ApiCommon
         return resultArray(['data' => '编辑成功']);
     }
 
-    public function delete()
+    public function del()
     {
         $menuModel = model('Menu');
         $param = $this->param;

@@ -82,7 +82,8 @@ class Category {
             }
             $childs[$i]['p_title'] = $p_name;
             $childs[$i]['else'] = $childs[$i][$this->fields['name']];
-            $childs[$i][$this->fields['fullname']] = ($space ? $space . $pre : "") . $childs[$i][$this->fields['name']];
+//            $childs[$i][$this->fields['fullname']] = ($space ? $space . $pre : "") . $childs[$i][$this->fields['name']];
+            $childs[$i][$this->fields['fullname']] = $childs[$i][$this->fields['name']];
             $childs[$i]['level'] = $level;
             $this->formatList[] = $childs[$i];
             $this->_searchList($childs[$i][$this->fields['cid']], $space . $pad . "  ",$level+1,$childs[$i]['else']); //递归下一级分类

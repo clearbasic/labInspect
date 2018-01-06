@@ -24,11 +24,24 @@ class Menu extends Common
 	 * @DateTime  2017-02-10T21:07:18+0800
 	 * @return    [array]                         
 	 */
-	public function getDataList()
+	public function getDataList($type ='')
 	{	
-        $cat = new \com\Category('admin_menu', array('id', 'pid', 'title', 'title'));     
-        $data = $cat->getList('', 0, 'sort'); 
-		return $data;
+        $cat = new \com\Category('admin_menu', array('id', 'pid', 'title', 'title'));
+        $data = $cat->getList('', 0, 'sort');
+
+        // 若type为tree，则返回树状结构
+        if ($type == 'tree') {
+            foreach ($data as $k => $v) {
+                $data[$k]['checked'] = false;
+            }
+            $tree = new \com\Tree();
+            $data = $tree->list_to_tree($data, 'id', 'pid', 'child', 0, true, array('pid'));
+        }
+
+        return $data;
+
+//        $data = $this->getMenuTree();
+//		return $data;
 	}
 
 	/**
@@ -65,10 +78,11 @@ class Menu extends Common
     		return [];
     	}
     	
-    	$u_id = $userInfo['u_id'];
-    	if ($u_id === 1) {
+    	$u_id = $userInfo['id'];
+    	if (1 === 1) {
     		$map['status'] = 1;
     		$menusList = Db::name('admin_menu')->where($map)->order('sort asc')->select();
+
     	} else {
     		$groups = model('User')->get($u_id)->groups;
     		
@@ -91,8 +105,8 @@ class Menu extends Common
         //处理成树状
         $tree = new \com\Tree();
         $menusList = $tree->list_to_tree($menusList, 'id', 'pid', 'child', 0, true, array('pid'));
-        $menusList = memuLevelClear($menusList);
-        
+//        $menusList = memuLevelClear($menusList);
+
         return $menusList? $menusList: [];
     }
 

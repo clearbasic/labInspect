@@ -28,10 +28,11 @@ class Rule extends Common
 	{
 		$cat = new \com\Category('admin_rule', array('id', 'pid', 'title', 'title'));
 		$data = $cat->getList('', 0, 'id');
+
 		// 若type为tree，则返回树状结构
 		if ($type == 'tree') {
 			foreach ($data as $k => $v) {
-				$data[$k]['check'] = false;
+				$data[$k]['checked'] = false;
 			}
 			$tree = new \com\Tree();
 			$data = $tree->list_to_tree($data, 'id', 'pid', 'child', 0, true, array('pid'));

@@ -7,11 +7,13 @@
 
 namespace app\admin\controller;
 
-class Rules extends ApiCommon
+use app\common\controller\Common;
+
+class Rules extends Checklogin
 {
 
     public function index()
-    {   
+    {
         $ruleModel = model('Rule');
         $param = $this->param;
         $type = !empty($param['type'])? $param['type']: '';
@@ -30,7 +32,7 @@ class Rules extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-    public function save()
+    public function add()
     {
         $ruleModel = model('Rule');
         $param = $this->param;
@@ -41,7 +43,7 @@ class Rules extends ApiCommon
         return resultArray(['data' => '添加成功']);
     }
 
-    public function update()
+    public function edit()
     {
         $ruleModel = model('Rule');
         $param = $this->param;
@@ -52,7 +54,7 @@ class Rules extends ApiCommon
         return resultArray(['data' => '编辑成功']);
     }
 
-    public function delete()
+    public function del()
     {
         $ruleModel = model('Rule');
         $param = $this->param;

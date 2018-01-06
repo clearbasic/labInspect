@@ -31,19 +31,21 @@ class Person extends Common
     {
         $map = [];
         //获取登录用户的子单位ID组
+        $flag = !empty($param['flag']) ? $param['flag']: '0';
+        if ($flag !== 'all'){
+            if ($GLOBALS['userInfo']['org_id'] != '1'){
+                $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
+                $childIds[]=$GLOBALS['userInfo']['org_id'];
 
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
-
-            if (!empty($childIds)){
-                $map['person.org_id'] = ['in', $childIds];
+                if (!empty($childIds)){
+                    $map['person.org_id'] = ['in', $childIds];
+                }
             }
         }
 
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         if ($keywords) {
-            $map['username|name'] = ['like', '%'.$keywords.'%'];
+            $map['person.username|person.name'] = ['like', '%'.$keywords.'%'];
         }
         $list = $this->alias('person')->where($map);
         // 若有分页
@@ -84,27 +86,27 @@ class Person extends Common
      */
     public function addData($param)
     {
-            // 验证
-            $validate = validate('Person');
-            if (!$validate->check($param)) {
-                $this->error = $validate->getError();
-                return false;
-            }
+        // 验证
+        $validate = validate('Person');
+        if (!$validate->check($param)) {
+            $this->error = $validate->getError();
+            return false;
+        }
 
-            $param['firstchar']=GetFirstCharter($param['name']);
-            $param['password_salt']=random(10);
-            $param['password']=encrypt_password($param['password'],$param['password_salt']);
+        $param['firstchar']=GetFirstCharter($param['name']);
+        $param['password_salt']=random(10);
+        $param['password']=encrypt_password($param['password'],$param['password_salt']);
 
-            $this->startTrans();
-            try {
-                $this->data($param)->allowField(true)->save();
-                $this->commit();
-                return '添加成功';
-            } catch(\Exception $e) {
-                $this->rollback();
-                $this->error = '添加失败';
-                return false;
-            }
+        $this->startTrans();
+        try {
+            $this->data($param)->allowField(true)->save();
+            $this->commit();
+            return '添加成功';
+        } catch(\Exception $e) {
+            $this->rollback();
+            $this->error = '添加失败';
+            return false;
+        }
 
     }
     /**
@@ -150,57 +152,105 @@ class Person extends Common
      * @param     Boolean                    $type       [是否重复登录]
      * @return    [type]                               [description]
      */
-    public function login($username, $password, $verifyCode = '', $isRemember = false, $type = false)
+    public function login($param,$username, $password, $verifyCode = '', $isRemember = false, $type = false)
     {
-        if (!$username) {
-            $this->error = '帐号不能为空';
-            return false;
-        }
-        if (!$password){
-            $this->error = '密码不能为空';
-            return false;
-        }
-        if (1 && !$type) {
-            if (!$verifyCode) {
-                $this->error = '验证码不能为空';
+        $flag = !empty($param['flag'])? $param['flag']: '';
+        $group_id = !empty($param['group_id'])? $param['group_id']: '';
+        $org_id = !empty($param['org_id'])? $param['org_id']: '';
+
+        if ($flag != 'true' && !$group_id ){
+            if (!$username) {
+                $this->error = '帐号不能为空';
                 return false;
             }
-            $captcha = new HonrayVerify(config('captcha'));
-            if (!$captcha->check($verifyCode)) {
-                $this->error = '验证码错误';
+            if (!$password){
+                $this->error = '密码不能为空';
                 return false;
             }
+            if (1 && !$type) {
+                if (!$verifyCode) {
+                    $this->error = '验证码不能为空';
+                    return false;
+                }
+                $captcha = new HonrayVerify(config('captcha'));
+                if (!$captcha->check($verifyCode)) {
+                    $this->error = '验证码错误';
+                    return false;
+                }
+            }
+
+            $map['username'] = $username;
+
+            $userInfo = $this->where($map)->find();
+
+            if (!$userInfo) {
+                $this->error = '帐号不存在';
+                return false;
+            }
+
+            if (encrypt_password($password,$userInfo['password_salt']) !== $userInfo['password']) {
+                $this->error = '密码错误';
+                return false;
+            }
+            if ($userInfo['person_state'] === 'no') {
+                $this->error = '帐号已被禁用';
+                return false;
+            }
+            // 获取菜单和权限
+            $groups = db::name('admin_access')->where('access.username',$userInfo['username'])
+                ->alias('access')
+                ->join('dc_person person', 'access.username=person.username', 'LEFT')
+                ->join('dc_org org', 'access.org_id=org.org_id', 'LEFT')
+                ->join('admin_group group', 'access.group_id=group.id', 'LEFT')
+                ->field('access.*,person.name as p_name, org.org_name as o_name,group.title as g_name')
+                ->order('group.group_level,org.org_level')
+                ->select();
+            if ( count($groups) > 1){
+                return $groups;
+            }
+            if (empty($groups)){
+                $this->error = '没有分配角色';
+                return false;
+            }
+            $group_id = $groups['0']['group_id'];
+            $org_id = $groups['0']['org_id'];
+            $dataList = $this->getMenuAndRule($group_id);
+        }else{
+            if (!$username) {
+                $this->error = '帐号不能为空';
+                return false;
+            }
+            if (!$group_id) {
+                $this->error = '角色不能为空';
+                return false;
+            }
+            if (!$org_id) {
+                $this->error = '单位不能为空';
+                return false;
+            }
+
+            $map['username'] = $username;
+            $userInfo = $this->where($map)->find();
+            $dataList = $this->getMenuAndRule($group_id);
         }
 
-        $map['username'] = $username;
-
-        $userInfo = $this->where($map)->find();
-
-        if (!$userInfo) {
-            $this->error = '帐号不存在';
+        if (!$dataList['menusList']) {
+            $this->error = '没有权限';
             return false;
         }
-
-        if (encrypt_password($password,$userInfo['password_salt']) !== $userInfo['password']) {
-            $this->error = '密码错误';
-            return false;
-        }
-        if ($userInfo['person_state'] === 'no') {
-            $this->error = '帐号已被禁用';
-            return false;
-        }
-
 
         if ($isRemember || $type) {
             $secret['username'] = $username;
             $secret['password'] = $password;
             $data['rememberKey'] = encrypt($secret);
         }
-
-        $userInfo['user_level'] = md5($userInfo['user_level'].'_level');
+        $userInfo['group_level'] = db::name('admin_group')->where('id',$group_id)->value('group_level');
+        $userInfo['group_level'] = md5($userInfo['group_level'].'_level');
+        $userInfo['org_id'] = $org_id;
         // 保存缓存
         session_start();
         $info['userInfo'] = $userInfo;
+        $info['group_id'] = $group_id;
         $info['sessionId'] = session_id();
         $authKey = user_md5($userInfo['username'].$userInfo['password'].$info['sessionId']);
         $info['authKey'] = $authKey;
@@ -210,6 +260,8 @@ class Person extends Common
         $data['authKey']		= $authKey;
         $data['sessionId']		= $info['sessionId'];
         $data['userInfo']		= $userInfo;
+        $data['authList']		= $dataList['rulesList'];
+        $data['menusList']		= $dataList['menusList'];
         return $data;
     }
 
@@ -217,13 +269,16 @@ class Person extends Common
      * 获取菜单和权限
      * @param  array   $param  [description]
      */
-    protected function getMenuAndRule($u_id)
+    protected function getMenuAndRule($group_id)
     {
-        if ($u_id === 1) {
+        if ($group_id == '1') {
             $map['status'] = 1;
             $menusList = Db::name('admin_menu')->where($map)->order('sort asc')->select();
+
         } else {
-            $groups = $this->get($u_id)->groups;
+//            $group_id = db::name('admin_access')->where(array('username'=>$u_id,'org_id'=>$org_id))->value('group_id');
+
+            $groups = db::name('admin_group')->where('id',$group_id)->select();
             $ruleIds = [];
             foreach($groups as $k => $v) {
                 $ruleIds = array_unique(array_merge($ruleIds, explode(',', $v['rules'])));
@@ -235,7 +290,7 @@ class Person extends Common
             $rules =Db::name('admin_rule')->where($ruleMap)->select();
             foreach ($rules as $k => $v) {
                 $ruleIds[] = $v['id'];
-                $rules[$k]['name'] = strtolower($v['name']);
+                $rules[$k]['name'] = $v['name'];
             }
             empty($ruleIds)&&$ruleIds = '';
             $menuMap['status'] = 1;
@@ -249,6 +304,7 @@ class Person extends Common
         $tree = new \com\Tree();
         $ret['menusList'] = $tree->list_to_tree($menusList, 'id', 'pid', 'child', 0, true, array('pid'));
         $ret['menusList'] = memuLevelClear($ret['menusList']);
+
         // 处理规则成树状
         $ret['rulesList'] = $tree->list_to_tree($rules, 'id', 'pid', 'child', 0, true, array('pid'));
         $ret['rulesList'] = rulesDeal($ret['rulesList']);

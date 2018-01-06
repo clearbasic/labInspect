@@ -7,7 +7,9 @@
 
 namespace app\admin\controller;
 
-class SystemConfigs extends ApiCommon
+use app\common\controller\Common;
+
+class SystemConfigs extends Common
 {
     public function save()
     {
@@ -19,5 +21,6 @@ class SystemConfigs extends ApiCommon
         } 
         return resultArray(['data' => '添加成功']);	
     }
+
 }
  

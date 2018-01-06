@@ -4,7 +4,11 @@
  * 行为绑定
  */
 \think\Hook::add('app_init','app\\common\\behavior\\InitConfigBehavior');
-
+use think\Db;
+use think\Request;
+use think\Response;
+use think\View;
+use think\Lang;
 /**
  * 返回对象
  * @param $array 响应数据
@@ -184,4 +188,110 @@ function add_newtable($table_name){
     ) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8;';
     $result = Db::execute($sql);
     return $result;
+}
+
+/*
+ * 获取登录用户角色
+ * @param $uid 用户学号 $orgid 选择登录的单位ID
+ */
+function get_groups($uid,$orgid){
+    $result = db::name('admin_access')->where(array('username'=>$uid,'org_id'=>$orgid))->column('group_id');
+    return $result;
+}
+
+/*
+ * 导出成excel
+ * @param $data 查表数据 $fields 表字段名 $filename 导出文件名
+ */
+function excel_run_export($data,$fields,$filename=''){
+
+    error_reporting(E_ALL);
+    date_default_timezone_set('Asia/chongqing');
+    $obj = new \PHPExcel();
+    //设置工作表名称
+    $obj->setActiveSheetIndex ( 0 )->setTitle ($filename );
+
+    // 总列数
+    $max_cols = count ( $fields );
+
+    //表头设置
+    $i = 1;
+    for($k = 1, $j = 'A'; $k <= $max_cols; $k ++, $j ++) {
+        $cell_index = $j . $i;
+        $field = $fields [$k - 1] [1];
+
+        $obj->getActiveSheet ()->setCellValue ( "{$cell_index}", $field );
+
+        if ($fields [$k - 1] [0] == 'tigan' || $fields [$k - 1] [0] == 'xuanxiang') {
+            $obj->getActiveSheet ()->getColumnDimension ( "{$j}" )->setWidth ( 50 );
+            $obj->getActiveSheet ()->getStyle ( "{$j}" )->getAlignment ()->setWrapText ( true );
+        }
+    }
+    //开始导出试题
+    $i = 2 ; //内容从第二行开始
+    foreach ( $data as $key=>$d ) {
+
+        $value = '';
+        for($k = 1, $j = 'A'; $k <= $max_cols; $k ++, $j ++) {
+
+            //当前字段名
+            $field_name = $fields [$k - 1] [0];
+
+            //当前所在单元格
+            $cell_index = $j . $i;
+
+            // 单远格填充的值
+            if ($field_name == 'id') {
+                $value = $key+1;
+            } else {
+                $value = $d [$field_name];
+            }
+            $obj->getActiveSheet ()->setCellValueExplicit ( "{$cell_index}", $value,
+                \PHPExcel_Cell_DataType::TYPE_STRING );
+        } // end for
+
+        $i ++;
+    } // end foreach
+    ob_end_clean();
+
+    header ( 'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' );
+    header ( 'Content-Disposition: attachment;filename="'.$filename.'.xls"' );
+    header ( 'Cache-Control: max-age=0' );
+
+
+    $objWriter = \PHPExcel_IOFactory::createWriter ( $obj, 'Excel5' );
+    $objWriter->save ( 'php://output' );
+    exit ();
+
+}
+
+/**
+ * 实验室所有资质
+ */
+function  lab_aptitude(){
+    $qualified_group = array();
+    $qualified=db::name('system_parameter')->where('syskey','=',"qualified")->order('sort_order')->column('id');
+    if(isset($qualified[0]) && $qualified[0]){
+        $qualified_group=db::name('system_parameter')->where('type','=',$qualified[0])->order('sort_order')->select();
+    }
+    $hazard_source_group = array();
+    $hazard_source=db::name('system_parameter')->where('syskey','=',"hazard_source")->order('sort_order')->column('id');
+    if(isset($hazard_source[0]) && $hazard_source[0]){
+        $hazard_source_group=db::name('system_parameter')->where('type','=',$hazard_source[0])->order('sort_order')->select();
+    }
+    $precautions_group = array();
+    $precautions=db::name('system_parameter')->where('syskey','=',"precautions")->order('sort_order')->column('id');
+    if(isset($precautions[0]) && $precautions[0]){
+        $precautions_group=db::name('system_parameter')->where('type','=',$precautions[0])->order('sort_order')->select();
+    }
+    $main_outfire_group = array();
+    $main_outfire=db::name('system_parameter')->where('syskey','=',"main_outfire")->order('sort_order')->column('id');
+    if(isset($main_outfire[0]) && $main_outfire[0]){
+        $main_outfire_group=db::name('system_parameter')->where('type','=',$main_outfire[0])->order('sort_order')->select();
+    }
+    $lab_aptitude['qualified_group']=$qualified_group;
+    $lab_aptitude['hazard_source_group']=$hazard_source_group;
+    $lab_aptitude['precautions_group']=$precautions_group;
+    $lab_aptitude['main_outfire_group']=$main_outfire_group;
+    return $lab_aptitude;
 }

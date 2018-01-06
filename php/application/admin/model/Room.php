@@ -38,11 +38,8 @@ class Room extends Common
         if ($GLOBALS['userInfo']['org_id'] != '1'){
             $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
             $childIds[]=$GLOBALS['userInfo']['org_id'];
-            if (!empty($childIds)){
-                $map['room.lab_id'] = ['in', $childIds];
-            }
+            if (!empty($childIds))$map['room.lab_id'] = ['in', $childIds];
         }
-
 
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         if ($keywords) {

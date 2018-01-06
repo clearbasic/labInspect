@@ -14,15 +14,19 @@ function memuLevelClear($data, $root=1, $child='child', $level='level')
         foreach($data as $key => $val){
         	$data[$key]['selected'] = false;
         	$data[$key]['level'] = $root;
+
         	if (!empty($val[$child]) && is_array($val[$child])) {
+
 				$data[$key][$child] = memuLevelClear($val[$child],$root+1);
-        	}else if ($root<3&&$data[$key]['menu_type']==1) {
+
+        	}else if ($root<2) {
         		unset($data[$key]);
         	}
-        	if (empty($data[$key][$child])&&($data[$key]['level']==1)&&($data[$key]['menu_type']==1)) {
+        	if (empty($data[$key][$child])&&($data[$key]['level']==1)) {
         		unset($data[$key]);
         	}
         }
+
         return array_values($data);
     }
     return array();
@@ -43,10 +47,10 @@ function rulesDeal($data)
             $str1 = $v1['name'];
             if (is_array($v1['child'])) {
                 foreach ($v1['child'] as $k2 => $v2) {
-                    $str2 = $str1.'-'.$v2['name'];
+                    $str2 = $str1.'/'.$v2['name'];
                     if (is_array($v2['child'])) {
                         foreach ($v2['child'] as $k3 => $v3) {
-                            $str3 = $str2.'-'.$v3['name'];
+                            $str3 = $str2.'/'.$v3['name'];
                             $ret[] = $str3;
                         }
                     }else{

@@ -10,6 +10,7 @@ return [
     '__rest__'=>[
         'admin/rules'		   =>'admin/rules',
         'admin/groups'		   =>'admin/groups',
+        'admin/roles'		   =>'admin/roles',
         'admin/users'		   =>'admin/users',
         'admin/menus'		   =>'admin/menus',
         'admin/structures'	   =>'admin/structures',
@@ -28,6 +29,7 @@ return [
         'admin/check'          =>'admin/check',
         'admin/login'          =>'admin/login',
         'admin/checklogin'     =>'admin/checklogin',
+        'admin/export'         =>'admin/export',
     ],
 
     // 【基础】登录
@@ -40,36 +42,61 @@ return [
     'admin/base/logout'     => ['admin/base/logout', ['method' => 'POST']],
     // 【基础】获取配置
     'admin/base/getConfigs' => ['admin/base/getConfigs', ['method' => 'POST']],
+    // 【基础】获取配置
+    'admin/base/aptitude' => ['admin/base/aptitude', ['method' => 'POST']],
     // 【基础】获取验证码
     'admin/base/getVerify'  => ['admin/base/getVerify', ['method' => 'GET']],
     // 【基础】上传图片
     'admin/upload'          => ['admin/upload/index', ['method' => 'POST']],
     // 保存系统配置
     'admin/systemConfigs'   => ['admin/systemConfigs/save', ['method' => 'POST']],
+
+
+    // 【规则】菜单列表
+    'admin/rules/index'   => ['admin/rules/index', ['method' => 'POST']],
+    // 【规则】菜单添加
+    'admin/rules/add'   => ['admin/rules/add', ['method' => 'POST']],
+    // 【规则】菜单修改
+    'admin/rules/edit'   => ['admin/rules/edit', ['method' => 'POST']],
+    // 【规则】菜单修改
+    'admin/rules/del'   => ['admin/rules/del', ['method' => 'POST']],
     // 【规则】批量删除
     'admin/rules/deletes'   => ['admin/rules/deletes', ['method' => 'POST']],
     // 【规则】批量启用/禁用
     'admin/rules/enables'   => ['admin/rules/enables', ['method' => 'POST']],
-    // 【用户组】批量删除
-    'admin/groups/deletes'  => ['admin/groups/deletes', ['method' => 'POST']],
-    // 【用户组】批量启用/禁用
-    'admin/groups/enables'  => ['admin/groups/enables', ['method' => 'POST']],
-    // 【用户】批量删除
-    'admin/users/deletes'   => ['admin/users/deletes', ['method' => 'POST']],
-    // 【用户】批量启用/禁用
-    'admin/users/enables'   => ['admin/users/enables', ['method' => 'POST']],
+
+    // 【用户组】菜单列表
+    'admin/groups/index'   => ['admin/groups/index', ['method' => 'POST']],
+    // 【用户组】菜单添加
+    'admin/groups/add'   => ['admin/groups/add', ['method' => 'POST']],
+    // 【用户组】根据用户组查询用户组的规则
+    'admin/groups/getRules'   => ['admin/groups/getRules', ['method' => 'POST']],
+    // 【用户组】菜单修改
+    'admin/groups/edit'   => ['admin/groups/edit', ['method' => 'POST']],
+    // 【用户组】菜单修改
+    'admin/groups/del'   => ['admin/groups/del', ['method' => 'POST']],
+
+
+    // 【角色分配】角色分配列表
+    'admin/roles/index'  => ['admin/roles/index', ['method' => 'POST']],
+    // 【角色分配】角色分配添加
+    'admin/roles/add'  => ['admin/roles/add', ['method' => 'POST']],
+    // 【角色分配】角色分配删除
+    'admin/roles/del'  => ['admin/roles/del', ['method' => 'POST']],
+
+    // 【菜单】菜单列表
+    'admin/menus/index'   => ['admin/menus/index', ['method' => 'POST']],
+    // 【菜单】菜单添加
+    'admin/menus/add'   => ['admin/menus/add', ['method' => 'POST']],
+    // 【菜单】菜单修改
+    'admin/menus/edit'   => ['admin/menus/edit', ['method' => 'POST']],
+    // 【菜单】菜单删除
+    'admin/menus/del'   => ['admin/menus/del', ['method' => 'POST']],
     // 【菜单】批量删除
     'admin/menus/deletes'   => ['admin/menus/deletes', ['method' => 'POST']],
     // 【菜单】批量启用/禁用
     'admin/menus/enables'   => ['admin/menus/enables', ['method' => 'POST']],
-    // 【组织架构】批量删除
-    'admin/structures/deletes' => ['admin/structures/deletes', ['method' => 'POST']],
-    // 【组织架构】批量启用/禁用
-    'admin/structures/enables' => ['admin/structures/enables', ['method' => 'POST']],
-    // 【部门】批量删除
-    'admin/posts/deletes'   => ['admin/posts/deletes', ['method' => 'POST']],
-    // 【部门】批量启用/禁用
-    'admin/posts/enables'   => ['admin/posts/enables', ['method' => 'POST']],
+
 
     // 【检查指标体系】类别列表
     'admin/checklist/index' => ['admin/checklist/index', ['method' => 'POST']],
@@ -111,6 +138,8 @@ return [
 
     // 【检查规则】规则添加
     'admin/rule/add'    => ['admin/rule/add', ['method' => 'POST']],
+    // 【检查规则】规则复制
+    'admin/rule/copy'    => ['admin/rule/copy', ['method' => 'POST']],
     // 【检查规则】规则修改
     'admin/rule/edit'   => ['admin/rule/edit', ['method' => 'POST']],
     // 【检查规则】规则修改
@@ -170,8 +199,6 @@ return [
     'admin/check/allot' => ['admin/check/allot', ['method' => 'POST']],
     // 【检查工作管理】检查工作进度
     'admin/check/progress' => ['admin/check/progress', ['method' => 'POST']],
-    // 【检查工作管理】检查工作结果
-    'admin/check/showresult' => ['admin/check/showresult', ['method' => 'POST']],
     // 【检查工作管理】检查工作基本信息
     'admin/check/baseinfo' => ['admin/check/baseinfo', ['method' => 'POST']],
     // 【检查工作管理】检查工作操作（添加修改）
@@ -184,6 +211,8 @@ return [
     'admin/check/submitcheck' => ['admin/check/submitcheck', ['method' => 'POST']],
     // 【检查工作管理】检查工作检查结果
     'admin/check/showresult' => ['admin/check/showresult', ['method' => 'POST']],
+    // 【检查工作管理】检查反馈
+    'admin/check/feedback' => ['admin/check/feedback', ['method' => 'POST']],
 
     // 【登录】
     'admin/login/login' => ['admin/login/login', ['method' => 'POST']],
@@ -191,6 +220,20 @@ return [
     'admin/login/getVerify'   => ['admin/login/getVerify', ['method' => 'GET']],
     // 【登录】
     'admin/login/logout'   => ['admin/login/logout', ['method' => 'POST']],
+
+    // 【统计功能】
+    'admin/statistics/room_export' => ['admin/statistics/room_export', ['method' => 'GET']],
+
+    'admin/statistics/test' => ['admin/statistics/test', ['method' => 'GET']],
+
+    // 【统计功能】检查统计
+    'admin/statistics/checkStatistics' => ['admin/statistics/checkStatistics', ['method' => 'POST']],
+    // 【统计功能】评优统计
+    'admin/statistics/excellentStatistics' => ['admin/statistics/excellentStatistics', ['method' => 'POST']],
+    // 【统计功能】设置评优
+    'admin/statistics/setExcellent' => ['admin/statistics/setExcellent', ['method' => 'POST']],
+    // 【统计功能】责任人登记表
+    'admin/statistics/responTable' => ['admin/statistics/responTable', ['method' => 'POST']],
 
     // MISS路由
     '__miss__'  => 'admin/base/miss',

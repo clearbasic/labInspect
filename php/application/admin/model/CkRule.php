@@ -8,6 +8,7 @@
 namespace app\admin\model;
 
 use app\admin\model\Common;
+use think\db;
 
 class CkRule extends Common
 {
@@ -60,6 +61,38 @@ class CkRule extends Common
             return false;
         }
     }
+    /**
+     * 创建检查规则
+     * @param  array   $param  [description]
+     */
+    public function copyData($param)
+    {
+        $plan_id = !empty($param['plan_id'])? $param['plan_id'] : '';
+        $old_level = !empty($param['old_level'])? $param['old_level'] : '';
+        $level = !empty($param['level'])? $param['level'] : '';
+        if (!$plan_id || !$level || !$old_level){
+            $this->error = '缺少参数';
+            return false;
+        }
+        $rule_list = db::name('ck_rule')->field('rule_id,creator,dt_create',true)->where(array('plan_id'=>$plan_id,'level'=>$old_level))->select();
+        $arr=[];
+        foreach ($rule_list as $k=>$v){
+            $arr[$k]=$v;
+            $arr[$k]['level']=$level;
+        }
+        $this->startTrans();
+        try {
+            $this->allowField(true)->saveAll($arr);
+            $this->commit();
+            return true;
+        } catch(\Exception $e) {
+            $this->rollback();
+            $this->error = '规则已重复，添加失败';
+            return false;
+        }
+    }
+
+
     /**
      * 通过id修改指标体系
      * @param  array   $param  [description]

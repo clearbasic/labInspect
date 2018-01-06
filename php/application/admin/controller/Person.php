@@ -15,6 +15,7 @@ class Person extends Checklogin
 {
     public function index()
     {
+
         $model = model('Person');
         $param = $this->param;
         $page = !empty($param['page']) ? $param['page']: '';

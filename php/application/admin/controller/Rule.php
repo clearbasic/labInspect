@@ -25,6 +25,16 @@ class Rule extends Checklogin
         }
         return resultArray(['data' => $data]);
     }
+    public function copy()
+    {
+        $model = model('CkRule');
+        $param = $this->param;
+        $data = $model->copyData($param);
+        if (!$data) {
+            return resultArray(['error' => $model->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
     public function del()
     {
         $model = model('CkRule');
