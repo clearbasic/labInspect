@@ -20,7 +20,10 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" @click="setShowAdd">添加</button>
+                            <button class="btn btn-primary btn-sm" @click="setShowAdd">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加
+                            </button>
                         </div>
                     </h1>
                 </div>

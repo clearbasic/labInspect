@@ -21,7 +21,10 @@
                         {{title}}
                         <div class="pull-right">
                             <router-link class="btn btn-primary btn-sm" tag="button" v-if="permission[loginUser.group_level] >= permission.college"
-                            :to="{path:pathName+'/orgEdit'}">添加</router-link>
+                            :to="{path:pathName+'/orgEdit'}">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加
+                            </router-link>
                         </div>
                     </h1>
                 </div>

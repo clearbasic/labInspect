@@ -23,7 +23,10 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">添加</button>
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加
+                            </button>
                             <button class="btn btn-primary btn-sm">导入</button>
                         </div>
                     </h1>

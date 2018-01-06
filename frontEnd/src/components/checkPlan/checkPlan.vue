@@ -21,7 +21,10 @@
                     <h1>
                         {{title}}
                         <div class="pull-right" @click="addPlan">
-                            <button class="btn btn-primary btn-sm">添加</button>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加
+                            </button>
                         </div>
                     </h1>
                 </div>

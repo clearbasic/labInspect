@@ -20,8 +20,15 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">添加房间</button>
-                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">分组管理</router-link>
+                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/importRoom'" tag="button">导入房间</router-link>
+                            <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加房间
+                            </button>
+                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">
+                                <i class="ace-icon fa fa-reply icon-only hidden-480"></i>
+                                分组管理
+                            </router-link>
                         </div>
                     </h1>
                 </div>

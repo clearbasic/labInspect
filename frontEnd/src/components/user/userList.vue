@@ -3,7 +3,10 @@
         <div class="row" v-if="showUserTable">
             <div class="col-xs-12 form-inline">
                 <div class="form-group">
-                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">添加新用户</button>
+                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">
+                        <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                        添加
+                    </button>
                 </div>
                 <div class="input-group form-group">
                     <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">

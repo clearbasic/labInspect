@@ -20,7 +20,10 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <button class="btn btn-primary btn-sm" @click="setShowType('add')">分配</button>
+                            <button class="btn btn-primary btn-sm" @click="setShowType('add')">
+                                <i class="ace-icon fa fa-cog hidden-480"></i>
+                                分配
+                            </button>
                         </div>
                     </h1>
                 </div>
