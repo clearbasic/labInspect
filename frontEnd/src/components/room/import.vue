@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content checkList">
+    <div class="main-content importRoom">
         <div class="main-content-inner">
             <!-- 面包屑 -->
             <div class="breadcrumbs" id="breadcrumbs">
@@ -20,10 +20,74 @@
                         {{title}}
                     </h1>
                 </div>
-                <div class="room_list" v-if="room_list.length == 0">
-                    <input type="file" @change="setFileObject($event)">
-                    <button class="btn btn-success btn-sm" @click="submitFile">提交文件</button>
-                    <a class="btn btn-primary btn-sm" :href="pathName+'static/importTemplate/room.xls'">下载示例表格</a>
+                <div class="import" v-if="room_list.length == 0">
+                    <div class="dropzone dz-clickable">
+                        <div class="dz-default dz-message" v-if="!file">
+                            <span class="bigger-150 bolder">
+                                <i class="ace-icon fa fa-caret-right red"></i>
+                                点击下面的图标上传
+                            </span>
+                            <br>
+                            <label class="pointer">
+                                <i class="upload-icon ace-icon fa fa-cloud-upload blue fa-5x"></i>
+                                <input type="file" class="hide" @change="setFileObject($event)">
+                            </label>
+                        </div>
+                        <div class="dz-preview dz-file-preview dz-processing dz-error" v-if="file">
+                            <div class="dz-details">
+                                <div class="dz-filename">
+                                    <span>
+                                        {{file.name}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="dz-size">
+                                {{file.size/1000}} KB
+                            </div>
+                            <a  class="dz-remove" @click="file=null">删除</a>
+                            <div class="dz-error-mark" @click="file=null"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-sm" @click="submitFile" v-if="file">提交文件</button>
+                    <button class="btn btn-defualt btn-sm" v-if="!file">提交文件</button>
+                    <a class="file" :href="pathName+'static/importTemplate/room.xls'">
+                        <i class="ace-icon fa fa-cloud-download">下载示例表格</i>
+                    </a>
+                    <span class="red">
+                        请按照示例模板的格式填写数据，否则导入信息有误
+                    </span>
+                </div>
+                <div class="room_list" v-if="room_list.length > 0">
+                    <h4>
+                        上传数据预览
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>所属院系</th>
+                                    <th>实验室名称</th>
+                                    <th>房间分组</th>
+                                    <th>房间名称</th>
+                                    <th>楼宇</th>
+                                    <th>安全责任人学工号</th>
+                                    <th>安全责任人姓名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(room,index) in room_list" :key="'room'+index">
+                                    <td>{{room[0]}}</td>
+                                    <td>{{room[1]}}</td>
+                                    <td>{{room[2]}}</td>
+                                    <td>{{room[3]}}</td>
+                                    <td>{{room[4]}}</td>
+                                    <td>{{room[5]}}</td>
+                                    <td>{{room[6]}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-success btn-sm" @click="submitRoom">导入</button>
                 </div>
             </div>
         </div>
@@ -36,15 +100,18 @@ export default {
         return {
             title: "房间导入",
             room_list:[],
-            importFile:null,
-            fileName:"",
-            isfile:false,
             file:null
         };
     },
     methods: {
         setFileObject(event){
-            this.file = event.target.files[0]
+            const file = event.target.files[0];
+            const type = file.name.split(".").pop();
+            if(type!="xlsx" && type != 'xls'){
+                alert("文件格式必须为xls、xlsx");
+                return false;
+            }
+            this.file = file;
         },
         submitFile(){
             const URL = this.serverUrl + "/admin/room/roomImport";
@@ -52,8 +119,16 @@ export default {
             let formData = new FormData();
             formData.append("file",this.file);
             this.emitAjaxFile(URL,formData,function(result){
-                _this.file = null
+                _this.file = null;
                _this.room_list = result;
+            })
+        },
+        submitRoom(){
+            const URL = this.serverUrl + "/admin/room/roomRunimport";
+            const _this = this;
+            this.emitAjax(URL,this.room_list,function(result){
+                _this.$store.commit("showToast",{isShow:true,msg:"导入完成"});
+                _this.$router.push(_this.pathName+"/room");
             })
         }
     },

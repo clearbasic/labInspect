@@ -75,8 +75,8 @@ input[readonly]:hover {
     border-radius: 3px;
     background: rgba(0, 0, 0, .03);
     padding: 23px;
-    cursor: pointer;
     text-align: center;
+    margin-bottom: 15px;
 }
 .dropzone .dz-default.dz-message {
     top: 50%;
@@ -106,8 +106,18 @@ input[readonly]:hover {
     height: 40px;
     font-size: 30px;
     text-align: center;
-    right: -10px;
-    top: -10px
+    right: -15px;
+    top: -15px
+}
+.dz-size {
+    line-height: 30px;
+}
+.dropzone a.dz-remove, .dropzone-previews a.dz-remove {
+    display: block;
+    padding:4px;
+}
+.pointer{
+    cursor:pointer;
 }
 @media screen and (max-width:480px) {
     .sysSelect li {
