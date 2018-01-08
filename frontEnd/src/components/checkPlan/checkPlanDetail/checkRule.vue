@@ -123,12 +123,6 @@ export default {
         this.getCheckList();
         this.getOrgList();
     },
-    props:{
-        showToast:{
-            type:Function,
-            default:null
-        }
-    },
     data() {
         return {
             checkListArray: [], //指标库列表
@@ -278,7 +272,7 @@ export default {
                 if(type){
                     const URL = _this.serverUrl + "/admin/rule/edit";
                     _this.emitAjax(URL, rule, function(){
-                        _this.showToast();
+                        _this.$store.commit("showToast",{isShow:true});
                     },function(result) {
                         _this.getCheckPlan();
                     });
@@ -307,7 +301,7 @@ export default {
             })
             
             this.emitAjax(URL, data, function(result) {
-                _SELF.showToast("添加成功");
+                _SELF.$store.commit("showToast",{isShow:true,msg:"添加成功"});
                 _SELF.newRule={
                     plan_id:0,
                     level:"lab",
@@ -333,7 +327,7 @@ export default {
                     level:rule.level,
                 }
                 this.emitAjax(URL, data, function(result) {
-                    _SELF.showToast("删除成功");
+                    _SELF.$store.commit("showToast",{isShow:true,msg:"删除成功"});
                     _SELF.getCheckPlan();
                 });
             }
@@ -365,7 +359,7 @@ export default {
                 }
                 this.emitAjax(URL,data,function(){
                     ruleConfig.copy = '';
-                    _this.showToast("拷贝成功");
+                    _this.$store.commit("showToast",{isShow:true,msg:"拷贝成功"});
                     _this.getCheckPlan();
                 })
             }

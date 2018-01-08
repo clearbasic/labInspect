@@ -102,12 +102,6 @@ export default {
             return this.$store.state.checkPlan
         }
     },
-    props:{
-        showToast:{
-            type:Function,
-            default:null
-        }
-    },
     methods:{
         addTask(type){
             //显示添加安排输入框
@@ -148,7 +142,7 @@ export default {
                 dt_end:this.moment(this.newTaskDtEnd).format("YYYY-MM-DD"),
             }
             this.emitAjax(URL, data, function(result) {
-                _SELF.showToast();
+                _SELF.$store.commit("showToast",{isShow:true});
                 _SELF.getCheckPlanData();
             });
             this.addTask("")
@@ -173,7 +167,7 @@ export default {
                 dt_end:changedEnd
             }
             this.emitAjax(URL, data, function(result) {
-                _this.showToast();
+                _this.$store.commit("showToast",{isShow:true});
                 _this.getCheckPlanData();
             });
         },
@@ -207,7 +201,7 @@ export default {
                 dt_end:end
             }
             this.emitAjax(URL, data, function(result) {
-                _this.showToast();
+                _this.$store.commit("showToast",{isShow:true});
                 _this.getCheckPlanData();
             });
         },

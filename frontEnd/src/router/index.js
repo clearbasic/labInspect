@@ -17,6 +17,7 @@ import OrgList from "../components/org/orgList.vue";
 import OrgEdit from "../components/org/orgEdit.vue";
 import User from "../components/user/user.vue";
 import Room from "../components/room/room.vue";
+import ImportRoom from "../components/room/import.vue";
 import Zone from "../components/room/zone.vue";
 import RoomZoneList from "../components/room/roomZoneList.vue";
 import Login from "../components/login/login.vue";
@@ -163,6 +164,14 @@ export default new Router({
 					component:Room,
 					meta:{
 						title:"房间列表 - "+title,
+						active:pathName+"/zone",
+					}
+				},{
+					path:pathName+"/importRoom",
+					name:"importRoom",
+					component:ImportRoom,
+					meta:{
+						title:"房间导入 - "+title,
 						active:pathName+"/zone",
 					}
 				},{

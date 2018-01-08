@@ -30,22 +30,37 @@
                 <router-view />
             </transition>
         </div>
+        <Toast :show="isShow" :msg="msgText" :hide="hideToast"></Toast>
 	</div>
 </template>
 
 <script>
 import VueHead from "./common/header";
 import VueLeft from "./common/leftMenu";
-
+import Toast from './common/toast.vue';
 export default {
     name: "Index",
     components: {
         VueHead,
-        VueLeft
+        VueLeft,
+        Toast
     },
     data() {
         return {
-            msg: "欢迎使用实验室安全检查管理系统"
+            msg: "欢迎使用实验室安全检查管理系统",
+        }
+    },
+    computed:{
+        isShow(){
+            return this.$store.state.showToast;
+        },
+        msgText(){
+            return this.$store.state.msgText;
+        }
+    },
+    methods:{
+        hideToast(){
+            this.$store.commit("showToast",{isShow:false});
         }
     }
 };

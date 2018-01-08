@@ -25,5 +25,13 @@ export default {
     },
     getPlanList(state,data){
         state.plan_list = data;
+    },
+    showToast(state,data){
+        state.showToast = data.isShow;
+        if(data.msg){
+            state.msgText = data.msg;
+        }else{
+            state.msgText = "保存成功";
+        }
     }
 }

@@ -4,15 +4,19 @@ import Vue from 'vue'
 import App from './App'
 import router from './router';
 import { serverUrl,pathName } from "./config/server.js";
-import { emitAjax ,getUserInfo} from "./assets/common.js";
+import { emitAjax ,getUserInfo,emitAjaxFile} from "./assets/common.js";
+import vue2FileUpload from 'vue2-file-upload';
 import store from './vuex';
 import moment from "moment";
 import './assets/common.css';
+
+Vue.use(vue2FileUpload);
 
 Vue.config.productionTip = false;
 Vue.prototype.pathName = pathName;
 Vue.prototype.serverUrl = serverUrl;
 Vue.prototype.emitAjax = emitAjax;
+Vue.prototype.emitAjaxFile = emitAjaxFile;
 Vue.prototype.permission = {
   school:10,
   college:8,

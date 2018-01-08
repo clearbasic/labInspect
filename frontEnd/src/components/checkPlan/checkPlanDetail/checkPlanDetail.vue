@@ -62,17 +62,16 @@
                     </ul>
                     <div class="tab-content">
                         <div id="checkPlan" class="tab-pane fade active in">
-                            <CheckTask :showToast="showToast"></CheckTask>
+                            <CheckTask></CheckTask>
                         </div>
                         <div id="checkRule" class="tab-pane fade">
-                            <CheckRule :showToast="showToast"></CheckRule>
+                            <CheckRule></CheckRule>
                         </div>
                         <div id="workDescription" class="tab-pane fade">
-                            <CheckDescription :showToast="showToast"></CheckDescription>
+                            <CheckDescription></CheckDescription>
                         </div>
                     </div>
-                </div>  
-                <Toast :show="isShow" :msg="msg" :hide="hideToast"></Toast>
+                </div>
             </div>
         </div>
     </div>
@@ -82,7 +81,6 @@
 import CheckTask from './checkTask';
 import CheckRule from './checkRule';
 import CheckDescription from './checkDescription';
-import Toast from '../../common/toast.vue';
 
 export default {
     name: "checkPlanDetail",
@@ -90,14 +88,11 @@ export default {
         CheckTask,
         CheckRule,
         CheckDescription,
-        Toast,
     },
     data() {
         return {
             title: "检查期次管理编辑",
             flag:"",
-            isShow:false,
-            msg:"保存成功"
         };
     },
     computed:{
@@ -132,7 +127,7 @@ export default {
             }
             this.flag = "";
             this.emitAjax(URL, data, function(){
-               _SELF.showToast();
+               _SELF.$store.commit("showToast",{isShow:true});
             },function(){
                 //修改失败刷新页面
                 _SELF.$router.push(pathName+'/checkPlan/'+this.$route.params.id);
@@ -151,15 +146,6 @@ export default {
         setFlag(value){
             this.flag = value;
         },
-        hideToast(){
-            this.isShow = false;
-        },
-        showToast(msg){
-            if(msg){
-                this.msg = msg;
-            }
-            this.isShow = true;
-        }
     },
     mounted(){
         this.getCheckPlan();

@@ -14,12 +14,6 @@
         components:{
            vueUeditor 
         },
-        props:{
-            showToast:{
-                type:Function,
-                default:null
-            }
-        },
         data(){
             return {
                 ueditorConfig:{
@@ -46,7 +40,7 @@
                         })
                         const URL = _SELF.serverUrl + "/admin/plan/edit";
                         _SELF.emitAjax(URL, data, function(){
-                            _SELF.showToast();
+                            _SELF.$store.commit("showToast",{isShow:true});
                         },function(){
                             //修改失败刷新页面
                             _SELF.$router.push(pathName+'/checkPlan/'+_SELF.$route.params.id);

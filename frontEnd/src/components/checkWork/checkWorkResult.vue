@@ -170,15 +170,13 @@
                 </div>
             </div>
         </div>
-        <Toast :show="isShow" :msg="msg" :hide="hideToast"></Toast>
     </div>
 </template>
 <script>
 import datepicker from "vue2-datepicker";
-import Toast from '../common/toast.vue';
 export default {
     name: "checkWork",
-    components: { datepicker,Toast },
+    components: { datepicker },
     data() {
         return {
             title: "检查工作进度",
@@ -192,8 +190,6 @@ export default {
             room_list: [],
             result_list:[],
             user_list:[],
-            isShow:false,
-            msg:"提交成功",
         };
     },
     methods: {
@@ -259,18 +255,9 @@ export default {
             const URL = this.serverUrl + "/admin/check/feedback";
             const _this = this;
             this.emitAjax(URL,data,function(){
-                _this.showToast();
+                _this.$store.commit("showToast",{isShow:true});
                 _this.getResultList();
             })
-        },
-        hideToast(){
-            this.isShow = false;
-        },
-        showToast(msg){
-            if(msg){
-                this.msg = msg;
-            }
-            this.isShow = true;
         }
     },
     mounted() {

@@ -19,8 +19,7 @@ a:hover {
     padding-left: 0;
     padding-right: 0;
 }
-.has-error input[type="text"],
-.has-error input[type="password"] {
+.has-error input[type="text"], .has-error input[type="password"] {
     border-color: #f00;
 }
 .form-group h5 {
@@ -38,14 +37,13 @@ input[readonly]:hover {
 .fade-enter-active {
     transition: opacity 0.5s
 }
-	
-.fade-enter,.fade-leave-active {
+.fade-enter, .fade-leave-active {
     opacity: 0
 }
 .dd-item button {
-        line-height: 1px;
-        outline: none;
-    }
+    line-height: 1px;
+    outline: none;
+}
 .dd {
     max-width: 1980px;
 }
@@ -53,11 +51,11 @@ input[readonly]:hover {
     width: 100%;
     position: absolute;
     left: 0;
-    top:30px;
+    top: 30px;
     background: #fff;
     z-index: 10;
-    max-height:300px;
-    overflow-y:auto;
+    max-height: 300px;
+    overflow-y: auto;
 }
 .sysSelect {
     height: 45px;
@@ -65,14 +63,55 @@ input[readonly]:hover {
     background: #5db7e9;
     padding: 0 10px;
     position: relative;
-    margin-left:6px;
+    margin-left: 6px;
 }
 .sysSelect a {
-    color:#fff;
+    color: #fff;
 }
-@media screen and (max-width:480px){
+.dropzone {
+    border: 1px solid rgba(0, 0, 0, .03);
+    min-height: 360px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, .03);
+    padding: 23px;
+    cursor: pointer;
+    text-align: center;
+}
+.dropzone .dz-default.dz-message {
+    top: 50%;
+    margin-top: -61.5px;
+    height: 123px;
+    position: absolute;
+}
+.dropzone .dz-preview, .dropzone-previews .dz-preview {
+    background: rgba(255, 255, 255, .8);
+    position: relative;
+    display: inline-block;
+    margin: 17px;
+    vertical-align: top;
+    border: 1px solid #acacac;
+    padding: 6px 6px 6px 6px;
+}
+.dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    background: #ebebeb;
+    padding: 5px;
+}
+.dz-error-mark{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    text-align: center;
+    right: -10px;
+    top: -10px
+}
+@media screen and (max-width:480px) {
     .sysSelect li {
-        text-align:right;
+        text-align: right;
     }
 }
 @media only screen and (max-width: 640px) {

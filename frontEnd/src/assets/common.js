@@ -66,6 +66,71 @@ function emitAjax(url,opt,success,error){
         }
     }
 }
+//上传文件方法
+function emitAjaxFile(url,formData,success,error){
+    let app_secret="c6d9622fdc385b26129fc8a4c7a30c2a";
+    let app_key=2347508144;
+    let timestamp = Date.parse(new Date());
+    let sign = setSign(app_secret,app_key,timestamp);
+    const authKey = localStorage.getItem("authKey");
+    const sessionId = localStorage.getItem("sessionId");
+    formData.append("app_key",app_key);
+    formData.append("timestamp",timestamp);
+    formData.append("sign",sign);
+    const isOk = checkPermission(url);
+    if(isOk.flag){
+        $.ajax({
+            url,
+            data:formData,
+            type:"POST",
+            headers:{
+                authKey,
+                sessionId
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(result){
+                let resultObj = result;
+                if(typeof result == "string"){
+                    resultObj = JSON.parse(resultObj);
+                }
+                switch (resultObj.code) {
+                    case 200:
+                        success && success(resultObj.data);
+                        break;
+                    case 101:
+                        //登录失效
+                        delLocalData();
+                        window.location.href = pathName+"/login";
+                        break;
+                    case 103:
+                        delLocalData();
+                        alert("您的帐号被禁用或者被删除，请联系相关管理员！");
+                        window.location.href = pathName+"/login";
+                        break;
+                    default:
+                        alert(resultObj.error);
+                        error&&error(resultObj);
+                        break;
+                }
+            },
+            error:function(error){
+                if(error.readyStatus !=4 || error.status != 200){
+                    alert("连接不到服务器，网络请求失败");
+                }
+            }
+        });
+    }else{
+        console.log(isOk.pathName);
+        alert("您没有权限做此操作！");
+        if(this){
+            this.$router.go({
+                path:this.$route.fullPath,
+            })
+        }
+    }
+}
 //生存密钥
 function setSign(a,b,c){
     let signString = a+b+c+a;
@@ -133,4 +198,4 @@ function getUserInfo(){
     }
     return data;
 }
-export {emitAjax,setLocalData,delLocalData,getUserInfo};
+export {emitAjax,setLocalData,delLocalData,getUserInfo,emitAjaxFile};

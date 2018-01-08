@@ -10,4 +10,6 @@ export default {
     leftMenu:[], //左侧菜单栏
     rule_list:[],
     plan_list:[],
+    showToast:false,
+    msgText:"保存成功",
 }
