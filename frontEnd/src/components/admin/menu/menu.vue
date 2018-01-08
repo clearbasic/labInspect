@@ -31,7 +31,7 @@
                     <div class="addMenu" v-if="showAdd">
                         <div class="row">
                             <div class="form-horizontal col-lg-8">
-                                <div class="form-group">
+                                <div :class="['form-group',{'has-error':!newMenu.title}]">
                                     <label for="title" class="col-sm-2 control-label">菜单名称</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" v-model="newMenu.title" id="title" placeholder="菜单名称">
@@ -191,6 +191,10 @@ export default {
             let url = this.serverUrl + "/admin/menus/add";
             if(this.newMenu.id){
                 url = this.serverUrl + "/admin/menus/edit";
+            }
+            if(!this.newMenu.title){
+                alert("菜单名称不能为空！");
+                return false;
             }
             this.emitAjax(url,this.newMenu,function(result){
                 _this.setHideAdd();

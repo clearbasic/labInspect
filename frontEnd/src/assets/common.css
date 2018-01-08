@@ -1,3 +1,11 @@
+
+.nomargin {
+    margin:0;
+}
+.nopadding{
+    padding:0;
+}
+/* 嵌入app */
 .app #navbar {
     display: none !important;
 }
@@ -10,14 +18,14 @@
 a:hover {
     cursor: pointer;
 }
+.app .page-content {
+    padding-left: 0;
+    padding-right: 0;
+}
 .inlineInput {
     display: inline-block;
     width: 100%;
     max-width: 160px;
-}
-.app .page-content {
-    padding-left: 0;
-    padding-right: 0;
 }
 .has-error input[type="text"], .has-error input[type="password"] {
     border-color: #f00;
@@ -68,6 +76,7 @@ input[readonly]:hover {
 .sysSelect a {
     color: #fff;
 }
+/* 上传样式 */
 .dropzone {
     border: 1px solid rgba(0, 0, 0, .03);
     min-height: 360px;
@@ -118,6 +127,14 @@ input[readonly]:hover {
 }
 .pointer{
     cursor:pointer;
+}
+.user-info {
+    max-width: 200px;
+}
+/* 分页 */
+.pagination input {
+    width: 30px;
+    margin:3px;
 }
 @media screen and (max-width:480px) {
     .sysSelect li {

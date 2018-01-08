@@ -1,6 +1,6 @@
 <template>
     <div class="roomList">
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-hover nomargin">
             <thead>
                 <tr>
                     <th class="center little">房间ID</th>
@@ -15,7 +15,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(room,index) in roomList" :key="'roomList'+index">
+                <tr v-for="(room,index) in roomList" :key="'roomList'+index"
+                    v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                >
                     <td class="center little">{{room.room_id}}</td>
                     <td>
                         <a @click="showRoomEdit(room)">{{room.room_name}}</a>
@@ -74,9 +76,14 @@
                 </tr>
             </tbody>
         </table>
+        <page
+            :pages = "Math.ceil(roomList.length/pageCount)"
+            :setPage = "setPage"
+        ></page>
     </div>
 </template>
 <script>
+    import page from '../common/page';
     export default {
         name:"roomList",
         props:{
@@ -85,12 +92,15 @@
                 default:null,
             }
         },
+        components:{page},
         data(){
             return {
                 roomList:[],
                 zoneList:[],
                 isShowOrder:0,
                 currentOrder:0,
+                page:1,
+                pageCount:10,
             }
         },
         methods:{
@@ -131,6 +141,9 @@
                 this.emitAjax(url,null,function(result){
                     _this.zoneList = result;
                 })
+            },
+            setPage(page){
+                this.page = page;
             }
         },
         mounted(){

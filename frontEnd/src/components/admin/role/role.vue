@@ -97,7 +97,7 @@
                     <div class="addRole" v-if="showType=='add'">
                         <div class="row">
                             <div class="form-horizontal col-lg-8">
-                                <div class="form-group">
+                                <div :class="['form-group',{'has-error':!newRole.title}]">
                                     <label for="title" class="col-sm-2 control-label">角色名称</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" v-model="newRole.title" id="title" placeholder="角色名称">
@@ -258,6 +258,10 @@ export default {
                 URL = this.serverUrl + "/admin/groups/edit";
             }
             const _this = this;
+            if(!this.newRole.title){
+                alert("角色名称不能为空！");
+                return false;
+            }
             this.emitAjax(URL, this.newRole, function(result) {
                 _this.setShowList();
                 _this.init();

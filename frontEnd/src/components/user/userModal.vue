@@ -3,7 +3,10 @@
         <div class="row" v-if="showUserTable">
             <div class="col-xs-12 form-inline">
                 <div class="form-group">
-                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">添加新用户</button>
+                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">
+                        <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                        添加
+                    </button>
                 </div>
                 <div class="input-group form-group">
                     <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
@@ -12,6 +15,12 @@
                             <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
                         </button>
                     </span>
+                </div>
+                <div class="form-group">
+                    <select v-model="searchType">
+                        <option :value="null">当前单位</option>
+                        <option value="all">全部</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -26,7 +35,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(user,index) in userList" :key="'user'+index">
+                    <tr v-for="(user,index) in userList" :key="'user'+index"
+                        v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                    >
                         <td>
                             {{user.username}} <span v-if="user.username == loginUser.username">（自己）</span>
                         </td>
@@ -57,6 +68,10 @@
                     </tr>
                 </tbody>
             </table>
+            <page
+                :pages = "Math.ceil(userList.length/pageCount)"
+                :setPage = "setPage"
+            ></page>
         </div>
         <CreateUser v-if="!showUserTable"
             :showUserList="showUserList"
@@ -67,16 +82,20 @@
 </template>
 <script>
     import CreateUser from './createUser';
+    import page from '../common/page.vue';
     export default {
         name:"userModal",
         props:["sure"],
-        components:{CreateUser},
+        components:{CreateUser,page},
         data(){
             return {
                 userList:[],
                 showUserTable:true,
                 currentUser:null,
+                searchType:null,
                 searchUserName:"",
+                page:1,
+                pageCount:15,
             }
         },
         methods:{
@@ -107,7 +126,18 @@
                 this.getUserList({
                     keywords:this.searchUserName
                 })
+            },
+            setPage(page){
+                this.page = page;
             }
+        },
+        watch:{
+            searchType(){
+                this.getUserList({
+                    flag:this.searchType
+                })
+            }
+            
         },
         mounted(){
             this.getUserList();

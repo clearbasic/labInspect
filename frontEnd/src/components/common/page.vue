@@ -1,0 +1,91 @@
+<template>
+    <ul class="pagination">
+        <li>
+            <a @click="clickPage(1)">首页</a>
+        </li>
+        <li>
+            <a v-if="page==1"><i class="ace-icon fa fa-angle-double-left"></i></a>
+            <a v-if="page!=1" @click="prev"><i class="ace-icon fa fa-angle-double-left"></i></a>
+        </li>
+        <li v-for="item in pageArray" :key="'page'+item" :class="{active:page==item}">
+            <a @click="clickPage(item)">{{item}}</a>
+        </li>
+        <li>
+            <a v-if="page==pages"><i class="ace-icon fa fa-angle-double-right"></i></a>
+            <a  @click="next" v-if="page!=pages"><i class="ace-icon fa fa-angle-double-right"></i></a>
+        </li>
+        <li>
+            <a @click="clickPage(pages)">尾页</a>
+        </li>
+        <li>
+            <input class="pull-left" v-model="gotoPage">
+            <a @click="clickPage(gotoPage)">跳转</a>
+        </li>
+        <li>
+            <span style="background:none;color:#000;border:0;">当前{{page}}/{{pages}}页</span>
+        </li>
+    </ul>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            page: 1,
+            pageArray:[],
+            gotoPage:1,
+        };
+    },
+    props: {
+        pages: {
+            type: Number,
+            default: 0
+        },
+        setPage: {
+            type: Function,
+            default: null
+        }
+    },
+    methods: {
+        clickPage(item) {
+            if(item>this.pages){
+                alert("跳转的页数不能超过"+this.pages+"。");
+                return false;
+            }
+            this.page = item;
+            this.setPage(this.page);
+        },
+        prev() {
+            this.page--;
+            this.setPage(this.page);
+        },
+        next(){
+            this.page++;
+            this.setPage(this.page);
+        },
+        setPageArray(){
+            let length = 5;
+            if(this.pages<5){
+                length = this.pages;
+            }
+            this.pageArray = [];
+            for (let index = 0; index < length; index++) {
+                this.pageArray.push(index+this.page);
+            }
+        }
+    },
+    watch:{
+        page(){
+            this.gotoPage = this.page;
+            if((this.page == this.pageArray[0] || this.page == this.pageArray[this.pageArray.length-1])&&this.pages>5){
+                this.setPageArray();
+            }
+        },
+        pages(){
+            this.setPageArray();
+        }
+    },
+    mounted(){
+        this.setPageArray();
+    }
+};
+</script>

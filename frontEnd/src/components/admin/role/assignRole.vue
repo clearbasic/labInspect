@@ -63,7 +63,7 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <div class="form-horizontal">
-                                    <div class="form-group">
+                                    <div :class="['form-group',{'has-error':!newAssign.group_id}]">
                                         <label class="col-sm-2 control-label">选择角色</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" v-model="newAssign.group_id" @change="selectGroupLevel">
@@ -71,7 +71,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" v-if="newAssign.group_id">
+                                    <div :class="['form-group',{'has-error':!newAssign.org_id}]" v-if="newAssign.group_id">
                                         <label class="col-sm-2 control-label">所属单位</label>
                                         <div class="col-sm-10">
                                             <select class="form-control" v-model="newAssign.org_id">
@@ -79,7 +79,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div :class="['form-group',{'has-error':!newAssign.username}]">
                                         <label class="col-sm-2 control-label">人员选择</label>
                                         <div class="col-sm-10">
                                             <input type="text" v-model="newAssign.username" readonly class="form-control" data-toggle="modal" data-target="#userModal" />

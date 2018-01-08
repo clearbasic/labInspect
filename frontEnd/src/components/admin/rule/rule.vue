@@ -32,7 +32,7 @@
                     <div class="addRule" v-if="showAdd">
                         <div class="row">
                             <div class="form-horizontal col-lg-8">
-                                <div class="form-group">
+                                <div :class="['form-group',{'has-error':!newRule.title}]">
                                     <label for="title" class="col-sm-2 control-label">显示名称</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" v-model="newRule.title" id="title" placeholder="显示名称">
@@ -60,7 +60,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div :class="['form-group',{'has-error':!newRule.name}]">
                                     <label for="name" class="col-sm-2 control-label">名称</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" v-model="newRule.name" id="name" placeholder="权限名称">
@@ -232,6 +232,14 @@ export default {
                 URL = this.serverUrl + '/admin/rules/edit';
             }
             const _this = this;
+            if(!this.newRule.title){
+                alert("权限显示名称不能为空！");
+                return false;
+            }
+            if(!this.newRule.name){
+                alert("权限名称不能为空！");
+                return false;
+            }
             this.emitAjax(URL,this.newRule,function(result){
                 _this.setHideAdd();
                 _this.init();

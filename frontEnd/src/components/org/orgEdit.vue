@@ -32,7 +32,7 @@
                     <li class="list-group-item clearfix">
                         <div class="row">
                             <div class="col-md-4">
-                                <div :class="['form-group','has-feedback',{'has-error':orgInfo.org_name ==''}]">
+                                <div :class="['form-group','has-feedback',{'has-error':!orgInfo.org_name}]">
                                     <label for="org_name" class="col-sm-2 col-lg-4 col-md-5 control-label">单位名称：</label>
                                     <div class="col-sm-10 col-lg-8 col-md-7">
                                         <input type="text" v-model="orgInfo.org_name" id="org_name" class="form-control">

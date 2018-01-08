@@ -62,9 +62,10 @@
                         上传数据预览
                     </h4>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered nomargin">
                             <thead>
                                 <tr>
+                                    <th>序号</th>
                                     <th>所属院系</th>
                                     <th>实验室名称</th>
                                     <th>房间分组</th>
@@ -75,7 +76,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(room,index) in room_list" :key="'room'+index">
+                                <tr v-for="(room,index) in room_list" :key="'room'+index" 
+                                    v-if="index>=(page-1)*pageCount && index<page*pageCount">
+                                    <td>{{index+1}}</td>
                                     <td>{{room[0]}}</td>
                                     <td>{{room[1]}}</td>
                                     <td>{{room[2]}}</td>
@@ -86,6 +89,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <page
+                            :pages = "Math.ceil(roomCount/pageCount)"
+                            :setPage = "setPage"
+                        ></page>
                     </div>
                     <button class="btn btn-success btn-sm" @click="submitRoom">导入</button>
                 </div>
@@ -94,54 +101,58 @@
     </div>
 </template>
 <script>
+import page from '../common/page';
 export default {
     name: "importRoom",
     data() {
         return {
             title: "房间导入",
-            room_list:[],
-            file:null
+            room_list: [],
+            file: null,
+            fileName: "",//上传后保存的文件名称
+            roomCount: 0,
+            page:1,
+            pageCount:20,
         };
     },
+    components:{page},
     methods: {
-        setFileObject(event){
+        setFileObject(event) {
             const file = event.target.files[0];
             const type = file.name.split(".").pop();
-            if(type!="xlsx" && type != 'xls'){
+            if (type != "xlsx" && type != "xls") {
                 alert("文件格式必须为xls、xlsx");
                 return false;
             }
             this.file = file;
         },
-        submitFile(){
+        submitFile() {
             const URL = this.serverUrl + "/admin/room/roomImport";
             const _this = this;
             let formData = new FormData();
-            formData.append("file",this.file);
-            this.emitAjaxFile(URL,formData,function(result){
+            formData.append("file", this.file);
+            this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
-               _this.room_list = result;
-            })
+                _this.room_list = result.room_list;
+                _this.fileName = result.SaveName;
+                _this.roomCount = result.count;
+            });
         },
-        submitRoom(){
-            const URL = this.serverUrl + "/admin/room/roomRunimport";
-            const _this = this;
-            this.emitAjax(URL,this.room_list,function(result){
-                _this.$store.commit("showToast",{isShow:true,msg:"导入完成"});
-                _this.$router.push(_this.pathName+"/room");
-            })
+        submitRoom() {
+            //提交房间
+            if(confirm("是否确定导入？")){
+                const URL = this.serverUrl + "/admin/room/roomRunimport";
+                const _this = this;
+                this.emitAjax(URL, { SaveName:this.fileName }, function(result) {
+                    _this.$store.commit("showToast", { isShow: true, msg: "导入完成" });
+                    _this.$router.push(_this.pathName + "/room");
+                });
+            }
+        },
+        setPage(page){
+            this.page = page;
         }
-    },
-    mounted() {
-        
     }
 };
 </script>
-<style>
-    .footer {
-        width: auto;
-        height: auto;
-        padding-top: 10px;
-    }
-</style>
 

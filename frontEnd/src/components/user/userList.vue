@@ -32,7 +32,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(user,index) in userList" :key="'user'+index">
+                    <tr v-for="(user,index) in userList" :key="'user'+index"
+                        v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                    >
                         <td>
                             {{user.username}} <span v-if="user.username == loginUser.username">（自己）</span>
                         </td>
@@ -76,6 +78,10 @@
                     </tr>
                 </tbody>
             </table>
+            <page
+                :pages = "Math.ceil(userList.length/pageCount)"
+                :setPage = "setPage"
+            ></page>
         </div>
         <CreateUser v-if="!showUserTable"
             :showUserList="showUserList"
@@ -86,16 +92,19 @@
 </template>
 <script>
     import CreateUser from './createUser';
+    import page from '../common/page.vue';
     export default {
         name:"userList",
         props:["sure"],
-        components:{CreateUser},
+        components:{CreateUser,page},
         data(){
             return {
                 userList:[],
                 showUserTable:true,
                 currentUser:null,
                 searchUserName:"",
+                page:1,
+                pageCount:15,
             }
         },
         methods:{
@@ -126,6 +135,9 @@
                 this.getUserList({
                     keywords:this.searchUserName
                 })
+            },
+            setPage(page){
+                this.page = page;
             }
         },
         mounted(){
