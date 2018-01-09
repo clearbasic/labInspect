@@ -101,6 +101,9 @@
                                     {{computedScore("school",org.org_id)}}
                                 </td>
                             </tr>
+                            <tr v-if="org_list.length==0" class="center">
+                                <td colspan="6">暂无安全统计</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

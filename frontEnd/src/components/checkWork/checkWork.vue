@@ -207,7 +207,7 @@ export default {
                 };
             if(this.college_id!=0){
                 this.emitAjax(URl,data,function(result){
-                    _this.currentPlan = result.plan;
+                    _this.currentPlan = result.plan?result.plan:{};
                     _this.setTaskType(result.check_list);
                 });
             }

@@ -18,6 +18,12 @@
                 <div class="page-header">
                     <h1>
                         {{title}}
+                        <div class="pull-right">
+                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/room'" tag="button">
+                                <i class="ace-icon fa fa-reply icon-only hidden-480"></i>
+                                房间列表
+                            </router-link>
+                        </div>
                     </h1>
                 </div>
                 <div class="import" v-if="room_list.length == 0">

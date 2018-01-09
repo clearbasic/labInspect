@@ -68,15 +68,19 @@ export default {
                 length = this.pages;
             }
             this.pageArray = [];
+            let first = this.page-2 >=1?this.page-2:1;
             for (let index = 0; index < length; index++) {
-                this.pageArray.push(index+this.page);
+                if(index+first<=this.pages){
+                    this.pageArray.push(index+first);
+                }
             }
         }
     },
     watch:{
         page(){
             this.gotoPage = this.page;
-            if((this.page == this.pageArray[0] || this.page == this.pageArray[this.pageArray.length-1])&&this.pages>5){
+            //当总页数大于5点到第一个和最后一个
+            if((this.page == this.pageArray[0] || this.page == this.pageArray[this.pageArray.length-1])&&this.pages>5 || this.pageArray.indexOf(this.page)<0){
                 this.setPageArray();
             }
         },

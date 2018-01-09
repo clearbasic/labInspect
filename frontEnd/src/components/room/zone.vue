@@ -26,7 +26,7 @@
                             </button>
                             <router-link :to="pathName+'/room'" tag="button" class="btn btn-primary btn-sm">
                                 <i class="ace-icon fa fa-share hidden-480"></i>
-                                房间管理
+                                房间列表
                             </router-link>
                         </div>
                     </h1>

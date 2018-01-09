@@ -42,6 +42,9 @@
                             <td class="center little">{{user.mobile}}</td>
                             <td class="hidden-640">{{user.email}}</td>
                         </tr>
+                        <tr v-if="person_list.length==0" class="center">
+                            <td colspan="6">暂无安全责任人</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

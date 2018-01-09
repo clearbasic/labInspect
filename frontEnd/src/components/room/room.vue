@@ -20,14 +20,36 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/importRoom'" tag="button">导入房间</router-link>
-                            <button class="btn btn-primary btn-sm" @click="showRoomEdit(null)">
-                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
-                                添加房间
-                            </button>
+                            
+                            <span class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    操作
+                                    <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-info">
+                                    <li>
+                                        <a @click="showRoomEdit(null)">
+                                            <i class="ace-icon glyphicon glyphicon-plus"></i>
+                                            添加房间
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <router-link class="" :to="pathName+'/importRoom'">
+                                            <i class="ace-icon fa fa-cloud-upload"></i>
+                                            导入房间
+                                        </router-link>
+                                    </li>
+                                    <li>
+                                        <a :href="serverUrl+'/admin/room/roomExport'" target="_blank">
+                                            <i class="ace-icon fa fa-cloud-download"></i>
+                                            导出房间
+                                        </a>
+                                    </li>
+                                </ul>
+                            </span>
                             <router-link class="btn btn-primary btn-sm" :to="pathName+'/zone'" tag="button">
                                 <i class="ace-icon fa fa-reply icon-only hidden-480"></i>
-                                分组管理
+                                房间分组
                             </router-link>
                         </div>
                     </h1>

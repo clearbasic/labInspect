@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user,index) in userList" :key="'user'+index"
-                        v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                        v-if="(index>=(page-1)*pageCount && index<page*pageCount)&&user.username!='admin'"
                     >
                         <td>
                             {{user.username}} <span v-if="user.username == loginUser.username">（自己）</span>
@@ -44,13 +44,12 @@
                         <td class="center little">{{user.name}}</td>
                         <td class="hidden-640">{{user.org_name}}</td>
                         <td class="center little">
-                            <span v-if="user.username == 'admin'">系统账户不能操作</span>
-                            <div class="hidden-xs btn-group" v-if="user.username != 'admin'">
+                            <div class="hidden-xs btn-group">
                                 <button class="btn btn-success btn-xs" @click="sure(user)">
                                     <i class="ace-icon glyphicon glyphicon-ok"></i>
                                 </button>
                             </div>
-                            <div class="hidden-sm hidden-md hidden-lg" v-if="user.username != 'admin'">
+                            <div class="hidden-sm hidden-md hidden-lg">
                                 <div class="inline pos-rel">
                                     <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto" aria-expanded="false">
                                         <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
