@@ -93,7 +93,7 @@ class Person extends Common
             return false;
         }
 
-        $param['firstchar']=GetFirstCharter($param['name']);
+//        $param['firstchar']=GetFirstCharter($param['name']);
         $param['password_salt']=random(10);
         $param['password']=encrypt_password($param['password'],$param['password_salt']);
 
@@ -238,6 +238,13 @@ class Person extends Common
             $this->error = '没有权限';
             return false;
         }
+
+
+        $arr['login_ip'] = getClientIP();
+        $arr['last_login_date'] = time();
+        $arr['login_count'] = $userInfo['login_count']+1;
+
+        $this->allowField(['login_count','login_ip','last_login_date'])->save($arr, ['id' => $userInfo['id']]);
 
         if ($isRemember || $type) {
             $secret['username'] = $username;

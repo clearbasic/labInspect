@@ -10,7 +10,7 @@ namespace app\admin\controller;
 
 use app\common\controller\Common;
 
-class Roles extends Common
+class Roles extends Checklogin
 {
 
     public function index()

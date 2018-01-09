@@ -235,5 +235,14 @@ return [
         // 验证成功后是否重置        
         'reset'    => true
     ],
+
     'app_secret'=>'c6d9622fdc385b26129fc8a4c7a30c2a',
+
+    'no_check'  =>  [
+        'Room/roomExport'
+    ],
+
+    'default_password' => '123456',
+
+
 ];

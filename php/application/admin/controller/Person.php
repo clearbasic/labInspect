@@ -68,5 +68,35 @@ class Person extends Checklogin
         }
         return resultArray(['data' => $data]);
     }
+    /*
+    * 人员信息导入操作
+    */
+    public function personImport(){
 
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        $file = request()->file('file');
+        if (!$file) {
+            return resultArray(['error' => '请上传文件']);
+        }
+
+        $info = $file->validate(['ext'=>'xls,xlsx'])->move(ROOT_PATH . DS . 'uploads');
+        if ($info) {
+            $res = read ( 'uploads'. DS .$info->getSaveName() );
+            $res = array_splice($res,1);
+            if (!$res){
+                return resultArray(['error' => '数据处理失败']);
+            }else{
+                foreach ($res as $k => $v){
+                    if (empty($v['2']))unset($res[$k]);
+                }
+                $count = count($res);
+                $data['count'] = $count;
+                $data['SaveName'] = $info->getSaveName();
+                $data['room_list'] = $res;
+                return resultArray(['data' => $data]);
+            }
+        }
+    }
 }

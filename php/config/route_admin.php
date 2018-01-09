@@ -171,6 +171,12 @@ return [
     'admin/room/edit'  => ['admin/room/edit', ['method' => 'POST']],
     // 【房间管理】删除房间
     'admin/room/del'   => ['admin/room/del', ['method' => 'POST']],
+    // 【房间管理】导入房间
+    'admin/room/roomImport'   => ['admin/room/roomImport', ['method' => 'POST']],
+    // 【房间管理】导入房间
+    'admin/room/roomRunimport'   => ['admin/room/roomRunimport', ['method' => 'POST']],
+    // 【房间管理】导出房间
+    'admin/room/roomExport'   => ['admin/room/roomExport', ['method' => 'GET']],
 
     // 【房间分组管理】房间分组列表
     'admin/zone/index' => ['admin/zone/index', ['method' => 'POST']],

@@ -295,3 +295,16 @@ function  lab_aptitude(){
     $lab_aptitude['main_outfire_group']=$main_outfire_group;
     return $lab_aptitude;
 }
+
+//获取用户IP， 定义一个函数getIP()
+function getClientIP(){
+    if (getenv("HTTP_CLIENT_IP")) {
+        $ip = getenv("HTTP_CLIENT_IP");
+    }elseif(getenv("HTTP_X_FORWARDED_FOR")) {
+        $ip = getenv("HTTP_X_FORWARDED_FOR");
+    }elseif(getenv("REMOTE_ADDR")) {
+        $ip = getenv("REMOTE_ADDR");
+    }else $ip = "Unknow";
+
+    return $ip;
+}

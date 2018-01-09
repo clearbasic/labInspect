@@ -13,7 +13,7 @@ class Person extends Validate{
         'password'      	=> 'require',
         'repassword'        => 'require|confirm:password',
         'org_id'      	    => 'require',
-        'mobile'      	    => 'require',
+//        'mobile'      	    => 'require',
         'email'      	    => 'email',
     );
     protected $message = array(
@@ -24,7 +24,7 @@ class Person extends Validate{
         'repassword.require'    => '确认密码必须填写',
         'repassword.confirm'    => '两次密码输入不一致',
         'org_id.require'    	=> '所属单位必须填写',
-        'mobile.require'    	=> '联系电话必须填写',
+//        'mobile.require'    	=> '联系电话必须填写',
         'email.email'    	    => '请填写正确的邮箱',
     );
 }
