@@ -1,8 +1,12 @@
 <template>
-    <transition name="fade">
+    <transition name="bounce">
         <div class="toast" v-if="show">
-            <i class="ace-icon glyphicon glyphicon-ok text-success"></i>
-            {{msg}}
+            <h5 class="toastHead">系统提示</h5>
+            <div class="toastBody">
+                <i class="ace-icon glyphicon glyphicon-ok text-success"></i>
+                {{msg}}
+            </div>
+            
         </div> 
     </transition>
 </template>
@@ -53,13 +57,25 @@
         position: fixed;
         top:50%;
         left:50%;
-        background: #f1f1f1;
-        border:1px solid #ccc;
-        line-height: 30px;
+        background: #fff;
+        border:3px solid #1d8d12;
         border-radius: 5px;
-        padding: 0 10px;
-        margin-top: -15px;
+        margin: -35px 0 0 -80px;
         z-index: 1000;
+        width: 160px;
+        height: 70px;
+    }
+    .toastHead {
+        background: #0bbb08;
+        height: 30px;
+        padding-left:10px;
+        margin:0;
+        line-height: 30px;
+        color:#fff;
+    }
+    .toastBody {
+        padding-left:10px;
+        line-height: 30px;
     }
 </style>
 

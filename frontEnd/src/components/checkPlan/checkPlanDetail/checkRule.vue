@@ -46,6 +46,7 @@
                                         <input type="text" 
                                             :value="rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             style="width:50px;"
+                                            @focus="currentScore = rule.checklist[''+checkList.id+'']?rule.checklist[''+checkList.id+''].score:0"
                                             @blur="changeScore(checkList.id,index,ruleConfig.type,$event)"
                                             @keyup="changeScore(checkList.id,index,ruleConfig.type,$event)"
                                         />
@@ -78,6 +79,7 @@
                                             :value="newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
                                             style="width:50px;"
                                             :data-checkList="checkList.id"
+                                            @focus="currentScore = newRule.checklist[''+checkList.id+'']?newRule.checklist[''+checkList.id+''].score:0"
                                             @blur="changeScore(checkList.id,null,null,$event)"
                                             @keyup="changeScore(checkList.id,null,null,$event)"
                                         />
@@ -101,6 +103,7 @@
     </div>
 </template>
 <script>
+import Vue from "vue";
 export default {
     name: "checkRule",
     computed: {
@@ -131,6 +134,7 @@ export default {
             labArray:[],//实验室列表
             isKeyUp: false, //是否按键了
             addRule:false,
+            currentScore:0,
             addRuleType:"",
             newRule:{
                 plan_id:0,
@@ -242,6 +246,9 @@ export default {
             if (event.type === "keyup" && event.key != "Enter") {
                 return false;
             }
+            if(this.currentScore == event.target.value){
+                return false;
+            }
             const _this= this;
             let ruleArry = [];
             if(type == "lab"){
@@ -261,13 +268,9 @@ export default {
                 let { checklist } = rule;
                 
                 let value = event.target.value ? event.target.value : 0;
-                if (checklist[checkListId]) {
-                    checklist[checkListId].score = value;
-                } else {
-                    checklist[checkListId] = {
-                        score: value
-                    };
-                }
+                Vue.set(checklist,checkListId,{
+                    score: value
+                })
                 //修改规则
                 if(type){
                     const URL = _this.serverUrl + "/admin/rule/edit";

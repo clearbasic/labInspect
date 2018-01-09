@@ -3,7 +3,7 @@
         <vueUeditor
             :ueditorConfig="ueditorConfig"
             @ready="editorReady"
-            ueditorPath="/static/ueditor/"
+            :ueditorPath="pathName+'/static/ueditor/'"
         ></vueUeditor>
     </div>
 </template>
@@ -12,7 +12,7 @@
     export default {
         name:"checkDescription",
         components:{
-           vueUeditor 
+           vueUeditor
         },
         data(){
             return {
@@ -26,6 +26,7 @@
                 },
                 ueditor:null,
                 content:"",
+                pathName:"",
             }
         },
         methods:{
