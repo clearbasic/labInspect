@@ -268,7 +268,7 @@ function excel_run_export($data,$fields,$filename=''){
 /**
  * 实验室所有资质
  */
-function  lab_aptitude(){
+function lab_aptitude(){
     $qualified_group = array();
     $qualified=db::name('system_parameter')->where('syskey','=',"qualified")->order('sort_order')->column('id');
     if(isset($qualified[0]) && $qualified[0]){
@@ -289,7 +289,7 @@ function  lab_aptitude(){
     if(isset($main_outfire[0]) && $main_outfire[0]){
         $main_outfire_group=db::name('system_parameter')->where('type','=',$main_outfire[0])->order('sort_order')->select();
     }
-    $lab_aptitude['qualified_group']=$qualified_group;
+    $lab_aptitude['qualified_group'] = $qualified_group;
     $lab_aptitude['hazard_source_group']=$hazard_source_group;
     $lab_aptitude['precautions_group']=$precautions_group;
     $lab_aptitude['main_outfire_group']=$main_outfire_group;

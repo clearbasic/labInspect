@@ -112,15 +112,29 @@ class Room extends Checklogin
 
     public function roomExport()
     {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: POST');
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        $param = $this->param;
+
+        $map= [];
+
+        $college = !empty($param['college_id']) ? $param['college_id']: '';
+        if ($college) $map['room.dept_id'] = $college;
+
+        $lab = !empty($param['lab_id']) ? $param['lab_id']: '';
+        if ($lab) $map['room.lab_id'] = $lab;
+
+        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
+        if ($keywords) $map['room.room_name'] = ['like', '%'.$keywords.'%'];
+
+        $zone_id = !empty($param['zone_id']) ? $param['zone_id']: '';
+        if ($zone_id) $map['room.zone_id'] = $zone_id;
+
 
         $data = db::name('dc_room')->alias('room')
             ->field('org1.org_name as college,org2.org_name as lab,zone.zone_name as zone_name,room.room_name,room.building_name,room.agent_name,room.agent_id')
             ->join('dc_org org1','room.dept_id = org1.org_id')
             ->join('dc_org org2','room.lab_id = org2.org_id')
             ->join('dc_zone zone','room.zone_id = zone.zone_id')
+            ->where($map)
             ->where('1 = 1')
             ->select();
 
@@ -135,4 +149,14 @@ class Room extends Checklogin
         );
         excel_run_export($data,$fields,$filename = '房间基本信息');
     }
+
+
+    public function roomAptitude()
+    {
+       $room_aptitude =  lab_aptitude();
+       return resultArray(['data' => $room_aptitude]);
+
+    }
+
+
 }

@@ -51,7 +51,6 @@ class Role extends Common
             ->order('group.group_level,org.org_level')
             ->select();
         $data = $list;
-
         return $data;
     }
 

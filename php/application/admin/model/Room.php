@@ -41,19 +41,21 @@ class Room extends Common
             if (!empty($childIds))$map['room.lab_id'] = ['in', $childIds];
         }
 
+        $college = !empty($param['college_id']) ? $param['college_id']: '';
+        if ($college) $map['room.dept_id'] = $college;
+
+        $lab = !empty($param['lab_id']) ? $param['lab_id']: '';
+        if ($lab) $map['room.lab_id'] = $lab;
+
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        if ($keywords) {
-            $map['username|name'] = ['like', '%'.$keywords.'%'];
-        }
+        if ($keywords) $map['room_name'] = ['like', '%'.$keywords.'%'];
+
         $zone_id = !empty($param['zone_id']) ? $param['zone_id']: '';
-        if ($zone_id) {
-            $map['zone_id'] = $zone_id;
-        }
+        if ($zone_id) $map['room.zone_id'] = $zone_id;
+
         $list = $this->alias('room')->where($map);
         // 若有分页
-        if ($page && $limit) {
-            $list = $list->page($page, $limit);
-        }
+        if ($page && $limit) $list = $list->page($page, $limit);
         $list = $list
             ->join('dc_org org1', 'room.dept_id=org1.org_id', 'LEFT')
             ->join('dc_org org2', 'room.lab_id=org2.org_id', 'LEFT')
@@ -130,8 +132,6 @@ class Room extends Common
             $this->error = '暂无此数据';
             return false;
         }
-
-
         $this->startTrans();
         try {
             $this->allowField(true)->save($param, ['room_id' => $id]);
@@ -273,7 +273,7 @@ class Room extends Common
                     }
                 }
 
-                //判断房间分组信息是否存在
+                //判断人员信息是否存在
                 if ($data['agent_id'] || $data['agent_name']){
                     $map = [];
                     if (!empty($data['agent_id']))$map['username']=$data['agent_id'];

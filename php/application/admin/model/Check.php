@@ -390,7 +390,6 @@ class Check extends Common
         $room_id = !empty($param['room_id'])? $param['room_id']: '';
 
 
-
         $choose = [
             ['plan_id'=>$plan_id,'level'=>$level,'lab_id'=>$lab_id],
             ['plan_id'=>$plan_id,'level'=>$level,'college_id'=>$college_id,'lab_id'=>'0'],

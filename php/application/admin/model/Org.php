@@ -92,16 +92,10 @@ class Org extends Common
                 return false;
             }
             $org_level = $checkData['org_level'];
-            $user_level = model('person')->where('org_id',$org_id)->column('user_level');
 
             $this->startTrans();
             try {
                 $this->allowField(true)->save($param, ['org_id' => $org_id]);
-                foreach ($user_level as $v){
-                    model('person')->save([
-                        'user_level'  => $this->org_level,
-                    ],['org_id' => $this->org_id,'user_level' => $org_level]);
-                }
                 $this->commit();
                 return '编辑成功';
 
@@ -135,7 +129,8 @@ class Org extends Common
         $this->startTrans();
         try {
             $childIds = $this->getAllChild($id);
-            if($childIds){
+            $roomIds = model('room')->where('lab_id|dept_id',$id)->find();
+            if($childIds || $roomIds){
                 $this->error = '还有子单位，不能删除';
                 return false;
             }

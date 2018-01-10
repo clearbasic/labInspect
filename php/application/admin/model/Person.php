@@ -57,11 +57,15 @@ class Person extends Common
             ->field('person.*,org.org_name as org_name')
             ->order('org.org_level,id')
             ->select();
+
         foreach ($list as $k => $v){
             unset($v['password']);
             unset($v['password_salt']);
+            if ($v['username'] == $GLOBALS['userInfo']['username']){
+                unset($list[$k]);
+                array_unshift($list,$v);
+            }
         }
-
         $data = $list;
         return $data;
     }
@@ -318,4 +322,71 @@ class Person extends Common
 
         return $ret;
     }
+
+    /**
+     * 导入xls的信息
+     * @param  array   $param  [description]
+     */
+    public function importData($param)
+    {
+        $SaveName = !empty($param['SaveName']) ? $param['SaveName'] : '';
+        if (!$SaveName){
+            $this->error = '文件不存在，读取失败';
+            return false;
+        }
+        $res = read ( 'uploads'. DS .$SaveName );
+        $res = array_splice($res,1);
+        foreach ($res as $k => $v){
+            if (empty($v['0']))unset($res[$k]);
+        }
+        //学院 实验室 房间分组  房间名 所在楼  责任人ID  责任人姓名
+        $titles=array('username','name','mobile','email','org_name');
+
+        $add_count = 0;
+        $jump_count = 0;
+        $this->startTrans();
+        try {
+            $insert = array();
+
+            foreach ( $res as $k => $v ) {
+
+                $data = array();
+                foreach ($titles as $ColumnIndex => $title) {
+                    $data[$title] = $v[$ColumnIndex];
+                }
+                if(empty($data['username'])){
+                    continue;
+                }
+
+                if ($data['org_name']){
+                    $org_id = model('org')->where('org_name',$data['org_name'])->value('org_id');
+                    if (!$org_id)$data['org_id']= 0;
+                    else $data['org_id']=$org_id;
+                }
+
+                $data['password'] = config('default_password');
+                $data['password_salt']=random(10);
+                $data['password']=encrypt_password($data['password'],$data['password_salt']);
+
+                $person_id = $this->where('username',$data['username'])->value('id');
+
+                if (!$person_id){
+                    $insert[$k] = $data;
+                    $add_count++;
+                }else{
+                    $jump_count++;
+                }
+            }
+            $end =  $this->allowField(true)->saveAll($insert);
+            $result['add'] = count($end);
+            $result['jump'] = $jump_count;
+            $this->commit();
+            return $result;
+        } catch(\Exception $e) {
+            $this->error = '一次导入数据量过大，请分批导入。';
+            $this->rollback();
+            return false;
+        }
+    }
+
 }

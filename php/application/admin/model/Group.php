@@ -37,7 +37,7 @@ class Group extends Common
                 if (!in_array($v['id'],$groups))unset($data[$k]);
             }
         }
-
+        sort($data);
         // 若type为tree，则返回树状结构
         if ($type == 'tree') {
             foreach ($data as $k => $v) {

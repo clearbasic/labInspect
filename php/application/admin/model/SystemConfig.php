@@ -12,19 +12,28 @@ use think\Model;
 class SystemConfig extends Model 
 {
 
-	/**
-	 * 获取配置列表
-	 * @param  array   $param  [description]
-	 */
-	public function getDataList()
-	{
-		$list = $this->select();
-		$data = array();
-        foreach ($list as $key => $val) {
-            $data[$val['name']] = $val['value'];
+    protected $name = 'system_parameter';
+
+    public function getDataList($type ='')
+    {
+        $cat = new \com\Category('system_parameter', array('id', 'pid', 'title', 'title'));
+        $data = $cat->getList('', 0, 'sort');
+        $res = $data;
+        // 若type为tree，则返回树状结构
+        if ($type == 'tree') {
+            $res = array();
+            foreach ($data as $k => $v) {
+                $data[$k]['checked'] = false;
+            }
+            $tree = new \com\Tree();
+            $data = $tree->list_to_tree($data, 'id', 'pid', 'child', 0, true, array('pid'));
+            foreach ($data as $k => $v){
+                $res[$v['type']] = $v;
+            }
         }
-        return $data;
-	}
+
+        return $res;
+    }
 
 	/**
 	 * 批量修改配置

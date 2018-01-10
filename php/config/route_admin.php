@@ -50,6 +50,8 @@ return [
     'admin/upload'          => ['admin/upload/index', ['method' => 'POST']],
     // 保存系统配置
     'admin/systemConfigs'   => ['admin/systemConfigs/save', ['method' => 'POST']],
+    // 保存系统配置
+    'admin/SystemConfig/index'   => ['admin/systemConfigs/index', ['method' => 'POST']],
 
 
     // 【规则】菜单列表
@@ -162,6 +164,13 @@ return [
     'admin/person/edit'  => ['admin/person/edit', ['method' => 'POST']],
     // 【人员管理】删除人员
     'admin/person/del'   => ['admin/person/del', ['method' => 'POST']],
+    // 【人员管理】导入人员
+    'admin/person/personImport'  => ['admin/person/personImport', ['method' => 'POST']],
+    // 【人员管理】导入人员操作
+    'admin/person/personRunimport'   => ['admin/person/personRunimport', ['method' => 'POST']],
+    // 【人员管理】人员导出操作
+    'admin/person/personExport'   => ['admin/person/personExport', ['method' => 'GET']],
+
 
     // 【房间管理】房间列表
     'admin/room/index' => ['admin/room/index', ['method' => 'POST']],
@@ -177,6 +186,8 @@ return [
     'admin/room/roomRunimport'   => ['admin/room/roomRunimport', ['method' => 'POST']],
     // 【房间管理】导出房间
     'admin/room/roomExport'   => ['admin/room/roomExport', ['method' => 'GET']],
+    // 【房间管理】房间资质
+    'admin/room/roomAptitude'   => ['admin/room/roomAptitude', ['method' => 'POST']],
 
     // 【房间分组管理】房间分组列表
     'admin/zone/index' => ['admin/zone/index', ['method' => 'POST']],

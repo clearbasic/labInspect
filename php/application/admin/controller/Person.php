@@ -89,14 +89,51 @@ class Person extends Checklogin
                 return resultArray(['error' => '数据处理失败']);
             }else{
                 foreach ($res as $k => $v){
-                    if (empty($v['2']))unset($res[$k]);
+                    if (empty($v['0']))unset($res[$k]);
                 }
                 $count = count($res);
                 $data['count'] = $count;
                 $data['SaveName'] = $info->getSaveName();
-                $data['room_list'] = $res;
+                $data['person_list'] = $res;
                 return resultArray(['data' => $data]);
             }
         }
+    }
+
+    public function  personRunimport(){
+        $model = model('Person');
+        $param = $this->param;
+        $data = $model->importData($param);
+        if (!$data) {
+            return resultArray(['error' => $model->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
+
+    public function personExport()
+    {
+        $param = $this->param;
+
+        $map= [];
+
+        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
+        if ($keywords) $map['person.username|person.name'] = ['like', '%'.$keywords.'%'];
+
+
+        $data = db::name('dc_person')->alias('person')
+            ->field('person.username,person.name,person.mobile,person.email,org.org_name as org_name')
+            ->join('dc_org org','person.org_id = org.org_id','left')
+            ->where($map)
+            ->where('1 = 1')
+            ->select();
+
+        $fields = array(
+            array('username','用户名/学工号'),
+            array('name','姓名'),
+            array('mobile','手机/电话'),
+            array('email','邮箱'),
+            array('org_name','单位'),
+        );
+        excel_run_export($data,$fields,$filename = '人员列表');
     }
 }
