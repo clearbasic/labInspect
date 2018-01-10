@@ -47,7 +47,7 @@
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
                                                 <ul class="tree tree-selectable">
                                                     <li class="tree-item" @click="selectPid(0)">
-                                                        <div class="tree-branch-name">无</div>
+                                                        <div class="tree-branch-name">--无--</div>
                                                     </li>
                                                     <selectItem :data="rule" 
                                                         v-for="(rule,index) in rule_tree" 
@@ -130,7 +130,7 @@
                                 <tr v-for="rule in rule_list" :key="'rule'+rule.id">
                                     <td class="center little">{{rule.id}}</td>
                                     <td>
-                                        <span v-if="rule.pid==0">无</span>
+                                        <span v-if="rule.pid==0">--无--</span>
                                         <span v-for="pRule in rule_list" :key="'pRule'+pRule.id" v-if="pRule.id == rule.pid">{{pRule.title}}</span>
                                     </td>
                                     <td>{{rule.title}}</td>

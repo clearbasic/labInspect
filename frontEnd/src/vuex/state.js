@@ -5,6 +5,9 @@ export default {
         rule_list:[],
     },
     orgList:[], //单位列表
+    labOrgList:[],
+    collegeOrgList:[],
+    schoolOrgList:[],
     currentRoom:{}, //当前选中的房间
     currentZone:{}, //当前选中的房间组
     leftMenu:[], //左侧菜单栏

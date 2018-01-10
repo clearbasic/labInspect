@@ -45,7 +45,7 @@
                                 <td class="center little">{{role.id}}</td>
                                 <td>{{role.title}}</td>
                                 <td>
-                                    <span v-if="role.pid == 0">无</span>
+                                    <span v-if="role.pid == 0">--无--</span>
                                     <span v-for="pRole in role_list" :key="'pRole'+pRole.id" v-if="pRole.id == role.pid">{{pRole.title}}</span>
                                 </td>
                                 <td>{{role.remark}}</td>
@@ -112,7 +112,7 @@
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
                                                 <ul class="tree tree-selectable">
                                                     <li class="tree-item" @click="selectPidId(0)">
-                                                        <div class="tree-branch-name">无</div>
+                                                        <div class="tree-branch-name">--无--</div>
                                                     </li>
                                                     <selectItem :data = "role" 
                                                         v-for="(role,index) in role_tree" 

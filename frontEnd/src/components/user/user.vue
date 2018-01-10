@@ -17,11 +17,43 @@
             <!-- 右侧主要内容 -->
             <div class="page-content">
                 <div class="page-header">
-                    <h1>{{title}}</h1>
+                    <h1>
+                        {{title}}
+                        <div class="pull-right">
+                            <span class="dropdown" slot="right">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    操作
+                                    <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-info">
+                                    <li>
+                                        <router-link class="" :to="pathName+'/importPerson'">
+                                            <i class="ace-icon fa fa-cloud-upload"></i>
+                                            导入人员
+                                        </router-link>
+                                    </li>
+                                    <li>
+                                        <a :href="downUrl" target="_blank">
+                                            <i class="ace-icon fa fa-cloud-download"></i>
+                                            导出人员
+                                        </a>
+                                    </li>
+                                </ul>
+                            </span>
+                            <button class="btn btn-primary btn-sm" @click="showUserTable = false">
+                                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                                添加
+                            </button>
+                        </div>
+                    </h1>
+                    
                 </div>
                 <UserList
-                :sure="editUser"
-                ref="userList"
+                    :sure="editUser"
+                    ref="userList"  
+                    :isShow="showUserTable"
+                    :setIsShow = "setIsShow"
+                    :setDownUrl = "setDownUrl"
                 ></UserList>
             </div>
         </div>
@@ -34,13 +66,21 @@
         name:"user",
         data(){
             return {
-                title:"人员管理"
+                title:"人员管理",
+                showUserTable:true,
+                downUrl:this.serverUrl+'/admin/person/personExport',
             }
         },
         methods:{
             editUser(user){
                 this.$refs.userList.showUserTable = false;
                 this.$refs.userList.currentUser = user;
+            },
+            setIsShow(bool){
+                this.showUserTable = bool;
+            },
+            setDownUrl(url){
+                this.downUrl = this.serverUrl+'/admin/person/personExport' + url;
             }
         },
         components:{UserList}

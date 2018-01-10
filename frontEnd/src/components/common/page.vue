@@ -31,7 +31,7 @@ export default {
     data() {
         return {
             page: 1,
-            pageArray:[],
+            pageArray:[1],
             gotoPage:1,
         };
     },
@@ -73,6 +73,9 @@ export default {
                 if(index+first<=this.pages){
                     this.pageArray.push(index+first);
                 }
+            }
+            if(this.pages == 0 ){
+                this.pageArray = [1];
             }
         }
     },

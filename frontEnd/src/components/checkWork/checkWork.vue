@@ -135,6 +135,18 @@ export default {
         },
         plan_id(){
             this.getCurrentPlan();
+        },
+        plan_list(){
+            if (this.$store.state.plan_list.length > 0) {
+                for (let index = 0; index < this.plan_list.length; index++) {
+                    const plan = this.plan_list[index];
+                    if(plan.current == 'yes'){
+                        this.currentPlan = Object.assign({},plan);
+                        this.plan_id = plan.plan_id;
+                        break;
+                    }
+                }
+            }
         }
     },
     methods: {

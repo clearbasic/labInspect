@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content checkStatistics">
+    <div class="main-content checkStatistics" @click="setIsOpen(false)">
         <div class="main-content-inner">
             <!-- 面包屑 -->
             <div class="breadcrumbs" id="breadcrumbs">
@@ -20,39 +20,27 @@
                         {{title}}
                     </h1>
                 </div>
-                <p>
-                    <button class="btn btn-primary btn-sm" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapseExample">
-                        <i class="ace-icon glyphicon glyphicon-search"></i>
-                        检索
-                    </button>
-                </p>
-                <div class="collapse" id="collapse">
-                    <div class="row">
-                        <div class="col-sm-8 col-md-6 col-lg-4">
-                            <div class="widget-box">
-                                <div class="form-search widget-main padding-16">
-                                    <div class="form-group">
-                                        <select v-model="selectPlan">
-                                            <option :value="{}">当前期次</option>
-                                            <option :value="plan" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" name="" id="" class="form-control search-query" 
-                                                placeholder="输入实验室名称" v-model="searchKey">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-purple btn-sm"  @click="search">
-                                                    <span class="ace-icon fa fa-search icon-on-right bigger-110">搜索</span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                <search :show="isOpen" :setShow="setIsOpen">
+                    <div class="form-search widget-main">
+                        <div class="form-group">
+                            <select v-model="selectPlan">
+                                <option :value="{}">当前期次</option>
+                                <option :value="plan" v-for="plan in plan_list" :key="'plan'+plan.plan_id">{{plan.plan_name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="" id="" class="form-control search-query" 
+                                    placeholder="输入实验室名称" v-model="searchKey">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-purple btn-sm"  @click="search">
+                                        <span class="ace-icon fa fa-search icon-on-right bigger-110">搜索</span>
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
+                </search>
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
@@ -102,7 +90,7 @@
                                 </td>
                             </tr>
                             <tr v-if="org_list.length==0" class="center">
-                                <td colspan="6">暂无安全统计</td>
+                                <td colspan="1111">暂无安全统计</td>
                             </tr>
                         </tbody>
                     </table>
@@ -112,6 +100,7 @@
     </div>
 </template>
 <script>
+import search from '../common/search';
 export default {
     name: "checkStatistics",
     data() {
@@ -125,9 +114,11 @@ export default {
             },
             searchKey:"",
             org_list:[],
-            check_list:[]
+            check_list:[],
+            isOpen:false,
         };
     },
+    components:{search},
     computed: {
         plan_list() {
             return this.$store.state.plan_list;
@@ -162,6 +153,7 @@ export default {
                     college:[]
                 }
                 _this.searchKey = '';
+                _this.setIsOpen(false);
                 for (let index = 0; index < result.task_list.length; index++) {
                     const task = result.task_list[index];
                     _this.task_list[task.task_level].push(task);
@@ -219,6 +211,10 @@ export default {
                     _this.getCheckStatistics();
                 })
             }
+        },
+        setIsOpen(bool){
+            //控制搜索下拉菜单
+            this.isOpen = bool;
         }
     },
     mounted() {

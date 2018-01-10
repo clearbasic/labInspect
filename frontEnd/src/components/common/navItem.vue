@@ -36,7 +36,7 @@
             },
             setActive(){
                 let active = this.$route.meta.active;
-                if(active == this.data.url){
+                if(active == this.pathName+this.data.url){
                     this.open = true;
                     this.isActive = true;
                 }else{
@@ -45,7 +45,7 @@
                 if(this.data.child){
                     for (let index = 0; index < this.data.child.length; index++) {
                         const element = this.data.child[index];
-                        if(active == element.url){
+                        if(active == this.pathName+element.url){
                             this.isActive = true;
                         }
                     }   

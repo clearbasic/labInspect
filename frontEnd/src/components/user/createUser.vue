@@ -46,7 +46,7 @@
                 <label for="email" class="control-label col-sm-2">单位</label>
                 <div class="col-sm-10">
                     <select v-model="userInfo.org_id" @change="setUserLevel">
-                        <option value="0">--全部--</option>
+                        <option value="0">--无--</option>
                         <option :value="org.org_id" v-for="(org,index) in userOrgList" :key="'org'+index">{{org.org_name}}</option>
                     </select>
                 </div>
@@ -76,113 +76,129 @@
     </div>
 </template>
 <script>
-    export default {
-        name:"createUser",
-        props:["showUserList","getUserList","user"],
-        data(){
-            return {
-                userInfo:{
-                    password:"",
-                    org_id:0,
-                    person_state:"yes"
-                },
-                user_level:"",
-                userOrgList:[],
+export default {
+    name: "createUser",
+    props: ["showUserList", "getUserList", "user"],
+    data() {
+        return {
+            userInfo: {
+                password: "",
+                org_id: 0,
+                person_state: "yes"
+            },
+            user_level: "",
+            userOrgList: []
+        };
+    },
+    computed: {
+        orgList() {
+            return this.$store.state.orgList;
+        }
+    },
+    methods: {
+        saveUser() {
+            const _this = this;
+            let URL = this.serverUrl + "/admin/person/add";
+            if (!this.userInfo.username || this.userInfo.username == "") {
+                alert("请填写用户名/学工号！");
+                return false;
             }
-        },
-        computed:{
-            orgList(){
-                return this.$store.state.orgList;
-            }
-        },
-        methods:{
-            saveUser(){
-                const _this= this;
-                let URL = this.serverUrl + "/admin/person/add";
-                if(!this.userInfo.username || this.userInfo.username == ''){
-                    alert("请填写用户名/学工号！");
+
+            if (this.user) {
+                URL = this.serverUrl + "/admin/person/edit";
+            } else {
+                if (
+                    !this.userInfo.password ||
+                    this.userInfo.password == "" ||
+                    this.userInfo.password.length < 6
+                ) {
+                    alert("请填写密码，字数为6~18！");
                     return false;
                 }
-                
-                if(this.user){
-                    URL = this.serverUrl +"/admin/person/edit";
-                }else{
-                    if(!this.userInfo.password || this.userInfo.password == '' || this.userInfo.password.length<6){
-                        alert("请填写密码，字数为6~18！");
-                        return false;
-                    }
-                }
-                if(!this.userInfo.name || this.userInfo.name == ''){
-                    alert("请填写您的姓名！");
-                    return false;
-                }
-                const username = this.userInfo.username?this.userInfo.username.replace(/\s+/g,""):"";
-                const password = this.userInfo.password?this.userInfo.password.replace(/\s+/g,""):"";
-                const data = Object.assign({},this.userInfo,{
-                    user_level:this.user_level,
-                    username,
-                    password,
-                })
-                this.emitAjax(URL,data,function(){
-                    if(_this.loginUser.username == _this.userInfo.username){
-                        alert("您修改了自己的信息，请重新登录，便以更新信息！");
-                        _this.$store.dispatch("logout");
-                    }
-                    _this.getUserList();
-                    _this.showUserList();
-                });
-            },
-            getOrgList(data){
-                //获取单位列表
-                if(this.$store.state.orgList.length == 0){
-                    this.$store.dispatch("getOrgList",data);
-                }
-            },
-            filterOrgList(){
-                this.userOrgList = [];
-                const _this = this;
-                for (let index = 0; index < this.orgList.length; index++) {
-                    const element = this.orgList[index];
-                    switch (this.loginUser.group_level) {
-                        case 'lab':
-                            if(element.org_level =="lab"&&element.org_state !="no"){
-                                _this.userOrgList.push(Object.assign({},element));
-                            }
-                            break;
-                        case 'college':
-                            if(element.org_level !="school"&&element.org_state !="no"){
-                                _this.userOrgList.push(Object.assign({},element));
-                            }
-                            break;
-                        default:
-                            if(element.org_state !="no"){
-                                _this.userOrgList.push(Object.assign({},element));
-                            }
-                            break;
-                    }
-                }
-            },
-            setUserLevel(){
-                const _this = this;
-                for (let index = 0; index < _this.userOrgList.length; index++) {
-                    const org = _this.userOrgList[index];
-                    if(org.org_id == _this.userInfo.org_id){
-                        _this.user_level = org.org_level;
-                    }
-                }
             }
+            if (!this.userInfo.name || this.userInfo.name == "") {
+                alert("请填写您的姓名！");
+                return false;
+            }
+            const username = this.userInfo.username
+                ? this.userInfo.username.replace(/\s+/g, "")
+                : "";
+            const password = this.userInfo.password
+                ? this.userInfo.password.replace(/\s+/g, "")
+                : "";
+            const data = Object.assign({}, this.userInfo, {
+                user_level: this.user_level,
+                username,
+                password
+            });
+            this.emitAjax(URL, data, function() {
+                if (_this.loginUser.username == _this.userInfo.username) {
+                    alert("您修改了自己的信息，请重新登录，便以更新信息！");
+                    _this.$store.dispatch("logout");
+                }
+                _this.getUserList();
+                _this.showUserList();
+            });
         },
-        watch:{
-            orgList(){
+        getOrgList(data) {
+            //获取单位列表
+            if (this.$store.state.orgList.length == 0) {
+                this.$store.dispatch("getOrgList", data);
+            } else {
                 this.filterOrgList();
             }
         },
-        mounted(){
-            this.getOrgList();
-            if(this.user){
-                this.userInfo = Object.assign({},this.user);
-                this.user_level = this.user.user_level;
+        filterOrgList() {
+            this.userOrgList = [];
+            const _this = this;
+            for (let index = 0; index < this.orgList.length; index++) {
+                const element = this.orgList[index];
+                switch (this.loginUser.group_level) {
+                    case "lab":
+                        if (
+                            element.org_level == "lab" &&
+                            element.org_state != "no"
+                        ) {
+                            _this.userOrgList.push(Object.assign({}, element));
+                        }
+                        break;
+                    case "college":
+                        if (
+                            element.org_level != "school" &&
+                            element.org_state != "no"
+                        ) {
+                            _this.userOrgList.push(Object.assign({}, element));
+                        }
+                        break;
+                    default:
+                        if (element.org_state != "no") {
+                            _this.userOrgList.push(Object.assign({}, element));
+                        }
+                        break;
+                }
+            }
+        },
+        setUserLevel() {
+            const _this = this;
+            for (let index = 0; index < _this.userOrgList.length; index++) {
+                const org = _this.userOrgList[index];
+                if (org.org_id == _this.userInfo.org_id) {
+                    _this.user_level = org.org_level;
+                }
             }
         }
-    };
+    },
+    watch: {
+        orgList() {
+            this.filterOrgList();
+        }
+    },
+    mounted() {
+        this.getOrgList();
+        if (this.user) {
+            this.userInfo = Object.assign({}, this.user);
+            this.user_level = this.user.user_level;
+        }
+    }
+};
 </script>

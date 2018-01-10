@@ -296,6 +296,8 @@
                         <div class="form-group">
                             <button class="btn btn-success btn-sm" @click="editOrgInfo">保存</button>
                             <button class="btn btn-danger btn-sm" @click="delOrg" v-if="orgInfo.org_id">删除</button>
+                            <router-link :to="{path:pathName+'/room',query:{lab_id:orgInfo.org_id}}"
+                                class="btn btn-default btn-sm" tag="button" v-if="orgInfo.org_level=='lab'">查看房间列表</router-link>
                             <router-link :to="pathName+'/orgList'" class="btn btn-default btn-sm" tag="button">返回</router-link>
                         </div>
                     </div>
@@ -354,6 +356,7 @@ export default {
             }
         },
         getOrgInfo() {
+            //初始实验室信息
             const _this = this;
             this.schoolArray = [];
             this.collegeArray = [];
@@ -364,13 +367,12 @@ export default {
                     if (element.org_id == this.$route.query.org_id) {
                         _this.orgInfo = Object.assign({}, element);
                     }
-                    _this[element.org_level + "Array"].push(
-                        Object.assign({}, element)
-                    );
+                    _this[element.org_level + "Array"].push(Object.assign({}, element));
                 }
             }
         },
         editOrgInfo() {
+            //编辑实验室
             const URL = this.serverUrl + "/admin/org/handle";
             const _this = this;
             switch (this.orgInfo.org_level) {
@@ -454,11 +456,14 @@ export default {
     watch: {
         orgList() {
             this.getOrgInfo();
+        },
+        orgInfo(){
+            this.showParentId();
         }
     },
     mounted() {
         this.getOrgList();
-        this.showParentId();
+        
     }
 };
 </script>

@@ -26,7 +26,6 @@
                 },
                 ueditor:null,
                 content:"",
-                pathName:"",
             }
         },
         methods:{

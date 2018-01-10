@@ -16,10 +16,10 @@ import MyCheck from "../components/myCheck/myCheck.vue";
 import OrgList from "../components/org/orgList.vue";
 import OrgEdit from "../components/org/orgEdit.vue";
 import User from "../components/user/user.vue";
+import ImportPerson from "../components/user/import.vue";
 import Room from "../components/room/room.vue";
 import ImportRoom from "../components/room/import.vue";
 import Zone from "../components/room/zone.vue";
-import RoomZoneList from "../components/room/roomZoneList.vue";
 import Login from "../components/login/login.vue";
 import Feedback from "../components/feedback/feedback.vue";
 import Menu from "../components/admin/menu/menu.vue";
@@ -111,6 +111,14 @@ export default new Router({
 						active:pathName+"/userList",
 					}
 				},{
+					path:pathName+"/importPerson",
+					name:"importPerson",
+					component:ImportPerson,
+					meta:{
+						title:"人员导入 - "+title,
+						active:pathName+"/userList",
+					}
+				},{
 					path:pathName+"/checkGroup",
 					name:"checkGroup",
 					component:CheckGroup,
@@ -180,14 +188,6 @@ export default new Router({
 					component:Zone,
 					meta:{
 						title:"房间分组列表 - "+title,
-						active:pathName+"/zone",
-					}
-				},{
-					path:pathName+"/zone/:id",
-					name:"roomZone",
-					component:RoomZoneList,
-					meta:{
-						title:"房间分组 - "+title,
 						active:pathName+"/zone",
 					}
 				},{

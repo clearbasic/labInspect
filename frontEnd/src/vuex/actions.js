@@ -13,6 +13,7 @@ export default {
         const url = serverUrl +"/admin/org/index";
         emitAjax(url,data,function(result){
             context.commit("getOrgList",result);
+            context.commit("filterOrg",result);
         })
     },
     logout(){

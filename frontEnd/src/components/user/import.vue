@@ -1,5 +1,5 @@
 <template>
-    <div class="main-content importRoom">
+    <div class="main-content importPerson">
         <div class="main-content-inner">
             <!-- 面包屑 -->
             <div class="breadcrumbs" id="breadcrumbs">
@@ -9,7 +9,7 @@
                         <router-link :to="pathName+'/'">首页</router-link>
                     </li>
                     <li>
-                        <router-link :to="pathName+'/importRoom'" class="active">{{title}}</router-link>
+                        <router-link :to="pathName+'/importPerson'" class="active">{{title}}</router-link>
                     </li>
                 </ul>
             </div>
@@ -19,14 +19,14 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/room'" tag="button">
+                            <router-link class="btn btn-primary btn-sm" :to="pathName+'/userList'" tag="button">
                                 <i class="ace-icon fa fa-reply icon-only hidden-480"></i>
-                                房间列表
+                                人员列表
                             </router-link>
                         </div>
                     </h1>
                 </div>
-                <div class="import" v-if="room_list.length == 0">
+                <div class="import" v-if="person_list.length == 0">
                     <div class="dropzone dz-clickable">
                         <div class="dz-default dz-message" v-if="!file">
                             <span class="bigger-150 bolder">
@@ -56,14 +56,14 @@
                     </div>
                     <button class="btn btn-success btn-sm" @click="submitFile" v-if="file">提交文件</button>
                     <button class="btn btn-defualt btn-sm" v-if="!file">提交文件</button>
-                    <a class="file" :href="pathName+'static/importTemplate/room.xls'">
+                    <a class="file" :href="pathName+'static/importTemplate/person.xls'">
                         <i class="ace-icon fa fa-cloud-download">下载示例表格</i>
                     </a>
                     <span class="red">
                         请按照示例模板的格式填写数据，否则导入信息有误
                     </span>
                 </div>
-                <div class="room_list" v-if="room_list.length > 0">
+                <div class="person_list" v-if="person_list.length > 0">
                     <h4>
                         上传数据预览
                     </h4>
@@ -72,35 +72,31 @@
                             <thead>
                                 <tr>
                                     <th>序号</th>
-                                    <th>所属院系</th>
-                                    <th>实验室名称</th>
-                                    <th>房间分组</th>
-                                    <th>房间名称</th>
-                                    <th>楼宇</th>
-                                    <th>安全责任人学工号</th>
-                                    <th>安全责任人姓名</th>
+                                    <th>用户名/学工号</th>
+                                    <th>姓名</th>
+                                    <th>手机/电话</th>
+                                    <th>邮箱</th>
+                                    <th>单位</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(room,index) in room_list" :key="'room'+index" 
+                                <tr v-for="(person,index) in person_list" :key="'person'+index" 
                                     v-if="index>=(page-1)*pageCount && index<page*pageCount">
                                     <td>{{index+1}}</td>
-                                    <td>{{room[0]}}</td>
-                                    <td>{{room[1]}}</td>
-                                    <td>{{room[2]}}</td>
-                                    <td>{{room[3]}}</td>
-                                    <td>{{room[4]}}</td>
-                                    <td>{{room[5]}}</td>
-                                    <td>{{room[6]}}</td>
+                                    <td>{{person[0]}}</td>
+                                    <td>{{person[1]}}</td>
+                                    <td>{{person[2]}}</td>
+                                    <td>{{person[3]}}</td>
+                                    <td>{{person[4]}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <page
-                        :pages = "Math.ceil(roomCount/pageCount)"
+                        :pages = "Math.ceil(personCount/pageCount)"
                         :setPage = "setPage"
                     ></page>
-                    <button class="btn btn-success btn-sm" @click="submitRoom">导入</button>
+                    <button class="btn btn-success btn-sm" @click="submitPerson">导入</button>
                 </div>
             </div>
         </div>
@@ -109,14 +105,14 @@
 <script>
 import page from '../common/page';
 export default {
-    name: "importRoom",
+    name: "importPerson",
     data() {
         return {
-            title: "房间导入",
-            room_list: [],
+            title: "人员导入",
+            person_list: [],
             file: null,
             fileName: "",//上传后保存的文件名称
-            roomCount: 0,
+            personCount: 0,
             page:1,
             pageCount:20,
         };
@@ -133,25 +129,25 @@ export default {
             this.file = file;
         },
         submitFile() {
-            const URL = this.serverUrl + "/admin/room/roomImport";
+            const URL = this.serverUrl + "/admin/person/personImport";
             const _this = this;
             let formData = new FormData();
             formData.append("file", this.file);
             this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
-                _this.room_list = result.room_list;
+                _this.person_list = result.person_list;
                 _this.fileName = result.SaveName;
-                _this.roomCount = result.count;
+                _this.personCount = result.count;
             });
         },
-        submitRoom() {
-            //提交房间
+        submitPerson() {
+            //提交人员
             if(confirm("是否确定导入？")){
-                const URL = this.serverUrl + "/admin/room/roomRunimport";
+                const URL = this.serverUrl + "/admin/person/personRunimport";
                 const _this = this;
                 this.emitAjax(URL, { SaveName:this.fileName }, function(result) {
                     _this.$store.commit("showToast", { isShow: true, msg: "导入完成" });
-                    _this.$router.push(_this.pathName + "/room");
+                    _this.$router.push(_this.pathName + "/userList");
                 });
             }
         },

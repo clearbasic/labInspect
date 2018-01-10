@@ -14,7 +14,7 @@
                 <tr v-for="(zone,index) in zoneList" :key="'zoneList'+index">
                     <td class="center little">{{zone.zone_id}}</td>
                     <td>
-                        <router-link :to="pathName+'/zone/'+zone.zone_id">{{zone.zone_name}}</router-link>
+                        <router-link :to="pathName+'/room?zone_id='+zone.zone_id">{{zone.zone_name}}</router-link>
                     </td>
                     <td>
                         <span v-if="zone.org_id == 0">全部</span>

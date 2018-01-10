@@ -1,23 +1,15 @@
 <template>
-    <div class="userList dataTables_wrapper">
-        <div class="row" v-if="showUserTable">
-            <div class="col-xs-12 form-inline">
-                <div class="form-group">
-                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">
-                        <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
-                        添加
+    <div class="userList dataTables_wrapper" @click="setIsOpen(false)">
+        <search :show="isOpen" :setShow="setIsOpen" v-if="showUserTable">
+            <div class="input-group">
+                <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
+                <span class="input-group-btn">
+                    <button class="btn btn-sm" @click="searchUser($event)">
+                        <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
                     </button>
-                </div>
-                <div class="input-group form-group">
-                    <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
-                    <span class="input-group-btn">
-                        <button class="btn btn-sm" @click="searchUser($event)">
-                            <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
-                        </button>
-                    </span>
-                </div>
+                </span>
             </div>
-        </div>
+        </search>
         <div class="table-responsive" v-if="showUserTable">
             <table class="table table-striped table-bordered table-hover dataTable">
                 <thead>
@@ -77,11 +69,12 @@
                     </tr>
                 </tbody>
             </table>
-            <page
-                :pages = "Math.ceil(userList.length/pageCount)"
-                :setPage = "setPage"
-            ></page>
         </div>
+        <page
+            :pages = "Math.ceil(userList.length/pageCount)"
+            :setPage = "setPage"
+            v-if="showUserTable"
+        ></page>
         <CreateUser v-if="!showUserTable"
             :showUserList="showUserList"
             :getUserList = "getUserList"
@@ -92,10 +85,29 @@
 <script>
     import CreateUser from './createUser';
     import page from '../common/page.vue';
+    import search from '../common/search.vue';
+
     export default {
         name:"userList",
-        props:["sure"],
-        components:{CreateUser,page},
+        props:{
+            sure:{
+                type:Function,
+                default:null
+            },
+            isShow:{
+                type:Boolean,
+                default:true
+            },
+            setIsShow:{
+                type:Function,
+                default:null
+            },
+            setDownUrl:{
+                type:Function,
+                default:null
+            }
+        },
+        components:{CreateUser,page,search},
         data(){
             return {
                 userList:[],
@@ -104,14 +116,31 @@
                 searchUserName:"",
                 page:1,
                 pageCount:15,
+                isOpen:false, //搜索控制下拉菜单
             }
+        },
+        watch:{
+            isShow(){
+                this.showUserTable = this.isShow;
+            },
+            showUserTable(){
+                if(this.showUserTable){
+                    this.setIsShow(this.showUserTable);
+                }
+            },
         },
         methods:{
             getUserList(data){
                 const _this = this;
                 const URL = this.serverUrl +"/admin/person/index";
-                this.emitAjax(URL,data,function(result){    
+                this.emitAjax(URL,data,function(result){
                     _this.userList = result;
+                    if(_this.searchUserName){
+                        _this.setDownUrl("?keywords="+_this.searchUserName);
+                    }else{
+                        _this.setDownUrl("");
+                    }
+                    _this.setIsOpen(false);
                 })
             },
             showUserList(){
@@ -137,6 +166,9 @@
             },
             setPage(page){
                 this.page = page;
+            },
+            setIsOpen(bool){
+                this.isOpen = bool;
             }
         },
         mounted(){

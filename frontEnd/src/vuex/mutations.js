@@ -5,6 +5,15 @@ export default {
     getOrgList(state,data){
         state.orgList = data;
     },
+    filterOrg(state,data){
+        state.labOrgList = [];
+        state.collegeOrgList = [];
+        state.schoolOrgList = [];
+        for (let index = 0; index < data.length; index++) {
+            const org = data[index];
+            state[org.org_level+"OrgList"].push(Object.assign({},org));
+        }
+    },
     setCurrentRoom(state,data){
         state.currentRoom = Object.assign({},{
             agent_name:"",

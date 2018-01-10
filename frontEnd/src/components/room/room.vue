@@ -20,8 +20,7 @@
                     <h1>
                         {{title}}
                         <div class="pull-right">
-                            
-                            <span class="dropdown">
+                            <span class="dropdown" slot="right">
                                 <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                     操作
                                     <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
@@ -40,7 +39,7 @@
                                         </router-link>
                                     </li>
                                     <li>
-                                        <a :href="serverUrl+'/admin/room/roomExport'" target="_blank">
+                                        <a :href="downUrl" target="_blank">
                                             <i class="ace-icon fa fa-cloud-download"></i>
                                             导出房间
                                         </a>
@@ -55,7 +54,7 @@
                     </h1>
                 </div>
                 <RoomList v-if="showComponentType == 'roomList'"
-                    :showRoomEdit = "showRoomEdit"
+                    :showRoomEdit = "showRoomEdit" :setDownUrl="setDownUrl"
                 ></RoomList>
                 <RoomEdit v-if="showComponentType == 'roomEdit'"
                     :showRoomList="showRoomList"
@@ -74,6 +73,7 @@ export default {
         return {
             title:"房间管理",
             showComponentType:"roomList",
+            downUrl:this.serverUrl+'/admin/room/roomExport',
         }
     },
     methods:{
@@ -92,6 +92,9 @@ export default {
             this.showComponentType = "roomList";
             this.$store.commit("setCurrentRoom");
         },
+        setDownUrl(url){
+            this.downUrl = this.serverUrl+'/admin/room/roomExport' + url;
+        }
     }
 };
 </script>

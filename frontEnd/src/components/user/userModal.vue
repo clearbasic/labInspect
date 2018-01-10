@@ -1,29 +1,25 @@
 <template>
     <div class="userList dataTables_wrapper">
-        <div class="row" v-if="showUserTable">
-            <div class="col-xs-12 form-inline">
-                <div class="form-group">
-                    <button class="btn btn-primary btn-sm" @click="showUserTable = false" v-if="showUserTable">
-                        <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
-                        添加
+        <search :show="isOpen" :setShow="setIsOpen" v-if="showUserTable">
+            <div class="input-group form-group">
+                <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
+                <span class="input-group-btn">
+                    <button class="btn btn-sm" @click="searchUser($event)">
+                        <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
                     </button>
-                </div>
-                <div class="input-group form-group">
-                    <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
-                    <span class="input-group-btn">
-                        <button class="btn btn-sm" @click="searchUser($event)">
-                            <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
-                        </button>
-                    </span>
-                </div>
-                <div class="form-group">
-                    <select v-model="searchType">
-                        <option :value="null">当前单位</option>
-                        <option value="all">全部</option>
-                    </select>
-                </div>
+                </span>
             </div>
-        </div>
+            <div class="form-group">
+                <select v-model="searchType">
+                    <option :value="null">当前单位</option>
+                    <option value="all">全部</option>
+                </select>
+            </div>
+            <button class="btn btn-primary btn-sm" @click="showUserTable = false" slot="right">
+                <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
+                添加
+            </button>
+        </search>
         <div class="table-responsive" v-if="showUserTable">
             <table class="table table-striped table-bordered table-hover dataTable">
                 <thead>
@@ -67,11 +63,12 @@
                     </tr>
                 </tbody>
             </table>
-            <page
-                :pages = "Math.ceil(userList.length/pageCount)"
-                :setPage = "setPage"
-            ></page>
         </div>
+        <page
+            :pages = "Math.ceil(userList.length/pageCount)"
+            :setPage = "setPage"
+            v-if="showUserTable"
+        ></page>
         <CreateUser v-if="!showUserTable"
             :showUserList="showUserList"
             :getUserList = "getUserList"
@@ -82,10 +79,11 @@
 <script>
     import CreateUser from './createUser';
     import page from '../common/page.vue';
+    import search from '../common/search.vue';
     export default {
         name:"userModal",
         props:["sure"],
-        components:{CreateUser,page},
+        components:{CreateUser,page,search},
         data(){
             return {
                 userList:[],
@@ -95,6 +93,7 @@
                 searchUserName:"",
                 page:1,
                 pageCount:15,
+                isOpen:false,
             }
         },
         methods:{
@@ -128,6 +127,9 @@
             },
             setPage(page){
                 this.page = page;
+            },
+            setIsOpen(bool){
+                this.isOpen = bool;
             }
         },
         watch:{

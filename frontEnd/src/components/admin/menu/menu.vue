@@ -46,7 +46,7 @@
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="selectrule">
                                                 <ul class="tree tree-selectable">
                                                     <li class="tree-item" @click="selectRuleId(0)">
-                                                        <div class="tree-branch-name">无</div>
+                                                        <div class="tree-branch-name">--无--</div>
                                                     </li>
                                                     <selectItem :data = "rule" 
                                                         v-for="(rule,index) in rule_tree" 
@@ -68,7 +68,7 @@
                                             <div class="widget-main padding-8 widget-box widget-color-blue2 selectMenu"  v-if="select">
                                                 <ul class="tree tree-selectable">
                                                     <li class="tree-item" @click="selectPid(0)">
-                                                        <div class="tree-branch-name">无</div>
+                                                        <div class="tree-branch-name">--无--</div>
                                                     </li>
                                                     <selectItem :data = "menu" 
                                                         v-for="(menu,index) in leftMenu" 
