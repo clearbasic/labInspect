@@ -1,109 +1,143 @@
 <template>
-    <div class="roowEdit">
-        <div class="form-horizontal">
-            <div class="row form-group">
-                <div class="col-xs-12 red" v-if="!room.room_id">
-                    注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~110。~表示房间名按顺序添加
-                </div>
+    <div class="roowEdit nomargin">
+        <div class="row form-group" v-if="!room.room_id">
+            <div class="col-xs-12 red" >
+                注：房间名不能含有(，~)这两种符号 。如需批量添加请以逗号隔开，中、英文逗号不能混用。例如：A103,A104,A104~110。~表示房间名按顺序添加
             </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div :class="['form-group','has-feedback',{'has-error':!room.room_name}]">
-                        <label for="room_name" class="control-label col-sm-4 col-md-4 col-lg-3">房间名</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.room_name" id="room_name">
-                            <span class="form-control-feedback red">*</span>
+        </div>
+        <ul class="form-horizontal list-group">
+            <li class="list-group-item active">
+                房间基本信息
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div :class="['form-group','has-feedback',{'has-error':!room.room_name}]">
+                            <label for="room_name" class="control-label col-sm-4 col-md-4 col-lg-3">房间名</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.room_name" id="room_name">
+                                <span class="form-control-feedback red">*</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="agent_name" class="control-label col-sm-4 col-md-4 col-lg-3">负责人姓名</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.agent_name" id="agent_name" data-toggle="modal" data-target="#userModal" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="agent_id" class="control-label col-sm-4 col-md-4 col-lg-3">负责人学工号</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.agent_id" id="agent_id" data-toggle="modal" data-target="#userModal" readonly>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="agent_name" class="control-label col-sm-4 col-md-4 col-lg-3">负责人姓名</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.agent_name" id="agent_name" data-toggle="modal" data-target="#userModal" readonly>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="phone" class="control-label col-sm-4 col-md-4 col-lg-3">联系电话</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.phone" id="phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="building_name" class="control-label col-sm-4 col-md-4 col-lg-3">楼名</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.building_name" id="building_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="room_order" class="control-label col-sm-4 col-md-4 col-lg-3">排序编号</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <input type="text" class="form-control" v-model="room.room_order" id="room_order">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="agent_id" class="control-label col-sm-4 col-md-4 col-lg-3">负责人学工号</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.agent_id" id="agent_id" data-toggle="modal" data-target="#userModal" readonly>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4 col-md-4 col-lg-3">所属学院</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <select class="form-control" v-model="room.dept_id">
+                                    <option :value="0">--全部--</option>
+                                    <option v-for="college in collegeArray" :value="college.org_id" :key="'college'+college.org_id">{{college.org_name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" v-if="room.dept_id">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4 col-md-4 col-lg-3">所属实验室</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <select class="form-control" v-model="room.lab_id">
+                                    <option :value="0">--全部--</option>
+                                    <option v-for="lab in labArray" :value="lab.org_id" :key="'lab'+lab.org_id" v-if="lab.pid == room.dept_id">{{lab.org_name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" v-if="room.lab_id">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4 col-md-4 col-lg-3">房间分组</label>
+                            <div class="col-sm-8 col-md-8 col-lg-9">
+                                <select class="form-control" v-model="room.zone_id">
+                                    <option :value="0">--无--</option>
+                                    <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id" v-if="zone.org_id == room.lab_id">{{zone.zone_name}}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="phone" class="control-label col-sm-4 col-md-4 col-lg-3">联系电话</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.phone" id="phone">
-                        </div>
+            </li>
+        </ul>
+        <ul class="list-group" v-for="key in zizhi.child" :key="'zizhi'+key.id">
+            <li class="list-group-item active">
+                {{key.title}}
+            </li>
+            <li class="list-group-item selectRule">
+                <button class="btn btn-success btn-xs" @click="selectAll(key,true)">全选</button>
+                <button class="btn btn-danger btn-xs" @click="selectAll(key,false)">全不选</button>
+                <br>
+                <br>
+                <label v-for="item in key.child" :key="'zi'+item.id">
+                    <input type="checkbox" class="ace" v-model="item.checked" :value="item.id" @change="setZizhi">
+                    <span class="lbl"> {{item.title}}</span>
+                </label>
+            </li>
+        </ul>
+        <ul class="list-group">
+            <li class="list-group-item active">
+                资质备注
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <textarea class="form-control" placeholder="输入资质备注" v-model="room.remark"></textarea>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="building_name" class="control-label col-sm-4 col-md-4 col-lg-3">楼名</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.building_name" id="building_name">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="room_order" class="control-label col-sm-4 col-md-4 col-lg-3">排序编号</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" v-model="room.room_order" id="room_order">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label class="control-label col-sm-4 col-md-4 col-lg-3">所属学院</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <select class="form-control" v-model="room.dept_id">
-                                <option :value="0">--全部--</option>
-                                <option v-for="college in collegeArray" :value="college.org_id" :key="'college'+college.org_id">{{college.org_name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4" v-if="room.dept_id">
-                    <div class="form-group">
-                        <label class="control-label col-sm-4 col-md-4 col-lg-3">所属实验室</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <select class="form-control" v-model="room.lab_id">
-                                <option :value="0">--全部--</option>
-                                <option v-for="lab in labArray" :value="lab.org_id" :key="'lab'+lab.org_id" v-if="lab.pid == room.dept_id">{{lab.org_name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4" v-if="room.lab_id">
-                    <div class="form-group">
-                        <label class="control-label col-sm-4 col-md-4 col-lg-3">房间分组</label>
-                        <div class="col-sm-8 col-md-8 col-lg-9">
-                            <select class="form-control" v-model="room.zone_id">
-                                <option :value="0">--无--</option>
-                                <option v-for="zone in zoneArray" :value="zone.zone_id" :key="'lab'+zone.zone_id" v-if="zone.org_id == room.lab_id">{{zone.zone_name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-md-offset-4 col-lg-offset-3 col-sm-8 col-md-8 col-lg-9">
-                            <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
-                            <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
-                            <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
-                            <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
-                        </div>
-                    </div>
+            </li>
+        </ul>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm" @click="editRoom" v-if="room.room_id">修改</button>
+                    <button class="btn btn-success btn-sm" @click="createRoom" v-if="!room.room_id">保存</button>
+                    <button class="btn btn-success btn-sm" @click="getNewRoomList" v-if="!room.room_id" data-toggle="modal" data-target="#roomNameModal">预览房间名</button>
+                    <button class="btn btn-default btn-sm" @click="showRoomList">返回</button>
                 </div>
             </div>
         </div>
@@ -142,7 +176,8 @@
     </div>
 </template>
 <script>
-import UserModal from '../user/userModal'
+import UserModal from '../user/userModal';
+import Vue from 'vue';
     export default {
         name:"roowEdit",
         props:{
@@ -154,10 +189,20 @@ import UserModal from '../user/userModal'
         components:{UserModal},
         computed:{
             room(){return this.$store.state.currentRoom},
-            orgList(){ return this.$store.state.orgList}
+            orgList(){ return this.$store.state.orgList},
+            sysData(){ return this.$store.state.sysData}
         },
         watch:{
-            orgList(){this.getOrgInfo()}
+            orgList(){this.getOrgInfo()},
+            sysData(){
+                this.zizhi = this.sysData.zizhi;
+            },
+            zizhi(){
+                this.selectZizhi();
+            },
+            room(){
+                this.selectZizhi();
+            }
         },
         data(){
             return {
@@ -166,6 +211,9 @@ import UserModal from '../user/userModal'
                 schoolArray:[],
                 zoneArray:[],
                 roomNameList:[],
+                zizhi:{},
+                zizhiString:"",
+                mark:"",
             }
         },
         methods:{
@@ -306,11 +354,71 @@ import UserModal from '../user/userModal'
                 this.emitAjax(url,null,function(result){
                     _this.zoneArray = result;
                 })
+            },
+            getSysData(){
+                //获取系统信息
+                if(this.$store.state.sysData.length==0){
+                    this.$store.dispatch("getSysData",{type:'tree'});
+                }else{
+                    this.zizhi = this.sysData.zizhi;
+                }
+            },
+            selectAll(zizhi,bool){
+                //全选、全不选
+                if(zizhi.child){
+                    for (let index = 0; index < zizhi.child.length; index++) {
+                        const item = zizhi.child[index];
+                        item.checked = bool;
+                    }
+                }
+                this.setZizhi();
+            },
+            selectZizhi(){
+                //资质回显
+                let zizhi_list = [];
+                console.log(this.room.zizhi)
+                if(this.room.zizhi){
+                    zizhi_list = this.room.zizhi.split(",");
+                }
+                if(this.zizhi.child){
+                    for (let index = 0; index < this.zizhi.child.length; index++) {
+                        const zizhi = this.zizhi.child[index];
+                        if(zizhi.child){
+                            for (let i = 0; i < zizhi.child.length; i++) {
+                                const zi = zizhi.child[i];
+                                if(zizhi_list.indexOf(''+zi.id)>=0){
+                                    zi.checked = true;
+                                }else{
+                                    zi.checked = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            setZizhi(){
+                let zizhiString = "";
+                if(this.zizhi.child){
+                    for (let index = 0; index < this.zizhi.child.length; index++) {
+                        const zizhi = this.zizhi.child[index];
+                        if(zizhi.child){
+                            for (let i = 0; i < zizhi.child.length; i++) {
+                                const zi = zizhi.child[i];
+                                if(zi.checked){
+                                    zizhiString += zi.id+",";
+                                }
+                            }
+                        }
+                    }
+                }
+                zizhiString = zizhiString.substring(0,zizhiString.length-1);
+                this.room.zizhi = zizhiString;
             }
         },
         mounted(){
             this.getOrgList();
             this.getZoneList();
+            this.getSysData();
         }
     };
 </script>

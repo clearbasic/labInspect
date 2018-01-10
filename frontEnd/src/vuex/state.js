@@ -15,4 +15,5 @@ export default {
     plan_list:[],
     showToast:false,
     msgText:"保存成功",
+    sysData:[],
 }

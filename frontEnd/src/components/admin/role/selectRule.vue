@@ -159,13 +159,4 @@ export default {
     }
 };
 </script>
-<style>
-.selectRule {
-    max-height: 400px;
-    overflow-y: auto;
-}
-.selectRule label {
-    padding: 0 5px;
-}
-</style>
 

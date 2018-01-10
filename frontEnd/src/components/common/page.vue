@@ -1,30 +1,32 @@
 <template>
-    <ul class="pagination">
-        <li>
-            <a @click="clickPage(1)">首页</a>
-        </li>
-        <li>
-            <a v-if="page==1"><i class="ace-icon fa fa-angle-double-left"></i></a>
-            <a v-if="page!=1" @click="prev"><i class="ace-icon fa fa-angle-double-left"></i></a>
-        </li>
-        <li v-for="item in pageArray" :key="'page'+item" :class="{active:page==item}">
-            <a @click="clickPage(item)">{{item}}</a>
-        </li>
-        <li>
-            <a v-if="page==pages"><i class="ace-icon fa fa-angle-double-right"></i></a>
-            <a  @click="next" v-if="page!=pages"><i class="ace-icon fa fa-angle-double-right"></i></a>
-        </li>
-        <li>
-            <a @click="clickPage(pages)">尾页</a>
-        </li>
-        <li>
-            <input class="pull-left" v-model="gotoPage">
-            <a @click="clickPage(gotoPage)">跳转</a>
-        </li>
-        <li>
-            <span style="background:none;color:#000;border:0;">当前{{page}}/{{pages}}页</span>
-        </li>
-    </ul>
+    <div>
+        <ul class="pagination">
+            <li>
+                <a @click="clickPage(1)">首页</a>
+            </li>
+            <li>
+                <a v-if="page==1"><i class="ace-icon fa fa-angle-double-left gray"></i></a>
+                <a v-if="page!=1" @click="prev"><i class="ace-icon fa fa-angle-double-left"></i></a>
+            </li>
+            <li v-for="item in pageArray" :key="'page'+item" :class="{active:page==item}">
+                <a @click="clickPage(item)">{{item}}</a>
+            </li>
+            <li>
+                <a v-if="page==pages"><i class="ace-icon fa fa-angle-double-right gray"></i></a>
+                <a  @click="next" v-if="page!=pages"><i class="ace-icon fa fa-angle-double-right"></i></a>
+            </li>
+            <li>
+                <a @click="clickPage(pages)">尾页</a>
+            </li>
+            <li>
+                <input class="pull-left" v-model="gotoPage">
+                <a @click="clickPage(gotoPage)">跳转</a>
+            </li>
+            <li>
+                <span style="background:none;color:#000;border:0;">当前{{page}}/{{pages}}页</span>
+            </li>
+        </ul>
+    </div>
 </template>
 <script>
 export default {

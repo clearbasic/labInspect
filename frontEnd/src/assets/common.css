@@ -4,7 +4,9 @@
 .nopadding {
     padding: 0;
 }
-
+.gray {
+    color:gray;
+}
 /* 嵌入app */
 
 .app #navbar {
@@ -163,6 +165,14 @@ input[readonly]:hover {
 .dataTables_wrapper input[type=password] {
     margin-bottom: 0 !important;
     margin:0 4px;
+}
+/* 选择权限 */
+.selectRule {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.selectRule label {
+    padding: 0 5px;
 }
 @media screen and (max-width:480px) {
     .sysSelect li {

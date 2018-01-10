@@ -183,7 +183,6 @@ export default {
         selectGroupLevel() {
             //根据角色过滤单位
             this.newAssign.group_level = "";
-            console.log(this.role_list)
             for (let index = 0; index < this.role_list.length; index++) {
                 const role = this.role_list[index];
                 if (role.id == this.newAssign.group_id) {
@@ -198,9 +197,7 @@ export default {
             this.org_list = [];
             for (let index = 0; index < this.orgList.length; index++) {
                 const org = this.orgList[index];
-                console.log(org.org_level , this.newAssign.group_level)
                 if (org.org_level == this.newAssign.group_level) {
-                    console.log(this.newAssign)
                     this.org_list.push(Object.assign({}, org));
                 }
             }

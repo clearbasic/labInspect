@@ -1,10 +1,10 @@
 <template>
-    <div class="userList dataTables_wrapper">
+    <div class="userList dataTables_wrapper" @click="setIsOpen(false)">
         <search :show="isOpen" :setShow="setIsOpen" v-if="showUserTable">
             <div class="input-group form-group">
                 <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
                 <span class="input-group-btn">
-                    <button class="btn btn-sm" @click="searchUser($event)">
+                    <button class="btn btn-purple btn-sm" @click="searchUser($event)">
                         <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
                     </button>
                 </span>
@@ -102,6 +102,7 @@
                 const URL = this.serverUrl +"/admin/person/index";
                 this.emitAjax(URL,data,function(result){    
                     _this.userList = result;
+                    _this.setIsOpen(false)
                 })
             },
             showUserList(){
@@ -134,9 +135,14 @@
         },
         watch:{
             searchType(){
-                this.getUserList({
-                    flag:this.searchType
-                })
+                if(this.searchType){
+                    this.getUserList({
+                        flag:this.searchType
+                    })
+                }else{
+                    this.getUserList();
+                }
+                
             }
             
         },

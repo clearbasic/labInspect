@@ -40,5 +40,11 @@ export default {
         emitAjax(url,null,function(result){
             context.commit("getPlanList",result);
         })
+    },
+    getSysData(context,data){
+        const url = serverUrl + "/admin/SystemConfig/index";
+        emitAjax(url,data,function(result){
+            context.commit("getSysData",result);
+        })
     }
 }

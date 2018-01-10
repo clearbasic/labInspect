@@ -20,7 +20,9 @@ export default {
             agent_id:"",
             dept_id:0,
             lab_id:0,
-            zone_id:0
+            zone_id:0,
+            zizhi:"",
+            remark:""
         },data);
     },
     setCurrentZone(state,data){
@@ -42,5 +44,8 @@ export default {
         }else{
             state.msgText = "保存成功";
         }
+    },
+    getSysData(state,data){
+        state.sysData = data;
     }
 }
