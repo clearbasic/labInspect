@@ -98,6 +98,39 @@
                             </div>
                         </div>
                     </li>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="campus" class="col-sm-2 col-lg-4 col-md-5 control-label">校区：</label>
+                                    <div class="col-sm-10 col-lg-8 col-md-7">
+                                        <select v-model="orgInfo.campus" class="form-control">
+                                            <option value="">--请选择--</option>
+                                            <option :value="xiaoqu.title" v-for="xiaoqu in campus.child" :key="''+xiaoqu.id">{{xiaoqu.title}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="contacts" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生联系人：</label>
+                                    <div class="col-sm-10 col-lg-8 col-md-7">
+                                        <input type="text" v-model="orgInfo.contacts" id="contacts" @focus="currentKey('contacts')"
+                                            class="form-control" data-toggle="modal" data-target="#userModal" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="responsible" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生责任人：</label>
+                                    <div class="col-sm-10 col-lg-8 col-md-7">
+                                        <input type="text" v-model="orgInfo.responsible" id="responsible" @focus="currentKey('responsible')"
+                                            class="form-control" data-toggle="modal" data-target="#userModal" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
                 <ul class="list-group form-horizontal" v-if="showCollege">
                     <li class="list-group-item active">实验室信息</li>
@@ -121,9 +154,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="campus" class="col-sm-2 col-lg-4 col-md-5 control-label">校区：</label>
+                                    <label for="usage" class="col-sm-2 col-lg-4 col-md-5 control-label">用途：</label>
                                     <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.campus" id="campus" class="form-control">
+                                        <input type="text" v-model="orgInfo.usage" id="bigcategory" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -133,17 +166,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="usage" class="col-sm-2 col-lg-4 col-md-5 control-label">用途：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.usage" id="usage" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
                                     <label for="bigcategory" class="col-sm-2 col-lg-4 col-md-5 control-label">大分类：</label>
                                     <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.bigcategory" id="bigcategory" class="form-control">
+                                        <select v-model="orgInfo.bigcategory" class="form-control">
+                                            <option value="">--请选择--</option>
+                                            <option :value="big.title" v-for="big in bigcategory.child" :key="''+big.id">{{big.title}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +179,10 @@
                                 <div class="form-group">
                                     <label for="smallcategory" class="col-sm-2 col-lg-4 col-md-5 control-label">小分类：</label>
                                     <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.smallcategory" id="smallcategory" class="form-control">
+                                        <select v-model="orgInfo.smallcategory" class="form-control">
+                                            <option value="">--请选择--</option>
+                                            <option :value="small.title" v-for="small in smallcategory.child" :key="''+small.id">{{small.title}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -159,116 +190,7 @@
                     </li>
                     <li class="list-group-item">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="contacts" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生联系人：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.contacts" id="contacts" @focus="currentKey('contacts')"
-                                            class="form-control" data-toggle="modal" data-target="#userModal" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="responsible" class="col-sm-2 col-lg-4 col-md-5 control-label">安全卫生责任人：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.responsible" id="responsible" @focus="currentKey('responsible')"
-                                            class="form-control" data-toggle="modal" data-target="#userModal" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="coordinate" class="col-sm-2 col-lg-4 col-md-5 control-label">经纬度：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.coordinate" id="coordinate" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="qualified" class="col-sm-2 col-lg-4 col-md-5 control-label">资质：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.qualified" id="qualified" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="qualified_remarks" class="col-sm-2 col-lg-4 col-md-5 control-label">资质备注：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.qualified_remarks" id="qualified_remarks" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="precautions" class="col-sm-2 col-lg-4 col-md-5 control-label">防护措施：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.precautions" id="precautions" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="precautions_remarks" class="col-sm-2 col-lg-4 col-md-5 control-label">防护措施备注：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.precautions_remarks" id="precautions_remarks" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="hazard_source" class="col-sm-2 col-lg-4 col-md-5 control-label">危险源：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.hazard_source" id="hazard_source" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="hazard_source_remarks" class="col-sm-2 col-lg-4 col-md-5 control-label">危险源备注：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.hazard_source_remarks" id="hazard_source_remarks" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="main_outfire" class="col-sm-2 col-lg-4 col-md-5 control-label">灭火要点：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.main_outfire" id="main_outfire" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="main_outfire_remarks" class="col-sm-2 col-lg-4 col-md-5 control-label">灭火要点备注：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.main_outfire_remarks" id="main_outfire_remarks" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="remarks" class="col-sm-2 col-lg-4 col-md-5 control-label">备注：</label>
-                                    <div class="col-sm-10 col-lg-8 col-md-7">
-                                        <input type="text" v-model="orgInfo.remarks" id="remarks" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </li>
                     <li class="list-group-item">
@@ -329,6 +251,9 @@ export default {
     data() {
         return {
             orgInfo: {
+                campus:"",
+                bigcategory:"",
+                smallcategory:"",
                 org_level: "school",
                 org_state:"yes"
             },
@@ -337,13 +262,29 @@ export default {
             schoolArray: [],
             collegeArray: [],
             labArray: [],
-            key: "" //保存当前要改变的字段
+            key: "" ,//保存当前要改变的字段
+            campus:{},//校区
+            usage:{},//用途
+            bigcategory:{},//大分类
+            smallcategory:{} //小分类
         };
     },
     components: { UserModal },
     computed: {
         orgList() {
             return this.$store.state.orgList;
+        },
+        sysData(){ return this.$store.state.sysData},
+    },
+    watch: {
+        orgList() {
+            this.getOrgInfo();
+        },
+        orgInfo(){
+            this.showParentId();
+        },
+        sysData(){
+            this.filterSysData();
         }
     },
     methods: {
@@ -370,6 +311,7 @@ export default {
                     _this[element.org_level + "Array"].push(Object.assign({}, element));
                 }
             }
+            console.log(_this.orgInfo)
         },
         editOrgInfo() {
             //编辑实验室
@@ -451,19 +393,25 @@ export default {
                     _this.$router.push(_this.pathName+'/orgList');
                 })
             }
-        }
-    },
-    watch: {
-        orgList() {
-            this.getOrgInfo();
         },
-        orgInfo(){
-            this.showParentId();
+        getSysData(){
+            //获取系统信息
+            if(this.$store.state.sysData.length==0){
+                this.$store.dispatch("getSysData",{type:'tree'});
+            }else{
+               this.filterSysData();
+            }
+        },
+        filterSysData(){
+            this.campus = Object.assign({},this.sysData.campus); 
+            this.usage= Object.assign({},this.sysData.usage);//用途
+            this.bigcategory= Object.assign({},this.sysData.bigcategory);//大分类
+            this.smallcategory= Object.assign({},this.sysData.smallcategory);//小分类
         }
     },
     mounted() {
         this.getOrgList();
-        
+        this.getSysData();
     }
 };
 </script>

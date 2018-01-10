@@ -195,7 +195,7 @@ import Vue from 'vue';
         watch:{
             orgList(){this.getOrgInfo()},
             sysData(){
-                this.zizhi = this.sysData.zizhi;
+                this.zizhi = Object.assign({},this.sysData.zizhi);
             },
             zizhi(){
                 this.selectZizhi();
@@ -360,7 +360,7 @@ import Vue from 'vue';
                 if(this.$store.state.sysData.length==0){
                     this.$store.dispatch("getSysData",{type:'tree'});
                 }else{
-                    this.zizhi = this.sysData.zizhi;
+                    this.zizhi = Object.assign({},this.sysData.zizhi);
                 }
             },
             selectAll(zizhi,bool){
