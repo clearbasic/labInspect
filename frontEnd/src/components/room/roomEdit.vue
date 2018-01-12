@@ -376,7 +376,6 @@ import Vue from 'vue';
             selectZizhi(){
                 //资质回显
                 let zizhi_list = [];
-                console.log(this.room.zizhi)
                 if(this.room.zizhi){
                     zizhi_list = this.room.zizhi.split(",");
                 }

@@ -1,90 +1,68 @@
 <template>
-    <div class="login-layout">
-        <div class="login-container">
-            <div class="center">
-                <h1>
-                    <i class="ace-icon fa fa-flask green"></i>
-                    <span class="red">实验室安全管理系统</span>
-                    <span class="white" id="id-text2"></span>
-                </h1>
-            </div>
-            <div class="space-6"></div>
-            <div class="position-relative">
-                <div id="login-box" class="login-box visible widget-box no-border">
-                    <div class="widget-body" v-if="isSingle">
-                        <div class="widget-main">
-                            <h4 class="header blue lighter bigger">
-                                <i class="ace-icon fa fa-coffee green"></i>
-                                请输入您的帐号密码
-                            </h4>
-                            <div class="space-6"></div>
-                            <form  @keyup="enterLogin($event)">
-                                <fieldset>
-                                    <label class="block clearfix">
-                                        <span class="block input-icon input-icon-right">
-                                            <input type="text" class="form-control" v-model="username" placeholder="用户名" />
-                                            <i class="ace-icon fa fa-user"></i>
-                                        </span>
-                                    </label>
-                                    <label class="block clearfix">
-                                        <span class="block input-icon input-icon-right">
-                                            <input type="password" class="form-control" v-model="password" placeholder="密码" />
-                                            <i class="ace-icon fa fa-lock"></i>
-                                        </span>
-                                    </label>
-                                    <label class="block clearfix row">
-                                        <span class="block input-icon input-icon-right col-xs-6">
-                                            <input type="text" class="form-control" v-model="verifyCode" placeholder="验证码" />
-                                        </span>
-                                        <span class="block input-icon input-icon-right col-xs-6">
-                                            <img :src="serverUrl+'/admin/login/getVerify'" class="verifyCode" alt="验证码" @click="refreshVerifyCode">
-                                        </span>
-                                    </label>
-                                    <div class="space"></div>
-                                    <div class="clearfix">
-                                        <label class="inline">
-                                            <input type="checkbox" checked class="ace" @click="remeberme = !remeberme" v-if="remeberme" />
-                                            <input type="checkbox" class="ace" @click="remeberme = !remeberme" v-if="!remeberme" />
-                                            <span class="lbl"> 记住帐号？</span>
-                                        </label>
-                                        <button type="button" class="width-35 pull-right btn btn-sm btn-primary" @click="login">
-                                            <i class="ace-icon fa fa-key"></i>
-                                            <span class="bigger-110">登录</span>
-                                        </button>
-                                    </div>
-                                    <div class="space-4"></div>
-                                </fieldset>
-                            </form>
+    <div class="login boxCenter">
+        <div class="loginherder">
+            <img src="../../assets/images/loginLogo.png" alt="loginLogo">
+            <span class="bigger-200" style="display:inline-block;vertical-align:bottom;color:#014099">实验室安全检查管理系统</span>
+        </div>
+        <div class="loginContent">
+            <div class="clearfix">
+                <div class="loginBox">
+                    <div class="loginFormBox" v-if="isSingle" @keyup="enterLogin($event)">
+                        <div class="loginHead">
+                            <h3>统一身份认证登录</h3>   
                         </div>
-                        <div class="toolbar clearfix white">
-                            <span class="col-xs-12"><h5>如果没有帐号，请联系相关管理人员添加帐号。</h5></span>
+                        <div class="inputGroup">
+                            <input type="text" name="username" class="inputText" v-model="username" placeholder="帐号">
                         </div>
-                    </div>
-                    <div class="widget-body" v-if="!isSingle">
-                        <div class="widget-main">
-                            <h4 class="header blue lighter bigger">
-                                <i class="ace-icon fa fa-coffee green"></i>
-                                请选择一个身份登录
-                            </h4>
-                            <div class="space-6"></div>
-                                <fieldset>
-                                    <label  v-if="role_list" v-for="role in role_list" :key="'role'+role.org_id" class="block">
-                                        <input type="radio" class="ace" @click="selectRoleLogin(role)" name="role">
-                                        <span class="lbl"> {{role.o_name}}-{{role.g_name}}</span>
-                                    </label>
-                                    <div class="space"></div>
-                                    <div class="clearfix">
-                                        <button type="button" class="width-35 btn btn-sm btn-primary" @click="submitRoleLogin">
-                                            <span class="bigger-110">确定</span>
-                                        </button>
-                                    </div>
-                                    <div class="space-4"></div>
-                                </fieldset>
+                        <div class="inputGroup">
+                            <input type="password" name="password" class="inputText" v-model="password" placeholder="密码">
+                        </div>
+                        <div class="inputGroup clearfix verificationCode">
+                            <div class="fl">
+                                <input type="text" v-model="verifyCode" class="inputText" placeholder="验证码">
+                            </div>
+                            <div class="fr">
+                                <img :src="serverUrl+'/admin/login/getVerify'" class="verifyCode" alt="验证码" @click="refreshVerifyCode">
+                            </div>
+                        </div>
+                        <div class="remeberme">
+                            <label>
+                                <input type="checkbox" class="ace" v-model="remeberme" />
+                                <span class="lbl"> 记住帐号？</span>
+                            </label>
+                        </div>
+                        <div class="inputGroup clearfix">
+                            <div class="fl verificationCode">
+                                <button class="loginBtn fl" @click="login"> 登录</button>
+                            </div>
+                            <div class="fr verificationCodeImg">
+                                <input type="reset" class="loginBtn fr" value="重置">
                             </div>
                         </div>
                     </div>
+                    <div class="loginFormBox" v-if="!isSingle">
+                        <h4 class="header blue lighter bigger">
+                            请选择一个身份登录
+                        </h4>
+                        <div class="space-6"></div>
+                        <fieldset>
+                            <label  v-if="role_list" v-for="role in role_list" :key="'role'+role.org_id" class="block">
+                                <input type="radio" class="ace" @click="selectRoleLogin(role)" name="role">
+                                <span class="lbl"> {{role.o_name}}-{{role.g_name}}</span>
+                            </label>
+                            <div class="space"></div>
+                            <div class="clearfix">
+                                <button type="button" class="width-35 btn btn-sm btn-primary" @click="submitRoleLogin">
+                                    <span class="bigger-110">确定</span>
+                                </button>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
+        </div>         
+        <div class="loginfooter">
+            <p>技术支持：杭州创高软件科技有限公司 2017 徐州医科大学 版权所有</p>
         </div>
     </div>
 </template>
@@ -98,12 +76,7 @@
                 password:"",
                 verifyCode:"",
                 remeberme:false,
-                role_list:[
-                    {
-                        org_id:19,
-                        org_name:"研究生院"
-                    }
-                ],
+                role_list:[],
                 isSingle:true,
                 selectRole:{},
             }
@@ -213,15 +186,3 @@
         }
     };
 </script>
-<style>
-    body {
-        background-color: #000
-    }
-    .login-layout {
-        background: none;
-    }
-    .verifyCode {
-        max-width:100%;
-        height: auto;
-    }
-</style>

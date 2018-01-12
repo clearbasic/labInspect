@@ -1,3 +1,7 @@
+/* 公用样式 */
+body {
+    background-color: #fff;
+}
 .nomargin {
     margin: 0;
 }
@@ -7,8 +11,10 @@
 .gray {
     color:gray;
 }
+a:hover {
+    cursor: pointer;
+}
 /* 嵌入app */
-
 .app #navbar {
     display: none !important;
 }
@@ -18,18 +24,11 @@
 .app #breadcrumbs {
     display: none !important;
 }
-a:hover {
-    cursor: pointer;
-}
 .app .page-content {
     padding-left: 0;
     padding-right: 0;
 }
-.inlineInput {
-    display: inline-block;
-    width: 100%;
-    max-width: 160px;
-}
+/* boostrap ace样式覆盖 */
 .has-error input[type="text"], .has-error input[type="password"] {
     border-color: #f00;
 }
@@ -45,32 +44,6 @@ a:hover {
 input[readonly]:hover {
     cursor: pointer;
 }
-
-/* 过渡 */
-
-.fade-enter-active {
-    transition: opacity 0.5s
-}
-.fade-enter, .fade-leave-active {
-    opacity: 0
-}
-.bounce-enter-active {
-    animation: bounce-in 0.75s;
-}
-@keyframes bounce-in {
-    0% {
-        transform: scale(0);
-    }
-    33% {
-        transform: scale(1); 
-    }
-    66% {
-        transform: scale(0.8);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
 .dd-item button {
     line-height: 1px;
     outline: none;
@@ -78,30 +51,10 @@ input[readonly]:hover {
 .dd {
     max-width: 1980px;
 }
-.selectMenu {
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 30px;
-    background: #fff;
-    z-index: 10;
-    max-height: 300px;
-    overflow-y: auto;
+.user-info {
+    max-width: 200px;
 }
-.sysSelect {
-    height: 45px;
-    line-height: 45px;
-    background: #5db7e9;
-    padding: 0 10px;
-    position: relative;
-    margin-left: 6px;
-}
-.sysSelect a {
-    color: #fff;
-}
-
 /* 上传样式 */
-
 .dropzone {
     border: 1px solid rgba(0, 0, 0, .03);
     min-height: 360px;
@@ -150,13 +103,6 @@ input[readonly]:hover {
     display: block;
     padding: 4px;
 }
-.pointer {
-    cursor: pointer;
-}
-.user-info {
-    max-width: 200px;
-}
-
 /* 分页 */
 .pagination input {
     width: 30px;
@@ -166,6 +112,62 @@ input[readonly]:hover {
     margin-bottom: 0 !important;
     margin:0 4px;
 }
+/* 自定义样式 */
+.selectMenu {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 30px;
+    background: #fff;
+    z-index: 10;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.sysSelect {
+    height: 45px;
+    line-height: 45px;
+    background: #5db7e9;
+    padding: 0 10px;
+    position: relative;
+    margin-left: 6px;
+}
+.sysSelect a {
+    color: #fff;
+}
+.inlineInput {
+    display: inline-block;
+    width: 100%;
+    max-width: 160px;
+}
+.pointer {
+    cursor: pointer;
+}
+
+/* 过渡 */
+.fade-enter-active {
+    transition: opacity 0.5s
+}
+.fade-enter, .fade-leave-active {
+    opacity: 0
+}
+.bounce-enter-active {
+    animation: bounce-in 0.75s;
+}
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    33% {
+        transform: scale(1); 
+    }
+    66% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* 选择权限 */
 .selectRule {
     max-height: 400px;
@@ -173,6 +175,110 @@ input[readonly]:hover {
 }
 .selectRule label {
     padding: 0 5px;
+}
+/* 登录 */
+.login {
+    max-width:947px;
+    padding:0 15px;
+}
+.boxCenter {
+    margin: 0 auto;
+}
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.loginherder {
+    padding:15px 0;
+}
+.loginContent {
+    height: 381px;
+    background:  url(./images/bodybg.jpg) no-repeat center top;
+}
+.banner {
+    width:536px;
+    height: 382px;
+    border:1px solid #dbdbdb;
+}
+.banner img {
+    padding:18px 0 0 54px;
+}
+
+.loginBox {
+    width: 266px;
+    height: 319px;
+    background: url(./images/logoBox.png) no-repeat center center;
+    margin:20px auto;
+}
+.loginFormBox {
+    padding: 17px;
+}
+.loginFormBox h3 {
+    margin-bottom: 14px;
+    margin-top: 8px;
+    text-align:center;
+    font-size: 20px;
+    font-weight: normal;
+}
+.inputGroup {
+    height: 42px;
+    margin-bottom: 18px;
+}
+.inputGroup input[type="text"],.inputGroup input[type="password"] {
+    display: block;
+    width: 100%;
+    height: 40px;
+    border:1px solid #9dc1d0;
+    outline: none;
+    text-indent: 10px;
+    font-size: 14px;
+    color:#b6b6b6;
+    line-height: 40px;
+}
+.remeberme {
+    margin:5px 0;
+}
+.verificationCode {
+    margin-bottom: 5px;
+}
+.verificationCode div{
+    width: 50%;
+}
+.verificationCode img {
+    width: 115px;
+    height: 42px;
+    float: right;
+}
+.inputGroup .loginBtn {
+    width: 108px;
+    height: 35px;
+    line-height: 35px;
+    background: #ff9e00;
+    color:#fff;
+    font-size: 16px;
+    border:none;
+}
+.inputGroup input[type="reset"] {
+    background: #eee;
+    color:#3d3d3d;
+}
+.loginfooter {
+    text-align: center;
+    font-size: 12px;
+    line-height: 22px;
+    padding:20px 0;
+    color:#000;
+}
+.loginfooter a {
+    color:#000;
+}
+.forgetPass {
+    font-size: 12px;
+    color:#000;
+    line-height: 40px;
+    padding-right: 10px;
 }
 @media screen and (max-width:480px) {
     .sysSelect li {
@@ -187,6 +293,13 @@ input[readonly]:hover {
 @media screen and (min-width: 768px) {
     .little {
         width: 80px;
+    }
+    .loginBox {
+        float: right;
+        margin:20px 80px 0 0;
+    }
+    .loginherder {
+        padding:90px 0 15px;
     }
 }
 @media screen and (min-width: 992px) {

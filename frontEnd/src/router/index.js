@@ -29,6 +29,7 @@ import AssignRole from "../components/admin/role/assignRole.vue";
 import PersonStatistics from "../components/statistics/person.vue";
 import CheckStatistics from "../components/statistics/check.vue";
 import Awards from "../components/statistics/awards.vue";
+import NotFondComponent from "../components/common/404.vue";
 
 Vue.use(Router)
 
@@ -36,6 +37,7 @@ let title = "实验室安全检查管理系统";
 
 export default new Router({
 	mode:"history",
+	fallback:false,
 	routes: [
 		{
 			path: pathName+'/',
@@ -264,6 +266,15 @@ export default new Router({
 			meta:{
 				title:"登录 - "+title,
 				active:pathName+"/login",
+			}
+		},
+		{
+			path: '*',
+			name: '404',
+			component: NotFondComponent,
+			meta:{
+				title:"页面走丢啦 - "+title,
+				active:pathName+"/index",
 			}
 		}
 	]

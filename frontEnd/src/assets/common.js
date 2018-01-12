@@ -3,6 +3,7 @@ import Vue from "vue";
 import md5 from "crypto-js/md5";
 import { pathName } from "../config/server";
 //发起网络请求
+
 function emitAjax(url,opt,success,error){
     let app_secret="c6d9622fdc385b26129fc8a4c7a30c2a";
     let app_key=2347508144;
@@ -142,6 +143,11 @@ function checkPermission(url){
     const authList = localStorage.getItem("authList");
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const pathName = urlArray[urlArray.length-3]+'/'+urlArray[urlArray.length-2]+'/'+urlArray[urlArray.length-1];
+    const noCheck =  [
+        'admin/Room/roomExport',
+        'admin/Person/personExport',
+        'admin/SystemConfig/index',
+    ]
     let flag = false;
     if(authList){
         flag = authList.indexOf(pathName)>=0?true:false;
@@ -150,7 +156,7 @@ function checkPermission(url){
     }
     
     //admin帐号不过滤
-    if(userInfo && userInfo.username == "admin"){
+    if((userInfo && userInfo.username == "admin") || noCheck.indexOf(pathName)>0){
         flag = true;
     }
     return {

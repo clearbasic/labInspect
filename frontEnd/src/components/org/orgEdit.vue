@@ -311,7 +311,6 @@ export default {
                     _this[element.org_level + "Array"].push(Object.assign({}, element));
                 }
             }
-            console.log(_this.orgInfo)
         },
         editOrgInfo() {
             //编辑实验室

@@ -56,7 +56,7 @@
                     </div>
                     <button class="btn btn-success btn-sm" @click="submitFile" v-if="file">提交文件</button>
                     <button class="btn btn-defualt btn-sm" v-if="!file">提交文件</button>
-                    <a class="file" :href="pathName+'static/importTemplate/person.xls'">
+                    <a class="file" :href="pathName+'/static/importTemplate/person.xls'">
                         <i class="ace-icon fa fa-cloud-download">下载示例表格</i>
                     </a>
                     <span class="red">
