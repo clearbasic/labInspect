@@ -4,7 +4,7 @@
             <div class="input-group">
                 <input type="text" class="form-control input-mask-product" v-model="searchUserName" placeholder="姓名/学工号" @keyup="searchUser($event)">
                 <span class="input-group-btn">
-                    <button class="btn btn-sm" @click="searchUser($event)">
+                    <button class="btn btn-sm btn-purple" @click="searchUser($event)">
                         <i class="ace-icon glyphicon glyphicon-search bigger-120"></i>
                     </button>
                 </span>

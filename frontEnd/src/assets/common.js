@@ -155,7 +155,7 @@ function checkPermission(url){
         flag = true;
     }
     
-    //admin帐号不过滤
+    //admin帐号不过滤，nocheck里面的也不过滤
     if((userInfo && userInfo.username == "admin") || noCheck.indexOf(pathName)>0){
         flag = true;
     }
