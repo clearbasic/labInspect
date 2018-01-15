@@ -91,18 +91,5 @@ export default {
             msg: "欢迎使用实验室安全检查管理系统",
         }
     },
-    computed:{
-        isShow(){
-            return this.$store.state.showToast;
-        },
-        msgText(){
-            return this.$store.state.msgText;
-        }
-    },
-    methods:{
-        hideToast(){
-            this.$store.commit("showToast",{isShow:false});
-        }
-    }
 };
 </script>
