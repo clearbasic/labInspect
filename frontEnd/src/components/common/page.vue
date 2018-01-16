@@ -45,6 +45,10 @@ export default {
         setPage: {
             type: Function,
             default: null
+        },
+        currentPage:{
+            type: Number,
+            default: 0
         }
     },
     methods: {
@@ -94,6 +98,9 @@ export default {
         }
     },
     mounted(){
+        if(this.currentPage != this.page) {
+            this.page = this.currentPage;
+        }
         this.setPageArray();
     }
 };

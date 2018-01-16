@@ -54,7 +54,7 @@
                     </h1>
                 </div>
                 <RoomList v-if="showComponentType == 'roomList'"
-                    :showRoomEdit = "showRoomEdit" :setDownUrl="setDownUrl"
+                    :showRoomEdit = "showRoomEdit" :setDownUrl="setDownUrl" :page="page" :setPage = "setPage"
                 ></RoomList>
                 <RoomEdit v-if="showComponentType == 'roomEdit'"
                     :showRoomList="showRoomList"
@@ -74,6 +74,7 @@ export default {
             title:"房间管理",
             showComponentType:"roomList",
             downUrl:this.serverUrl+'/admin/room/roomExport',
+            page:1,
         }
     },
     methods:{
@@ -94,7 +95,10 @@ export default {
         },
         setDownUrl(url){
             this.downUrl = this.serverUrl+'/admin/room/roomExport' + url;
-        }
+        },
+        setPage(page) {
+            this.page = page;
+        },
     }
 };
 </script>

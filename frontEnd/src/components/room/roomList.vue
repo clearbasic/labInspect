@@ -115,6 +115,7 @@
         <page
             :pages = "Math.ceil(roomList.length/pageCount)"
             :setPage = "setPage"
+            :currentPage = "page"
         ></page>
     </div>
 </template>
@@ -131,6 +132,14 @@ export default {
         setDownUrl:{
             type: Function,
             default: null
+        },
+        page:{
+            type:Number,
+            default:1,
+        },
+        setPage:{
+            type: Function,
+            default: null
         }
     },
     components: { page, search },
@@ -140,7 +149,6 @@ export default {
             zoneList: [],
             isShowOrder: 0,
             currentOrder: 0,
-            page: 1,
             pageCount: 10,
             college_id: null,
             lab_id: null,
@@ -237,9 +245,6 @@ export default {
             if (this.$store.state.orgList.length == 0) {
                 this.$store.dispatch("getOrgList");
             }
-        },
-        setPage(page) {
-            this.page = page;
         },
         setIsOpen(bool){
             this.isOpen = bool;

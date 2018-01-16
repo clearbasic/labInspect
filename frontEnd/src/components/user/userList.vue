@@ -73,6 +73,7 @@
         <page
             :pages = "Math.ceil(userList.length/pageCount)"
             :setPage = "setPage"
+            :currentPage="page"
             v-if="showUserTable"
         ></page>
         <CreateUser v-if="!showUserTable"
