@@ -99,6 +99,7 @@
                     <page
                         :pages = "Math.ceil(roomCount/pageCount)"
                         :setPage = "setPage"
+                        :currentPage = "page"
                     ></page>
                     <button class="btn btn-success btn-sm" @click="submitRoom">导入</button>
                 </div>

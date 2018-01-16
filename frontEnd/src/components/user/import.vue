@@ -95,6 +95,7 @@
                     <page
                         :pages = "Math.ceil(personCount/pageCount)"
                         :setPage = "setPage"
+                        :currentPage = "page"
                     ></page>
                     <button class="btn btn-success btn-sm" @click="submitPerson">导入</button>
                 </div>
