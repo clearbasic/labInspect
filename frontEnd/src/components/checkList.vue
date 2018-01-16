@@ -183,12 +183,8 @@ export default {
         },
         setCheckList() {
             //修改指标库信息
-            if (
-                this.checkListName === "" ||
-                this.checkListIntro === "" ||
-                this.checkListOrder === ""
-            ) {
-                alert("修改信息不能为空！！");
+            if (!this.checkListName || !this.checkListOrder) {
+                alert("名称或者排序不能为空！！");
                 return false;
             }
             
