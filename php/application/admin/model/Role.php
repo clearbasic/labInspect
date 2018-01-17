@@ -33,7 +33,12 @@ class Role extends Common
 
         // 默认除去超级管理员
 //        $map['access.user_id'] = array('neq', 1);
-
+        if ($GLOBALS['group_id'] != '1'){
+            $groups =new Group();
+            $res = $groups->getAllChild($GLOBALS['group_id']);
+            $res[]=$GLOBALS['group_id'];
+            $map['group.id'] = ['in',$res];
+        }
         $list = $this
             ->where($map)
             ->alias('access')

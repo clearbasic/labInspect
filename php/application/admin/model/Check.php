@@ -340,6 +340,7 @@ class Check extends Common
 
 
     public function  mycheck(){
+
         //获取登录用户的子单位ID组
         $username = $GLOBALS['userInfo']['username'];
 
