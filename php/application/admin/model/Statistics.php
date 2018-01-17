@@ -111,7 +111,7 @@ class Statistics extends Common
         }
     }
 
-    public function responTable()
+    public function responTable($param)
     {
         $map =[];
         $childIds = [];
@@ -120,18 +120,38 @@ class Statistics extends Common
             $childIds[]=$GLOBALS['userInfo']['org_id'];
         }
         if (!empty($childIds))$map['org_id'] = ['in', $childIds];
+        //按照院系 实验室 房间  进行查询
+
+        $org_level = !empty($param['org_level']) ? $param['org_level'] : '';
+
+        if (!empty($org_level)){
+            if ($org_level == 'room'){
+                $where = []; $arr= [];
+                if (!empty($childIds))$where['lab_id|dept_id'] = ['in', $childIds];
+                $where['agent_id'] = ['neq',''];
+                $data = db::name('dc_room')->where($where)->field('agent_id,agent_name,room_name as org_name')->select();
+                foreach ($data as $k => $v){
+                    $user_info = db::name('dc_person')->field('username,name,email,mobile')->where('username',$v['agent_id'])->find();
+                    $arr[$k]=array_merge($v,$user_info);
+                }
+                return $arr;
+            }else{
+                $map['org_level'] =  $org_level;
+            }
+        }
+
         $data = db::name('dc_org')->where($map)->where('responsible','neq','')->field('responsible,org_id,org_name')->select();
         if (!empty($data)){
             foreach ($data as $k=>$v){
                 $result = array();
                 preg_match_all("/(?:\()(\w+)(?:\))/i",$v['responsible'], $result);
-
                 $username= $result[1][0];
                 $user_info = db::name('dc_person')->field('username,name,email,mobile')->where('username',$username)->find();
                 $data[$k]=array_merge($v,$user_info);
 
             }
         }
+
 
         return $data;
     }

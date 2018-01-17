@@ -172,11 +172,14 @@ class Check extends Common
         $check_id = !empty($param['check_id'])? $param['check_id']: '';
 
         $zone_list = !empty($param['zone_list'])? $param['zone_list']: [];
+        sort($zone_list);
+
         //$check_id不存在为添加，否则为修改
         if (!$check_id){
 
             $this->startTrans();
             try {
+
                 $this->data($param)->allowField(true)->save();
                 $check_id = $this->check_id;
                 foreach ($zone_list as $k => $v){
@@ -347,23 +350,22 @@ class Check extends Common
         $group_ids = model('CkGroup')->where('leader_id',$username)->where('deleted','no')->column('group_id');
         $data = [];
         if (empty($group_ids)) {
-
             return $data;
         }
-
         $check_ids = model('effort')->where('group_id',['in',$group_ids])->group('check_id')->select();
-
         $data['plan'] = model('plan')->where('current','yes')->find();
         $data['task_list'] = $this->alias('check')
-            ->field('check.dt_begin,check.dt_end,task.task_id,task.task_name,task.task_level')
+            ->field('check.org_id,org.org_name as org_name,check.dt_begin,check.dt_end,task.task_id,task.task_name,task.task_level')
             ->join('ck_task task','check.task_id=task.task_id')
             ->join('ck_plan plan','task.plan_id=plan.plan_id')
             ->join('ck_effort effort','check.check_id=effort.check_id')
+            ->join('dc_org org','check.org_id=org.org_id')
             ->where('effort.group_id',['in',$group_ids])
             ->where('plan.current','yes')
-            ->group('check.task_id')
+            ->group('check.org_id')
             ->order('task.task_level,task.task_id')
             ->select();
+
         foreach ($data['task_list'] as $k=>$v){
             $data['task_list'][$k]['room_list'] = $this->alias('check')
                 ->field('effort.*,room.room_name,room.lab_id,room.dept_id,org1.org_name as lab_name,org2.org_name as dept_name')
@@ -375,6 +377,7 @@ class Check extends Common
                 ->join('dc_org org2','room.dept_id=org2.org_id')
                 ->where('effort.group_id',['in',$group_ids])
                 ->where('check.task_id',$v['task_id'])
+                ->where('check.org_id',$v['org_id'])
                 ->where('plan.current','yes')
                 ->select();
         }

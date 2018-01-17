@@ -42,7 +42,8 @@ class Statistics extends Checklogin
     public function responTable()
     {
         $groupModel = model('Statistics');
-        $data = $groupModel->responTable();
+        $param = $this->param;
+        $data = $groupModel->responTable($param);
         return resultArray(['data' => $data]);
     }
 
