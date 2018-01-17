@@ -18,43 +18,55 @@
                 <div class="page-header">
                     <h1>
                         {{title}}
+                        <div class="pull-right">
+                            <button :class="['btn btn-sm',{'btn-primary':searchType!='college'},{'btn-success':searchType=='college'}]"
+                                v-if="permission[loginUser.group_level] >= permission['school']" 
+                                @click="searchPerson('college')">按学院</button>
+                            <button :class="['btn btn-sm',{'btn-primary':searchType!='lab'},{'btn-success':searchType=='lab'}]" 
+                            v-if="permission[loginUser.group_level] >= permission['college']" 
+                            @click="searchPerson('lab')">按实验室</button>
+                            <button :class="['btn btn-sm',{'btn-primary':searchType!='room'},{'btn-success':searchType=='room'}]"  
+                                @click="searchPerson('room')">按房间</button>
+                        </div>
                     </h1>
                 </div>
-                <p>
-                    <button class="btn btn-primary btn-sm" v-if="permission[loginUser.group_level] >= permission['school']" @click="searchPerson('college')">按学院</button>
-                    <button class="btn btn-primary btn-sm" v-if="permission[loginUser.group_level] >= permission['college']" @click="searchPerson('lab')">按实验室</button>
-                    <button class="btn btn-primary btn-sm"  @click="searchPerson('room')">按房间</button>
-                </p>
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="center" style="width:60px;">序号</th>
-                            <th>用户名</th>
-                            <th class="center little">姓名</th>
-                            <th class="hidden-640">单位名称</th>
-                            <th class="center little">移动电话</th>
-                            <th class="hidden-640">电子邮箱</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(user,index) in person_list" 
-                            :key="'user'+index"
-                            v-if="index>=(page-1)*pageCount && index<page*pageCount"
-                        >
-                            <td>{{index+1}}</td>
-                            <td>
-                                {{user.username}}
-                            </td>
-                            <td class="center little">{{user.name}}</td>
-                            <td class="hidden-640">{{user.org_name}}</td>
-                            <td class="center little">{{user.mobile}}</td>
-                            <td class="hidden-640">{{user.email}}</td>
-                        </tr>
-                        <tr v-if="person_list.length==0" class="center">
-                            <td colspan="6">暂无安全责任人</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h3 class="center">
+                    <span v-if="searchType=='college'">院系安全责任人登记表</span>
+                    <span v-if="searchType=='lab'">实验室安全责任人登记表</span>
+                    <span v-if="searchType=='room'">房间安全责任人登记表</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center" style="width:60px;">序号</th>
+                                <th>用户名</th>
+                                <th class="center little">姓名</th>
+                                <th class="hidden-640">单位名称</th>
+                                <th class="center little">移动电话</th>
+                                <th class="hidden-640">电子邮箱</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(user,index) in person_list" 
+                                :key="'user'+index"
+                                v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                            >
+                                <td>{{index+1}}</td>
+                                <td>
+                                    {{user.username}}
+                                </td>
+                                <td class="center little">{{user.name}}</td>
+                                <td class="hidden-640">{{user.org_name}}</td>
+                                <td class="center little">{{user.mobile}}</td>
+                                <td class="hidden-640">{{user.email}}</td>
+                            </tr>
+                            <tr v-if="person_list.length==0" class="center">
+                                <td colspan="6">暂无安全责任人</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <page
                     :pages = "Math.ceil(person_list.length/pageCount)"
                     :setPage = "setPage"

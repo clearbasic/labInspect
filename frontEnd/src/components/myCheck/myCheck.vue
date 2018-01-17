@@ -37,6 +37,7 @@
                     <thead>
                         <tr>
                             <th class="center little">检查安排</th>
+                            <th>单位名称</th>
                             <th>单位要求时间</th>
                             <th class="center little">检查类型</th>
                             <th class="center little">开展情况</th>
@@ -45,6 +46,7 @@
                     <tbody>
                         <tr v-for="taskCheck in task_list" :key="'taskCheck'+taskCheck.check_id">
                             <td class="center little">{{taskCheck.task_name}}</td>
+                            <td>{{taskCheck.org_name}}</td>
                             <td>{{taskCheck.dt_begin.substring(0,10)}} 到 {{taskCheck.dt_end.substring(0,10)}}</td>
                             <td class="center little" >
                                 <span v-if="taskCheck.task_level == 'lab'">自查</span>
