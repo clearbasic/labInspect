@@ -40,16 +40,22 @@ class CkRule extends Common
             $this->error = $validate->getError();
             return false;
         }
+        $plan_score = model('Plan')->where('plan_id',$param['plan_id'])->value('plan_score');
         $arr = [];
         $i = 0;
+        $score = 0;
         foreach ($param['checklist'] as $k => $v){
             $arr[$i]= $param;
             unset($arr[$i]['checklist']);
             $arr[$i]['checklist_id'] = $k;
             $arr[$i]['score'] = $v['score'];
+            $score += $v['score'];
             $i++;
         }
-
+        if ($score != $plan_score){
+            $this->error = '设置总分不等于配置总分';
+            return false;
+        }
         $this->startTrans();
         try {
             $this->allowField(true)->saveAll($arr);
@@ -112,23 +118,31 @@ class CkRule extends Common
             $this->error = '缺少单位级别';
             return false;
         }
+        $plan_score = model('Plan')->where('plan_id',$plan_id)->value('plan_score');
         $where = [];
         $where['plan_id'] = $plan_id;
         $where['level']   = $level;
         $where['college_id'] = $college_id;
         $where['lab_id']  = $lab_id;
+
+        $arr = [];
+        $i = 0; $score = 0;
+        foreach ($param['checklist'] as $k => $v){
+            $arr[$i]= $param;
+            unset($arr[$i]['checklist']);
+            $arr[$i]['checklist_id'] = $k;
+            $arr[$i]['score'] = $v['score'];
+            $score += $v['score'];
+            $i++;
+        }
+        if ($score > $plan_score){
+            $this->error = '设置总分大于配置总分';
+            return false;
+        }
+
         $this->startTrans();
         try {
             $this->where($where)->delete();
-            $arr = [];
-            $i = 0;
-            foreach ($param['checklist'] as $k => $v){
-                $arr[$i]= $param;
-                unset($arr[$i]['checklist']);
-                $arr[$i]['checklist_id'] = $k;
-                $arr[$i]['score'] = $v['score'];
-                $i++;
-            }
             $this->allowField(true)->saveAll($arr);
             $this->commit();
             return true;
