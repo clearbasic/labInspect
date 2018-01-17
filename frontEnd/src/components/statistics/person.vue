@@ -37,7 +37,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(user,index) in person_list" :key="'user'+index">
+                        <tr v-for="(user,index) in person_list" 
+                            :key="'user'+index"
+                            v-if="index>=(page-1)*pageCount && index<page*pageCount"
+                        >
                             <td>{{index+1}}</td>
                             <td>
                                 {{user.username}}
@@ -52,21 +55,30 @@
                         </tr>
                     </tbody>
                 </table>
+                <page
+                    :pages = "Math.ceil(person_list.length/pageCount)"
+                    :setPage = "setPage"
+                    :currentPage="page"
+                >
+                </page>
             </div>
         </div>
     </div>
 </template>
 <script>
-
+import page from '../common/page';
 export default {
     name: "personStatistics",
     data() {
         return {
             title: "安全责任人统计",
             person_list:[],
-            searchType:'room'
+            searchType:'room',
+            page:1,
+            pageCount:15,
         };
     },
+    components:{page},
     watch:{
         searchType(){
             this.getPerson();
@@ -82,7 +94,10 @@ export default {
         },
         searchPerson(type){
             this.searchType = type;
-        }   
+        },
+        setPage(page){
+            this.page = page;
+        },  
     },
     mounted() {
         this.getPerson();
