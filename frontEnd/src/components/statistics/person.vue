@@ -20,6 +20,11 @@
                         {{title}}
                     </h1>
                 </div>
+                <p>
+                    <button class="btn btn-primary btn-sm" v-if="permission[loginUser.group_level] >= permission['school']" @click="searchPerson('college')">按学院</button>
+                    <button class="btn btn-primary btn-sm" v-if="permission[loginUser.group_level] >= permission['college']" @click="searchPerson('lab')">按实验室</button>
+                    <button class="btn btn-primary btn-sm"  @click="searchPerson('room')">按房间</button>
+                </p>
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
@@ -59,16 +64,25 @@ export default {
         return {
             title: "安全责任人统计",
             person_list:[],
+            searchType:'room'
         };
+    },
+    watch:{
+        searchType(){
+            this.getPerson();
+        }
     },
     methods: {
         getPerson(){
             const URL = this. serverUrl + '/admin/statistics/responTable';
             const _this = this;
-            this.emitAjax(URL, null, function(result) {
+            this.emitAjax(URL, {org_level:this.searchType}, function(result) {
                 _this.person_list = result;
             });
-        }
+        },
+        searchPerson(type){
+            this.searchType = type;
+        }   
     },
     mounted() {
         this.getPerson();

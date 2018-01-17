@@ -58,15 +58,12 @@ export default {
                 return false;
             }
             this.page = item;
-            this.setPage(this.page);
         },
         prev() {
             this.page--;
-            this.setPage(this.page);
         },
         next(){
             this.page++;
-            this.setPage(this.page);
         },
         setPageArray(){
             let length = 5;
@@ -87,6 +84,7 @@ export default {
     },
     watch:{
         page(){
+            this.setPage(this.page);
             this.gotoPage = this.page;
             //当总页数大于5点到第一个和最后一个
             if((this.page == this.pageArray[0] || this.page == this.pageArray[this.pageArray.length-1])&&this.pages>5 || this.pageArray.indexOf(this.page)<0){
@@ -94,6 +92,9 @@ export default {
             }
         },
         pages(){
+            if(this.page>this.pages){
+                this.page = this.pages;
+            }
             this.setPageArray();
         }
     },

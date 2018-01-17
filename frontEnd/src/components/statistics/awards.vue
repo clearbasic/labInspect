@@ -20,6 +20,9 @@
                         {{title}}
                     </h1>
                 </div>
+                <h2 class="center">
+                    {{selectPlan.plan_name?selectPlan.plan_name:"本期次"}}优秀实验室名单
+                </h2>
                 <p>
                     <button class="btn btn-primary btn-sm" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapseExample">
                         <i class="ace-icon glyphicon glyphicon-search"></i>
