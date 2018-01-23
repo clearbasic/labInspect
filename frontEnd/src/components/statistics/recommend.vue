@@ -128,7 +128,6 @@ export default {
                 org_name:this.searchKey,
             }
             this.emitAjax(URL, data, function(result) {
-                console.log(result)
                 _this.org_list = result.org_list;
                 _this.check_list = result.check_list;
                 _this.task_list = {

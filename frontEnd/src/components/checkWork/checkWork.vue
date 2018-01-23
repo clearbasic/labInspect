@@ -204,7 +204,6 @@ export default {
         },
         getCollege(){
             //获得当前学院的名称
-            console.log(this.college_name)
             for (let index = 0; index < this.college_list.length; index++) {
                 const college = this.college_list[index];
                 if(this.college_id == college.org_id){

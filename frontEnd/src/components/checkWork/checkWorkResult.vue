@@ -216,7 +216,6 @@ export default {
                 task_id: this.$route.params.id
             }
             this.emitAjax(URL,data,function(result){
-                console.log(result)
                 _this.result_list = result;
             })
         },
