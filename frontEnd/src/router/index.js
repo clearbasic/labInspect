@@ -28,7 +28,9 @@ import Role from "../components/admin/role/role.vue";
 import AssignRole from "../components/admin/role/assignRole.vue";
 import PersonStatistics from "../components/statistics/person.vue";
 import CheckStatistics from "../components/statistics/check.vue";
+import CheckStatisticsRusult from "../components/statistics/checkResult.vue";
 import Awards from "../components/statistics/awards.vue";
+import Recommend from "../components/statistics/recommend.vue";
 import NotFondComponent from "../components/common/404.vue";
 
 Vue.use(Router)
@@ -249,12 +251,28 @@ export default new Router({
 						active:pathName+"/checkStatistics",
 					}
 				},{
+					path:pathName+"/checkStatistics/:id",
+					name:"checkStatisticsRusult",
+					component:CheckStatisticsRusult,
+					meta:{
+						title:"检查统计结果详细 - "+title,
+						active:pathName+"/checkStatistics",
+					}
+				},{
 					path:pathName+"/awards",
 					name:"awards",
 					component:Awards,
 					meta:{
 						title:"评奖评优 - "+title,
 						active:pathName+"/awards",
+					}
+				},{
+					path:pathName+"/recommend",
+					name:"recommend",
+					component:Recommend,
+					meta:{
+						title:"评奖评优 - "+title,
+						active:pathName+"/recommend",
 					}
 				},
 			]

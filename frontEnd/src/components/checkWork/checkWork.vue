@@ -131,7 +131,9 @@ export default {
     watch:{
         college_id(){
             this.getCurrentPlan();
-            this.getCollege();
+            if(this.loginUser.group_level != "lab"){
+                this.getCollege();
+            }
         },
         plan_id(){
             this.getCurrentPlan();
@@ -180,6 +182,7 @@ export default {
                 const org = orgLIst[index];
                 if(this.loginUser.org_id == org.org_id){
                     this.college_id = org.pid;
+                    this.college_name = org.org_name;
                     break;
                 }
             }
@@ -195,10 +198,13 @@ export default {
                 }
             }
             this.college_id = this.college_list[0]?this.college_list[0].org_id:0;
-            this.getCollege();
+            if(this.loginUser.group_level != "lab"){
+                this.getCollege();
+            }
         },
         getCollege(){
             //获得当前学院的名称
+            console.log(this.college_name)
             for (let index = 0; index < this.college_list.length; index++) {
                 const college = this.college_list[index];
                 if(this.college_id == college.org_id){
@@ -236,7 +242,7 @@ export default {
                 const task = taskList[index];
                 _this.task_list[task.task_level].push(Object.assign({},task));
             }
-            //过滤自查、复查、抽查
+            /* //过滤自查、复查、抽查
             switch (this.permission[this.loginUser.group_level]) {
                 case this.permission.college:
                     this.task_list.school = [];
@@ -247,7 +253,7 @@ export default {
                     break;
                 default:
                     break;
-            }
+            } */
         }
     },
     mounted() {

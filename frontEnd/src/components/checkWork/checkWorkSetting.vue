@@ -113,12 +113,11 @@
                                     <tr v-if="loginUser.group_level == currentTask.task_level">
                                         <td colspan="2" class="center">
                                             <button class="btn btn-success btn-sm" @click="editCheckTask(check)" v-if="today < moment(check.dt_begin).unix()">保存</button>
-                                            <router-link class="btn btn-default btn-sm" 
-                                                v-if="check.check_state != 'finished'&&today > moment(check.dt_begin).unix()&&today < moment(check.dt_end).unix()" 
+                                            <router-link v-if="check.check_state != 'finished'&&today > moment(check.dt_begin).unix()&&today < moment(check.dt_end).unix()" 
                                                 :to="{path:pathName+'/checkWork/progress/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                             >查看进度</router-link>
-                                            <router-link class="btn btn-default btn-sm" 
-                                                v-if="check.check_state == 'finished' || today > moment(check.dt_end).unix()"
+                                            <span v-if="check.check_state != 'finished' && today > moment(check.dt_end).unix()">逾期未完成检查</span>
+                                            <router-link v-if="check.check_state == 'finished'"
                                                 :to="{path:pathName+'/checkWork/result/'+$route.params.id,query:{college_id:$route.query.college_id}}"
                                             >查看结果</router-link>
                                         </td>

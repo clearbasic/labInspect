@@ -47,43 +47,29 @@
                             <tr>
                                 <th class="center" width="60px">序号</th>
                                 <th>实验室名称</th>
-                                <th class="center" v-for="task in task_list.lab" :key="'lab'+task.task_id">{{task.task_name}}</th>
                                 <th class="center">平均分（自查）</th>
-                                <th class="center" v-for="task in task_list.college" :key="'college'+task.task_id">{{task.task_name}}</th>
                                 <th class="center">平均分（复查）</th>
-                                <th class="center" v-for="task in task_list.school" :key="'school'+task.task_id">{{task.task_name}}</th>
                                 <th class="center">平均分（抽查）</th>
+                                <th>评优推荐</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(org,index) in org_list" :key="'org'+org.org_id">
                                 <td>{{index+1}}</td>
-                                <td>
-                                    <router-link :to="{path:pathName+'/checkStatistics/'+org.org_id,query:{plan_id:selectPlan.plan_id}}">{{org.org_name}}</router-link>
-                                </td>
-                                <td class="center" v-for="task in task_list.lab" :key="'lab'+task.task_id">
-                                    <span v-for="check in check_list" :key="'check'+check.check_id" v-if="check.org_id == org.org_id && check.task_id == task.task_id">
-                                        {{check.check_score}}
-                                    </span>
-                                </td>
+                                <td>{{org.org_name}}</td>
                                 <td class="center">
                                     {{computedScore("lab",org.org_id)}}
-                                </td>
-                                <td class="center" v-for="task in task_list.college" :key="'college'+task.task_id">
-                                    <span v-for="check in check_list" :key="'check'+check.check_id" v-if="check.org_id == org.org_id && check.task_id == task.task_id">
-                                        {{check.check_score}}
-                                    </span>
                                 </td>
                                 <td class="center">
                                     {{computedScore("college",org.org_id)}}
                                 </td>
-                                <td class="center" v-for="task in task_list.school" :key="'school'+task.task_id">
-                                    <span v-for="check in check_list" :key="'check'+check.check_id" v-if="check.org_id == org.org_id && check.task_id == task.task_id">
-                                        {{check.check_score}}
-                                    </span>
-                                </td>
                                 <td class="center">
                                     {{computedScore("school",org.org_id)}}
+                                </td>
+                                <td>
+                                    <button :class="['btn btn-xs',{'btn-warning':org.isExcellent==2}]" v-if="loginUser.group_level=='college'&&org.isExcellent!=1" @click="setRecommend(org)">推荐</button>
+                                    <span v-if="loginUser.group_level=='college'&&org.isExcellent==1">已评优</span>
+                                    <button :class="['btn btn-xs',{'btn-warning':org.isExcellent==1}]" v-if="loginUser.group_level=='school'" @click="setExcellent(org)">评优</button>
                                 </td>
                             </tr>
                             <tr v-if="org_list.length==0" class="center">
@@ -135,13 +121,14 @@ export default {
         },
         getCheckStatistics() {
             //获取数据列表
-            const URL = this.serverUrl + "/admin/statistics/checkStatistics";
+            const URL = this.serverUrl + "/admin/statistics/recommendStatistics";
             const _this = this;
             let data = {
                 plan_id:this.selectPlan.plan_id,
                 org_name:this.searchKey,
             }
             this.emitAjax(URL, data, function(result) {
+                console.log(result)
                 _this.org_list = result.org_list;
                 _this.check_list = result.check_list;
                 _this.task_list = {
@@ -180,6 +167,62 @@ export default {
             }
             const score = count != 0 ?totalScore/count:0;
             return parseFloat(score.toFixed(2));
+        },
+        setExcellent(org){
+            //评优
+            let falg = false;
+            if(org.isExcellent == 2){
+                if(confirm("是否要给"+org.org_name+"评优？")){
+                    org.isExcellent = 1;
+                    falg = true;
+                }
+            }else{
+                if(confirm("是否要取消"+org.org_name+"的评优？")){
+                    org.isExcellent = 2;
+                    falg = true;
+                }
+            }
+            if(falg){
+                const URL= this.serverUrl + "/admin/statistics/setExcellent";
+                const _this = this;
+                const data = {
+                    plan_id:this.selectPlan.plan_id,
+                    org_id:org.org_id,
+                    isExcellent:org.isExcellent
+                }
+                this.emitAjax(URL,data,null,function(){
+                    //网络出问题时
+                    _this.getCheckStatistics();
+                })
+            }
+        },
+        setRecommend(org){
+            //推荐评优
+            let falg = false;
+            if(org.isExcellent == 0){
+                if(confirm("是否要推荐"+org.org_name+"为评优实验室？")){
+                    org.isExcellent = 2;
+                    falg = true;
+                }
+            }else{
+                if(confirm("是否要取消"+org.org_name+"的评优推荐？")){
+                    org.isExcellent = 0;
+                    falg = true;
+                }
+            }
+            if(falg){
+                const URL= this.serverUrl + "/admin/statistics/setRecommend";
+                const _this = this;
+                const data = {
+                    plan_id:this.selectPlan.plan_id,
+                    org_id:org.org_id,
+                    isExcellent:org.isExcellent
+                }
+                this.emitAjax(URL,data,null,function(){
+                    //网络出问题时
+                    _this.getCheckStatistics();
+                })
+            }
         },
         setIsOpen(bool){
             //控制搜索下拉菜单
