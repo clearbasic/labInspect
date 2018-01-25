@@ -152,8 +152,9 @@
                                                 <textarea v-if="loginUser.group_level != 'lab'" v-model="org.check[0].reply" readonly class="bg-gray textarea"></textarea>
                                             </li>
                                             <li class="list-group-item" v-if="org.check[0].review_state != 'college'">
-                                                <button class="btn btn-primary btn-sm" @click="saveReview(org)">提交</button>
-                                                <button class="btn btn-default btn-sm" @click="org.check[0].review_state='no-start'">取消</button>
+                                                <button class="btn btn-primary btn-sm" @click="saveReview(org)" v-if="loginUser.group_level=='school'">提交整改</button>
+                                                <button class="btn btn-primary btn-sm" @click="saveReview(org)" v-if="loginUser.group_level=='lab'">提交反馈</button>
+                                                <button class="btn btn-default btn-sm" @click="org.check[0].review_state='no-start'" v-if="loginUser.group_level=='school'&&org.check[0].review_state == 'pending'">取消</button>
                                             </li>
                                         </ul>
                                         <span v-if="org.check[0].review_state == 'no-need'">
@@ -240,7 +241,7 @@ export default {
         },
         saveReview(org){
             //保存整改通知
-            if(org.check[0].reply){
+            if(loginUser.group_level == 'lab' && org.check[0].review_state =='pending'){
                 org.check[0].review_state = 'finished';
             }
             const data = {
