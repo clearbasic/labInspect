@@ -241,7 +241,7 @@ export default {
         },
         saveReview(org){
             //保存整改通知
-            if(loginUser.group_level == 'lab' && org.check[0].review_state =='pending'){
+            if(this.loginUser.group_level == 'lab' && org.check[0].review_state =='pending'){
                 org.check[0].review_state = 'finished';
             }
             const data = {
