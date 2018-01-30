@@ -92,6 +92,7 @@ export default {
             newTaskLevel:"",
             newTaskDtBegin:"",
             newTaskDtEnd:"",
+            today:0,
         }
     },
     components:{
@@ -207,23 +208,23 @@ export default {
         },
         setCount(){
             //安排分类
-            const _this = this;
-            _this.schoolArray = [];
-            _this.collegeArray = [];
-            _this.labArray = [];
             const taskList = this.checkPlan.task_list;
+            this.schoolArray = [];
+            this.collegeArray = [];
+            this.labArray = [];
+            this.today = this.checkPlan.today;
             if(taskList){
                 for (let index = 0; index < taskList.length; index++) {
                     const element = taskList[index];
                     switch (element.task_level) {
                         case "school":
-                            _this.schoolArray.push(Object.assign({},element))
+                            this.schoolArray.push(Object.assign({},element))
                             break;
                         case "college":
-                            _this.collegeArray.push(Object.assign({},element))
+                            this.collegeArray.push(Object.assign({},element))
                             break;
                         case "lab":
-                            _this.labArray.push(Object.assign({},element))
+                            this.labArray.push(Object.assign({},element))
                         default:
                             break;
                     }

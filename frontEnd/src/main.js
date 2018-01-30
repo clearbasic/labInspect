@@ -21,7 +21,6 @@ Vue.prototype.permission = {
 }
 Vue.prototype.loginUser = getUserInfo();
 Vue.prototype.moment = moment;
-Vue.prototype.today = Date.parse(new Date()) / 1000;
 //这是钩子进入页面之前,就修改title
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title    //这 to.meta.title 是在router里设置的

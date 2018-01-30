@@ -209,7 +209,8 @@ export default {
             zone_list: [],
             room_list: [],
             check_list: [],
-            newLabSetting: {}
+            newLabSetting: {},
+            today:0,
         };
     },
     methods: {
@@ -239,7 +240,9 @@ export default {
                 task_id: this.$route.params.id,
             };
             this.emitAjax(URL, data, function(result) {
-                _this.check_list = result;
+                console.log(result)
+                _this.check_list = result.content;
+                _this.today = result.today;
             });
         },
         setGroupId(checkObj,zone_id,event,flag){
