@@ -27,6 +27,17 @@ class Task extends Common
         return $GLOBALS['userInfo']['username'];
     }
 
+    //方法一
+    public function getPlanIdAttr($value,$data)
+    {
+        return $this->belongsTo('Plan','plan_id','plan_id')->where('plan_id',$value)->value('plan_name');
+    }
+    //方法二
+//    public function getPlanIdAttr($value,$data)
+//    {
+//        return $this->belongsTo('Plan','plan_id','plan_id')->where('plan_id',$data['plan_id'])->value('plan_name');
+//    }
+
     /**
      * [getDataList 获取列表]
      * @return    [array]

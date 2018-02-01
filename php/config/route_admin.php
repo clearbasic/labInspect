@@ -228,6 +228,8 @@ return [
     'admin/check/submitcheck' => ['admin/check/submitcheck', ['method' => 'POST']],
     // 【检查工作管理】检查工作检查结果
     'admin/check/showresult' => ['admin/check/showresult', ['method' => 'POST']],
+    // 【检查工作管理】检查结果
+    'admin/check/checkResult' => ['admin/check/checkResult', ['method' => 'POST']],
     // 【检查工作管理】检查反馈
     'admin/check/feedback' => ['admin/check/feedback', ['method' => 'POST']],
 
@@ -238,15 +240,14 @@ return [
     // 【登录】
     'admin/login/logout'   => ['admin/login/logout', ['method' => 'POST']],
 
-    // 【统计功能】
-    'admin/statistics/room_export' => ['admin/statistics/room_export', ['method' => 'GET']],
-
-    'admin/statistics/test' => ['admin/statistics/test', ['method' => 'GET']],
-
     // 【统计功能】检查统计
     'admin/statistics/checkStatistics' => ['admin/statistics/checkStatistics', ['method' => 'POST']],
-    // 【统计功能】评优统计
+    // 【统计功能】评优结果统计
     'admin/statistics/excellentStatistics' => ['admin/statistics/excellentStatistics', ['method' => 'POST']],
+    // 【统计功能】评优推荐统计
+    'admin/statistics/recommendStatistics' => ['admin/statistics/recommendStatistics', ['method' => 'POST']],
+    // 【统计功能】评优推荐
+    'admin/statistics/setRecommend' => ['admin/statistics/setRecommend', ['method' => 'POST']],
     // 【统计功能】设置评优
     'admin/statistics/setExcellent' => ['admin/statistics/setExcellent', ['method' => 'POST']],
     // 【统计功能】责任人登记表

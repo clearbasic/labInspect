@@ -13,7 +13,6 @@ class Checklist extends Checklogin
 
     public function index()
     {
-
         $model = model('Checklist');
         $param = $this->param;
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';

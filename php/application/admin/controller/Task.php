@@ -11,23 +11,24 @@ use think\Request;
 use think\Db;
 use app\common\adapter\AuthAdapter;
 use app\common\controller\Common;
+use think\log;
 
 class Task extends Checklogin
 {
 
     public function index()
     {
-        $model = model('task');
-        $param = $this->param;
-        $plan_id = !empty($param['plan_id']) ? $param['plan_id']: '';
-        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        $page = !empty($param['page']) ? $param['page']: '';
-        $limit = !empty($param['limit']) ? $param['limit']: '';
-        $data = $model->getDataList($plan_id,$keywords, $page, $limit);
-        if (!$data) {
-            return resultArray(['error' => $model->getError()]);
-        }
-        return resultArray(['data' => $data]);
+            $model = model('task');
+            $param = $this->param;
+            $plan_id = !empty($param['plan_id']) ? $param['plan_id']: '';
+            $keywords = !empty($param['keywords']) ? $param['keywords']: '';
+            $page = !empty($param['page']) ? $param['page']: '';
+            $limit = !empty($param['limit']) ? $param['limit']: '';
+            $data = $model->getDataList($plan_id,$keywords, $page, $limit);
+            if (!$data) {
+                return resultArray(['error' => $model->getError()]);
+            }
+            return resultArray(['data' => $data]);
     }
     public function add()
     {

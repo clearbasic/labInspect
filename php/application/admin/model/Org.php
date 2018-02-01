@@ -22,10 +22,19 @@ class Org extends Common
     protected $insert = [
         'creator'
     ];
-    protected function setCreatorAttr()
+    //修改器
+    protected function setCreatorAttr($value,$data)
     {
+
         return $GLOBALS['userInfo']['username'];
     }
+    //获取器
+    //    public function getOrgStateAttr($value, $data){
+    //        $get_data = ['yes'=>'开启','no'=>'关闭'];
+    //        return $get_data[$value];
+    //    }
+
+
     /**
      * [getDataList 获取列表]
      * @return    [array]
@@ -36,12 +45,15 @@ class Org extends Common
         //获取登录用户的子单位ID组
         $map = [];
         $orgIds =[];
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = $this->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
+
+        //$GLOBALS['group_id']>2 即代表校级管理员以下角色
+        if ($GLOBALS['group_id'] > 2) {
+            $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
+
             $parentIds = $this->getAllParent($GLOBALS['userInfo']['org_id']);
             $orgIds = array_merge($childIds,$parentIds);
         }
+
         if (!empty($orgIds))$map['org_id'] = ['in', $orgIds];
 
         //根据关键字查询
@@ -73,8 +85,8 @@ class Org extends Common
                     $v['college_id'] = '';
                 }
             }
+            $data[] = $v->toArray();
         }
-        $data = $list;
         return $data;
     }
 
@@ -144,28 +156,4 @@ class Org extends Common
         }
     }
 
-    public function orgData()
-    {
-        $data['school_list'] = $this
-            ->where('org_level','school')
-            ->field('org_id,org_name,org_level,org_alias,org_address,contacts,responsible,org_state,org_order')
-            ->select();
-        $data['college_list'] = $this
-            ->alias('a')
-            ->join('dc_org b', 'b.pid=a.org_id', 'LEFT')
-            ->where('b.org_level','college')
-            ->field('b.org_id,b.pid as school_id,b.org_name,b.org_level,b.org_alias,b.org_address,
-            b.contacts,b.responsible,b.org_state,b.org_order')
-            ->order('b.org_order')
-            ->select();
-        $data['lab_list'] = $this
-            ->alias('a')
-            ->join('dc_org b', 'b.pid=a.org_id', 'LEFT')
-            ->join('dc_org c', 'c.pid=b.org_id', 'LEFT')
-            ->where('c.org_level','lab')
-            ->field('c.*,b.pid as school_id,c.pid as college_id')
-            ->order('c.org_order')
-            ->select();
-        return $data;
-    }
 }

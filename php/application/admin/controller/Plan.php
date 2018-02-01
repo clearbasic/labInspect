@@ -30,10 +30,11 @@ class Plan extends Checklogin
         $model = model('plan');
         $param = $this->param;
         $data = $model->createData($param);
+
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }
-        return resultArray(['data' => $data]);
+        return resultArray(['data' => '添加成功']);
     }
     public function del()
     {

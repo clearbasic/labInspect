@@ -24,6 +24,23 @@ class Statistics extends Checklogin
         return resultArray(['data' => $data]);
     }
 
+    public function recommendStatistics()
+    {
+        $groupModel = model('Statistics');
+        $param = $this->param;
+        $data = $groupModel->getRecommendList($param);
+        return resultArray(['data' => $data]);
+    }
+
+
+    public function setRecommend()
+    {
+        $groupModel = model('Statistics');
+        $param = $this->param;
+        $data = $groupModel->setRecommend($param);
+        return resultArray(['data' => $data]);
+    }
+
     public function excellentStatistics()
     {
         $groupModel = model('Statistics');
@@ -31,6 +48,7 @@ class Statistics extends Checklogin
         $data = $groupModel->getExcellentList($param);
         return resultArray(['data' => $data]);
     }
+
     public function setExcellent()
     {
         $groupModel = model('Statistics');
@@ -38,6 +56,7 @@ class Statistics extends Checklogin
         $data = $groupModel->setExcellent($param);
         return resultArray(['data' => $data]);
     }
+
 
     public function responTable()
     {

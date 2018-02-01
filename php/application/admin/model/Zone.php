@@ -35,13 +35,11 @@ class Zone extends Common
         $map = [];
 
         //获取登录用户的子单位ID组
-        if ($GLOBALS['userInfo']['org_id'] != '1') {
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[] = $GLOBALS['userInfo']['org_id'];
-            if (!empty($childIds)) {
-                $map['zone.org_id'] = ['in', $childIds];
-            }
+        $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
+        if (!empty($childIds)) {
+            $map['zone.org_id'] = ['in', $childIds];
         }
+
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         if ($keywords) {
             $map['username|name'] = ['like', '%'.$keywords.'%'];

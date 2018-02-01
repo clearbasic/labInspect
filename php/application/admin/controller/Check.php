@@ -104,6 +104,17 @@ class Check extends Checklogin
         return resultArray(['data' => $data]);
     }
 
+    public function checkResult()
+    {
+        $Model = model('check');
+        $param = $this->param;
+        $data = $Model->checkResult($param);
+        if (!$data) {
+            return resultArray(['error' => $Model->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
+
     public function startcheck()
     {
         $Model = model('check');

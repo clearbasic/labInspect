@@ -35,11 +35,9 @@ class Room extends Common
         $map = [];
 
         //获取登录用户的子单位ID组
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
-            if (!empty($childIds))$map['room.lab_id'] = ['in', $childIds];
-        }
+        $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
+        if (!empty($childIds))$map['room.lab_id'] = ['in', $childIds];
+
 
         $college = !empty($param['college_id']) ? $param['college_id']: '';
         if ($college) $map['room.dept_id'] = $college;

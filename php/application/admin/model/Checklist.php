@@ -49,6 +49,7 @@ class Checklist extends Common
             $list[$k]['count']= Db::table('t_ck_item')->where('checklist_id',$v['id'])->count('id');
         }
         $data = $list;
+//        p($data);
         return $data;
     }
     /**

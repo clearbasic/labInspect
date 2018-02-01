@@ -27,7 +27,7 @@ class Plan extends Common
         return $GLOBALS['userInfo']['username'];
     }
     /**
-     * [getDataList 获取列表]
+     * [getDataList 获取期次列表]
      * @return    [array]
      */
     public function getDataList($param, $page, $limit)
@@ -57,8 +57,11 @@ class Plan extends Common
             $list = $list->page($page, $limit);
         }
         $list = $list->select();
-        $data = $list;
+        foreach ($list as &$v){
+            $data[]=$v->toArray();
+        }
         return $data;
+
     }
     /**
      * 创建指标体系
@@ -72,11 +75,14 @@ class Plan extends Common
             $this->error = $validate->getError();
             return false;
         }
+
         $this->startTrans();
         try {
             $this->data($param)->allowField(true)->save();
+
             $plan_id = $this->plan_id;
             $current = $this->current;
+
             if ($current == 'yes'){
                 $this->where(['plan_id'=>['not in',$plan_id]])->setField('current','no');
             }
@@ -126,8 +132,10 @@ class Plan extends Common
     public function delDataById($id = '', $delSon = false)
     {
 
-        $task_ids =  model('task')->where('plan_id',$id)->column('task_id');
-        $count = model('check')->where('task_id',['in',$task_ids])->count('check_id');
+        $count = db::view('ck_check')
+            ->view('ck_task','','ck_check.task_id = ck_task.task_id')
+            ->where('ck_task.plan_id',$id)
+            ->count();
         if ($count > 0){
             $this->error = '该期次下已有检查任务进行，不能删除';
             return false;
@@ -181,8 +189,12 @@ class Plan extends Common
             $this->error = '暂无此期次ID';
             return false;
         }
-        $data['plan'] = $this->where('plan_id',$plan_id)->find();
-        $data['task_list'] = $this
+        //检查期次信息
+        $plan = $this->where('plan_id',$plan_id)->find()->toArray();
+        $res['plan'] = $plan;
+
+        //检查安排信息
+        $task_list = $this
             ->alias('plan')
             ->join('ck_task task', 'task.plan_id=plan.plan_id', 'LEFT')
             ->where('plan.plan_id',$plan_id)
@@ -190,30 +202,33 @@ class Plan extends Common
             ->order('task.dt_begin,task.task_name,task.task_level')
             ->select();
 
-        $data['rule_list'] = $this
+        foreach ($task_list as $v){
+            $res['task_list'][] = $v->toArray();
+        }
+
+        //检查规则信息
+        $rule_list = $this
             ->alias('plan')
             ->join('ck_rule rule', 'rule.plan_id=plan.plan_id', 'LEFT')
             ->where('plan.plan_id',$plan_id)
-            ->field('rule.*')
+            ->field('rule.level,rule.college_id,rule.lab_id,rule.plan_id')
             ->group('rule.level,rule.college_id,rule.lab_id')
             ->select();
-        foreach ($data['rule_list'] as $k=>$v){
-            $v['checklist'] = db::name('ck_rule')
+
+        foreach ($rule_list as $v){
+            $res['rule_list'][] = $v->toArray();
+        }
+
+        foreach ($res['rule_list'] as &$v){
+            $rules = db::name('ck_rule')
                 //字段排除
                 ->field(['plan_id','rule_id','level','college_id','lab_id','creator','dt_create'],true)
                 ->where(array('level'=>$v['level'],'college_id'=>$v['college_id'],'lab_id'=>$v['lab_id'],'plan_id'=>$plan_id))
                 ->select();
-            $arr = [];
-            foreach ($v['checklist'] as $key => $val){
-                $arr[$val['checklist_id']] = $val;
-
-            }
-            unset($v['rule_id']);
-            unset($v['checklist_id']);
-            unset($v['score']);
-            $arr = array_to_object($arr);
-            $v['checklist'] = $arr;
+            $v['checklist'] = $rules;
         }
-        return $data;
+
+        $res['today'] =  time();
+        return $res;
     }
 }

@@ -9,14 +9,17 @@ return [
     'type'           => 'mysql',
     // 服务器地址
     'hostname'       => 'mysql-web.crigh.net',
+//    'hostname'       => 'localhost',
     // 数据库名
     'database'       => 'lab-inspect',
+//    'database'       => 'lab_inspect',
     // 用户名
     'username'       => 'root',
     // 密码
     'password'       => '',
     // 端口
     'hostport'       => '3306',
+//    'hostport'       => '3307',
     // 连接dsn
     'dsn'            => '',
     // 数据库连接参数

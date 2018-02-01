@@ -7,24 +7,13 @@ use think\Validate;
  */
 class Person extends Validate{
 
-    protected $rule = array(
-        'username'  		=> 'require|unique:dc_person',
-        'name'  		    => 'require',
-        'password'      	=> 'require',
-        'repassword'        => 'require|confirm:password',
-        'org_id'      	    => 'require',
-//        'mobile'      	    => 'require',
-        'email'      	    => 'email',
-    );
-    protected $message = array(
-        'username.require'    	=> '用户名必须填写',
-        'username.unique'    	=> '用户名已存在',
-        'name.require'    	    => '真实姓名必须填写',
-        'password.require'    	=> '密码必须填写',
-        'repassword.require'    => '确认密码必须填写',
-        'repassword.confirm'    => '两次密码输入不一致',
-        'org_id.require'    	=> '所属单位必须填写',
-//        'mobile.require'    	=> '联系电话必须填写',
-        'email.email'    	    => '请填写正确的邮箱',
-    );
+    protected   $rule = [
+        ['username','require|unique:dc_person|alphaDash|length:4,25', '用户名必须填写|用户名已存在|请输入正确的用户名(为字母和数字，下划线_及破折号-)|用户名长度必须在4--20位之间'],
+        ['name','require','真实姓名必须填写'],
+        ['password','require|alphaDash|length:4,25', '密码不能为空|请输入正确的密码(为字母和数字，下划线_及破折号-)|密码长度必须在4--20位之间'],
+        ['repassword','require|confirm:password', '确认密码必须填写|两次密码输入不一致'],
+        ['org_id','require', '所属单位必须填写'],
+        ['mobile','regex:1[34578]\d{9}', '请输入正确的手机号码'],
+        ['email','email', '请填写正确的邮箱'],
+        ];
 }

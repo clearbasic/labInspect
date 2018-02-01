@@ -23,6 +23,17 @@ class Person extends Common
     protected $insert = [
         'creator' => 'chingo',
     ];
+    protected $hidden = [
+        'password','password_salt',
+    ];
+
+    public function getGroupsAttr($value, $data){
+        $groups = Db::name('admin_access')
+            ->where('username',$data['username'])
+            ->column('group_id');
+        return $groups;
+    }
+
     /**
      * [getDataList 获取列表]
      * @return    [array]
@@ -33,14 +44,8 @@ class Person extends Common
         //获取登录用户的子单位ID组
         $flag = !empty($param['flag']) ? $param['flag']: '0';
         if ($flag !== 'all'){
-            if ($GLOBALS['userInfo']['org_id'] != '1'){
-                $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-                $childIds[]=$GLOBALS['userInfo']['org_id'];
-
-                if (!empty($childIds)){
-                    $map['person.org_id'] = ['in', $childIds];
-                }
-            }
+            $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
+            if (!empty($childIds))$map['person.org_id'] = ['in', $childIds];
         }
 
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
@@ -59,14 +64,9 @@ class Person extends Common
             ->select();
 
         foreach ($list as $k => $v){
-            unset($v['password']);
-            unset($v['password_salt']);
-            if ($v['username'] == $GLOBALS['userInfo']['username']){
-                unset($list[$k]);
-                array_unshift($list,$v);
-            }
+            $data[] = $v->append(['Groups'])->toarray();
         }
-        $data = $list;
+
         return $data;
     }
 
@@ -201,14 +201,22 @@ class Person extends Common
                 return false;
             }
             // 获取菜单和权限
-            $groups = db::name('admin_access')->where('access.username',$userInfo['username'])
-                ->alias('access')
-                ->join('dc_person person', 'access.username=person.username', 'LEFT')
-                ->join('dc_org org', 'access.org_id=org.org_id', 'LEFT')
-                ->join('admin_group group', 'access.group_id=group.id', 'LEFT')
-                ->field('access.*,person.name as p_name, org.org_name as o_name,group.title as g_name')
-                ->order('group.group_level,org.org_level')
+//            $groups = db::name('admin_access')->where('access.username',$userInfo['username'])
+//                ->alias('access')
+//                ->join('dc_person person', 'access.username=person.username', 'LEFT')
+//                ->join('dc_org org', 'access.org_id=org.org_id', 'LEFT')
+//                ->join('admin_group group', 'access.group_id=group.id', 'LEFT')
+//                ->field('access.*,person.name as p_name, org.org_name as o_name,group.title as g_name')
+//                ->order('group.group_level,org.org_level')
+//                ->select();
+
+            $groups = Db::view('admin_access','*')
+                ->view('dc_person',['name'=>'p_name'],'admin_access.username=dc_person.username','LEFT')
+                ->view('dc_org',['org_name'=>'o_name'],'admin_access.org_id=dc_org.org_id','LEFT')
+                ->view('admin_group',['title'=>'g_name'],'admin_access.group_id=admin_group.id','LEFT')
+                ->where('admin_access.username',$userInfo['username'])
                 ->select();
+
             if ( count($groups) > 1){
                 return $groups;
             }
@@ -258,6 +266,9 @@ class Person extends Common
         $userInfo['group_level'] = db::name('admin_group')->where('id',$group_id)->value('group_level');
         $userInfo['group_level'] = md5($userInfo['group_level'].'_level');
         $userInfo['org_id'] = $org_id;
+
+        $userInfo = $userInfo->toArray();
+
         // 保存缓存
         session_start();
         $info['userInfo'] = $userInfo;
@@ -265,14 +276,17 @@ class Person extends Common
         $info['sessionId'] = session_id();
         $authKey = user_md5($userInfo['username'].$userInfo['password'].$info['sessionId']);
         $info['authKey'] = $authKey;
+
         cache('Auth_'.$authKey, null);
         cache('Auth_'.$authKey, $info, 3600);
+
         // 返回信息
         $data['authKey']		= $authKey;
         $data['sessionId']		= $info['sessionId'];
         $data['userInfo']		= $userInfo;
         $data['authList']		= $dataList['rulesList'];
         $data['menusList']		= $dataList['menusList'];
+
         return $data;
     }
 
@@ -287,8 +301,6 @@ class Person extends Common
             $menusList = Db::name('admin_menu')->where($map)->order('sort asc')->select();
 
         } else {
-//            $group_id = db::name('admin_access')->where(array('username'=>$u_id,'org_id'=>$org_id))->value('group_id');
-
             $groups = db::name('admin_group')->where('id',$group_id)->select();
             $ruleIds = [];
             foreach($groups as $k => $v) {

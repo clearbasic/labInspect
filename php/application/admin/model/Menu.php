@@ -40,8 +40,6 @@ class Menu extends Common
 
         return $data;
 
-//        $data = $this->getMenuTree();
-//		return $data;
 	}
 
 	/**

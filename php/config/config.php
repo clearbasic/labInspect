@@ -243,6 +243,8 @@ return [
         'Room/roomAptitude',
         'Person/personExport',
         'SystemConfig/index',
+        'Check/checkResult',
+        'Task/index',
     ],
 
     'default_password' => '123456',

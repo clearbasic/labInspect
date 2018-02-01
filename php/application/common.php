@@ -26,7 +26,6 @@ function resultArray($array)
         $array['data'] = '';
     }
 
-
     return [
         'code'  => $code,
         'data'  => $array['data'],
@@ -307,4 +306,54 @@ function getClientIP(){
     }else $ip = "Unknow";
 
     return $ip;
+}
+
+//发送邮件
+function send_phpmail( $to, $name, $subject, $body) {
+    //$to 表示收件人地址 $name 表示收件人名称 $subject 表示邮件标题 $body表示邮件正文
+    date_default_timezone_set("Asia/Shanghai");
+    //设定时区东八区
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();                                //new一个PHPMailer对象出来
+
+    // $body = eregi_replace( "[\]", '', $body );                      //对邮件内容进行必要的过滤
+    $mail->CharSet        = "utf-8";                          //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
+    $mail->IsSMTP();                                    // 设定使用SMTP服务
+    $mail->SMTPDebug      = 1;                            // 启用SMTP调试功能   1 = errors and messages   2 = messages only
+    $mail->SMTPAuth       = true;                           // 启用 SMTP 验证功能
+    //$mail->SMTPSecure     = 'ssl';                          //设置使用ssl加密方式登录鉴权
+    $mail->Host         = 'smtp.ym.163.com';                    // SMTP 服务器
+    $mail->Port         = 25;                    // SMTP服务器的端口号
+    $mail->Username       = 'lijy@chingo.cn';                     // SMTP服务器用户名
+    $mail->Password       = 'linjay980566';                     // SMTP服务器密码
+    $mail->SetFrom('lijy@chingo.cn', '内容报告');
+    $mail->Subject        = $subject;
+    $mail->AltBody        = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+    $mail->Body         = $body;
+    $mail->ContentType      = 'text/html';
+    $address = $to;
+    $mail->AddAddress($address);
+
+    $result = $mail->Send();
+    $data=array();
+    if ( !$result ) {
+        $data['status']=0;
+        $data['msg']= "向" .  $to . "发送邮件失败，原因可能是：" . $mail->ErrorInfo . "\n";
+    } else {
+        $data['status']=1;
+        $data['msg']=  "发送邮件成功\n";
+    }
+    return $data;
+}
+
+
+function getChildOrgIds($orgId){
+    $childIds = [];
+    //$GLOBALS['group_id'] 大于2 代表院级管理员及以下
+    if ($GLOBALS['group_id'] >2) {
+        $childIds = model('org')->getAllChild($orgId);
+        $childIds[] = $orgId;
+    }else{
+        $childIds = model('org')->column('org_id');
+    }
+    return $childIds;
 }

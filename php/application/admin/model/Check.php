@@ -34,7 +34,11 @@ class Check extends Common
             return false;
         }
 
-        $college_id = !empty($param['college_id'])? $param['college_id']: '';
+        if ($GLOBALS['group_id'] == '4'){
+            $college_id = $GLOBALS['userInfo']['org_id'];
+        }else{
+            $college_id = !empty($param['college_id'])? $param['college_id']: '';
+        }
         if (!$college_id) {
             $this->error = '学院ID不能为空';
             return false;
@@ -42,14 +46,15 @@ class Check extends Common
 
         //获取登录用户的子单位ID组
         $map =[];
-        $childIds = [];
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
-        }
+
+        $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
         if (!empty($childIds))$map['org_id'] = ['in', $childIds];
 
-        $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
+        if ($GLOBALS['group_id'] == '4') {
+            $lab_ids = model('org')->where('org_id', $college_id)->where($map)->column('org_id');
+        }else{
+            $lab_ids = model('org')->where('pid', $college_id)->where($map)->column('org_id');
+        }
 
         $checklist['task'] = model('task')->field(['creator', 'dt_create'], true)->where('task_id', $task_id)->find();
 
@@ -86,18 +91,13 @@ class Check extends Common
             return false;
         }
 
+        $map =[];
 
         //获取登录用户的子单位ID组
-        $map =[];
-        $childIds = [];
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
-        }
+        $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
         if (!empty($childIds))$map['org_id'] = ['in', $childIds];
 
         $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
-
 
         $checklist = $this->field('check_id,check_level,org_id,task_id,dt_begin,dt_end,check_state')
             ->where(array('task_id'=>$task_id,'org_id'=>['in',$lab_ids]))
@@ -125,7 +125,9 @@ class Check extends Common
             $checklist[$k]['zone_list'] = $arr;
         }
 
-        return $checklist;
+        $res['today'] = time();
+        $res['content'] = $checklist;
+        return $res;
     }
 
     /**
@@ -242,13 +244,9 @@ class Check extends Common
             $this->error = '学院ID不能为空';
             return false;
         }
-        //获取登录用户的子单位ID组
         $map =[];
-        $childIds = [];
-        if ($GLOBALS['userInfo']['org_id'] != '1'){
-            $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-            $childIds[]=$GLOBALS['userInfo']['org_id'];
-        }
+        //获取登录用户的子单位ID组
+        $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
         if (!empty($childIds))$map['org_id'] = ['in', $childIds];
 
         $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
@@ -279,6 +277,76 @@ class Check extends Common
         return $arr;
     }
 
+
+    //根据不同的条件返回不同的检查结果
+    public  function  checkResult($param){
+        //参数主要有plan_id(期次ID)、task_id(安排ID)、college_id(学院ID)、lab_id(实验室ID)。
+        //最终返回的结果是以实验室为单位的所有房间的检查结果
+        //1确定检查任务  2确定检查单位
+        $map1=[];     $map2=[];
+        $plan_id = !empty($param['plan_id'])? $param['plan_id']: '';
+        if ($plan_id)$map1['plan_id'] = $plan_id;
+
+        $task_id = !empty($param['task_id'])? $param['task_id']: '';
+        if ($task_id)$map1['task_id'] = $task_id;
+
+        $college_id = !empty($param['college_id'])? $param['college_id']: '';
+        if ($college_id)$map2['pid'] = $college_id;
+
+        $lab_id = !empty($param['lab_id'])? $param['lab_id']: '';
+        if ($lab_id)$map2['org_id'] = $lab_id;
+
+        //检查任务IDS
+        $task_ids = db::name('ck_task')->where($map1)->column('task_id');
+        //检查实验室IDS
+        $lab_ids = db::name('dc_org')->where($map2)->select();
+
+        $data=[];
+        if (!empty($lab_ids)){
+            $i = 0;
+            foreach ($lab_ids as $k => $v){
+                $data[$i] = $v;
+                $check_list = db::name('ck_check')->where(array('org_id'=>$v['org_id'],'task_id'=>['in',$task_ids]))->order('check_level')->select();
+                $room_ids = db::name('dc_room')->where('lab_id',$v['org_id'])->column('room_id');
+                $data[$i]['check'] = $check_list;
+                if (!empty($data[$i]['check'])){
+                    foreach ($data[$i]['check'] as $key => $val){
+                        $data[$i]['check'][$key]['task_name'] = db::name('ck_task')->where('task_id',$val['task_id'])->value('task_name');
+                        if($val['check_state'] == 'finished'){
+                            //一次检查下的问题列表
+                            $problem_list = db::name('ck_problem')->alias('problem')->field('problem.*,room.room_name')
+                                ->join('dc_room room','problem.room_id = room.room_id','left')
+                                ->where(array('problem.check_id'=>$val['check_id'],'problem.room_id'=>['in',$room_ids],'problem.problem_level'=>'no'))
+                                ->select();
+                            $data[$i]['check'][$key]['problem_list'] = $problem_list;
+
+                            //一次检查下的房间检查结果
+                            $effort_list = db::name('ck_effort')->alias('effort')->field('effort.*,room.room_name')
+                                ->join('dc_room room','effort.room_id = room.room_id','left')
+                                ->where('effort.check_id',$val['check_id'])
+                                ->where('effort.room_id',['in',$room_ids])
+                                ->select();
+                            $data[$i]['check'][$key]['effort_list'] = $effort_list;
+
+                            if (!empty($data[$i]['check'][$key]['effort_list'])){
+                                //统计一次检查下每个房间的问题数量
+                                foreach ($data[$i]['check'][$key]['effort_list'] as $kk=>$vv){
+                                    $data[$i]['check'][$key]['effort_list'][$kk]['problem_fatal'] = model('Problem')->where(array('effort_id'=>$vv['effort_id'],'item_level'=>'fatal','problem_level'=>'no'))->count();
+                                    $data[$i]['check'][$key]['effort_list'][$kk]['problem_common'] = model('Problem')->where(array('effort_id'=>$vv['effort_id'],'item_level'=>'common','problem_level'=>'no'))->count();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $data;
+    }
+
+
+
+
+    //根据检查安排ID和学院的ID查看检查结果
     public function resultData($param){
         $task_id = !empty($param['task_id'])? $param['task_id']: '';
         if (!$task_id) {
@@ -294,10 +362,6 @@ class Check extends Common
         }
 
         //获取登录用户的子单位ID组
-        $childIds = model('org')->getAllChild($GLOBALS['userInfo']['org_id']);
-        $childIds[]=$GLOBALS['userInfo']['org_id'];
-
-//        $lab_ids = model('org')->where('pid',$college_id)->where('org_id',['in',$childIds])->column('org_id');
         $lab_ids = $this->alias('check')->where('check.task_id',$task_id)
             ->join('dc_org org','check.org_id = org.org_id')
             ->where('org.pid',$college_id)
@@ -381,6 +445,7 @@ class Check extends Common
                 ->where('plan.current','yes')
                 ->select();
         }
+        $data['today'] = time();
         return $data;
     }
 
@@ -536,23 +601,69 @@ class Check extends Common
      * 检查反馈
      * @param  array   $param  [description]
      */
+    public function  reform($param){
+        $check_id = !empty($param['check_id']) ? $param['check_id'] : '';
+        if (empty($check_id)){ $this->error = '缺少检查ID';return false;}
+
+        $checkData = $this->get($check_id);
+        if (empty($checkData)){ $this->error = '检查不存在';return false;}
+//        $review_state = $checkData->review_state;
+
+
+        $review = !empty($param['review']) ? $param['review'] : '';
+
+        //整改状态有四种  no-need不需要 no-start未开始  pending已通知  finished已反馈
+        $review_state = !empty($param['review_state']) ? $param['review_state'] : '';
+
+
+        $param['review'] = $review;
+        $param['review_staff'] = $GLOBALS['userInfo']['username'];
+        $param['dt_inform'] = date("Y-m-d H:i:s",time());
+        $param['review_state'] = $review_state;
+
+
+        $this->startTrans();
+        try {
+            $this->allowField(true)->save($param,['check_id' => $check_id]);
+            $this->commit();
+            return '整改提交成功';
+        } catch(\Exception $e) {
+            $this->rollback();
+            $this->error = '整改提交失败';
+            return false;
+        }
+
+
+    }
+
+    /**
+     * 检查反馈
+     * @param  array   $param  [description]
+     */
     public function  feedback($param){
         $check_id = !empty($param['check_id']) ? $param['check_id'] : '';
         if (empty($check_id)){ $this->error = '缺少检查ID';return false;}
-        $review = !empty($param['review']) ? $param['review'] : '';
+        $checkData = $this->get($check_id);
+        if (empty($checkData)){ $this->error = '检查不存在';return false;}
 
         $reply = !empty($param['reply']) ? $param['reply'] : '';
 
+        $review = !empty($param['review']) ? $param['review'] : '';
+
+        //整改状态有四种  no-need不需要 no-start未开始  pending已通知  finished已反馈
         $review_state = !empty($param['review_state']) ? $param['review_state'] : '';
-        if (!$review)$review_state = 'no-need';
 
 
-        if ($review_state != 'no-need'){
+        if ($GLOBALS['group_id'] <= 2){
             $param['review_staff'] = $GLOBALS['userInfo']['username'];
             $param['dt_inform'] = date("Y-m-d H:i:s",time());
+        }elseif ($GLOBALS['group_id'] == 4){
             $param['reply_staff'] = $GLOBALS['userInfo']['username'];
             $param['dt_reply'] = date("Y-m-d H:i:s",time());
         }
+
+            $param['review_state'] = $review_state;
+
 
         $this->startTrans();
         try {
