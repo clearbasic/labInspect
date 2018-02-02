@@ -103,7 +103,6 @@
     </div>
 </template>
 <script>
-import Vue from "vue";
 export default {
     name: "checkRule",
     computed: {
@@ -268,7 +267,7 @@ export default {
                 let { checklist } = rule;
                 
                 let value = event.target.value ? event.target.value : 0;
-                Vue.set(checklist,checkListId,{
+                this.$set(checklist,checkListId,{
                     score: value
                 })
                 //修改规则

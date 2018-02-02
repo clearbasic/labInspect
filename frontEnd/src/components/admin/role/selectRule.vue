@@ -74,13 +74,13 @@ export default {
                 this.forEachChild(rule.child, isTure);
             }
             if (isTure && pRules) {
-                Vue.set(pRules,index,Object.assign({}, pRules[index], {
+                this.$set(pRules,index,Object.assign({}, pRules[index], {
                         checked: isTure
                     })
                 );
             }
             if (isTure && psRules) {
-                Vue.set(psRules,pIndex,Object.assign({}, psRules[pIndex], {
+                this.$set(psRules,pIndex,Object.assign({}, psRules[pIndex], {
                         checked: isTure
                     })
                 );
@@ -91,7 +91,7 @@ export default {
         },
         forEachChild(rule, bool) {
             for (let index = 0; index < rule.length; index++) {
-                Vue.set(
+                this.$set(
                     rule,
                     index,
                     Object.assign({}, rule[index], {
@@ -130,7 +130,7 @@ export default {
             //根据规则回显
             for (let index = 0; index < rule.length; index++) {
                 if (this.relesArray.indexOf(""+rule[index].id) >= 0) {
-                    Vue.set(
+                    this.$set(
                         rule,
                         index,
                         Object.assign({}, rule[index], {
