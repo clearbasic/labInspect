@@ -177,7 +177,6 @@
 </template>
 <script>
 import UserModal from '../user/userModal';
-import Vue from 'vue';
     export default {
         name:"roowEdit",
         props:{
