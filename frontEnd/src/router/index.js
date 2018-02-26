@@ -18,6 +18,7 @@ import OrgEdit from "../components/org/orgEdit.vue";
 import User from "../components/user/user.vue";
 import ImportPerson from "../components/user/import.vue";
 import Room from "../components/room/room.vue";
+import RoomCard from "../components/room/roomCard.vue";
 import ImportRoom from "../components/room/import.vue";
 import Zone from "../components/room/zone.vue";
 import Login from "../components/login/login.vue";
@@ -285,7 +286,15 @@ export default new Router({
 				title:"登录 - "+title,
 				active:pathName+"/login",
 			}
-		},
+		},{
+            path:pathName+"/roomCard",
+            name:"roomCard",
+            component:RoomCard,
+            meta:{
+                title:"房间列表 - "+title,
+                active:pathName+"/room",
+            }
+        },
 		{
 			path: '*',
 			name: '404',

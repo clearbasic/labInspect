@@ -80,11 +80,14 @@
                     <td class="center little">
                         <div class="hidden-xs btn-group">
                             <button class="btn btn-xs btn-success" @click="showRoomEdit(room)" title="编辑">
-                                <i class="ace-icon glyphicon glyphicon-edit bigger-100"></i>
+                                <i class="ace-icon glyphicon glyphicon-edit"></i>
                             </button>
                             <button class="btn btn-xs btn-danger" @click="deleteRoom(room)" title="删除">
-                                <i class="ace-icon fa fa-trash-o bigger-100"></i>
+                                <i class="ace-icon fa fa-trash-o"></i>
                             </button>
+                            <router-link class="btn btn-xs btn-primary" :to="{path:pathName+'/roomCard',query:{id:room.room_id}}" title="查看房间标识卡">
+                                <i class="ace-icon fa fa-eye"></i>
+                            </router-link>
                         </div>
                         <div class="hidden-sm hidden-md hidden-lg">
                             <div class="inline pos-rel">
@@ -102,6 +105,11 @@
                                             <i class="ace-icon fa fa-trash-o bigger-100"></i>
                                         </a>
                                     </li>
+                                    <li>
+                                        <router-link class="tooltip-info blue" :to="{path:pathName+'/roomCard',query:{id:room.room_id}}">
+                                            <i class="ace-icon fa fa-eye"></i>
+                                        </router-link>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -113,7 +121,7 @@
             </tbody>
         </table>
         <page
-            :pages = "Math.ceil(roomList.length/pageCount)"
+            :pages = "pages"
             :setPage = "setPage"
             :currentPage = "page"
         ></page>
@@ -149,6 +157,7 @@ export default {
             zoneList: [],
             isShowOrder: 0,
             currentOrder: 0,
+            pages:1,
             pageCount: 10,
             college_id: null,
             lab_id: null,
@@ -209,6 +218,7 @@ export default {
             this.emitAjax(URL, data, function(result) {
                 _this.setIsOpen(false);
                 _this.roomList = result;
+                _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
             });
         },
         deleteRoom(room) {

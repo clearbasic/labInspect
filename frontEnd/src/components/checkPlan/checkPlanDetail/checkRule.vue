@@ -39,7 +39,7 @@
                                         <span v-for="(college,index) in orgList" :key="'collegeArray'+index" v-if="college.org_id == rule.college_id">{{college.org_name}}</span>
                                         <span v-if="!rule.college_id">全部</span>
                                         - 
-                                        <span v-for="(lab,index) in orgList" :key="'collegeArray'+index"  v-if="lab.org_id == rule.lab_id">{{lab.org_name}}</span>
+                                        <span v-for="(lab,index) in orgList" :key="'labArray'+index"  v-if="lab.org_id == rule.lab_id">{{lab.org_name}}</span>
                                         <span v-if="!rule.lab_id">全部</span>
                                    </td>
                                    <td v-for="checkList in checkListArray" :key="'checklist'+checkList.id">
@@ -69,7 +69,7 @@
                                        </select>
                                        <select v-model="newRule.lab_id">
                                            <option value="0">--全部--</option>
-                                            <option v-for="(lab,index) in labArray" :key="'collegeArray'+index" 
+                                            <option v-for="(lab,index) in labArray" :key="'labArray'+index" 
                                                 :value="lab.org_id"
                                            >{{lab.org_name}}</option>
                                        </select>
@@ -382,6 +382,8 @@ export default {
             //获取单位信息
             if(this.$store.state.orgList.length == 0){
                 this.$store.dispatch("getOrgList");
+            }else{
+                this.getOrgInfo();
             }
         },
         getOrgInfo(){

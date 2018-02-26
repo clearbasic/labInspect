@@ -65,7 +65,7 @@
             </table>
         </div>
         <page
-            :pages = "Math.ceil(userList.length/pageCount)"
+            :pages = "pages"
             :setPage = "setPage"
             :currentPage="page"
             v-if="showUserTable"
@@ -93,6 +93,7 @@
                 searchType:null,
                 searchUserName:"",
                 page:1,
+                pages:1,
                 pageCount:15,
                 isOpen:false,
             }
@@ -103,6 +104,7 @@
                 const URL = this.serverUrl +"/admin/person/index";
                 this.emitAjax(URL,data,function(result){    
                     _this.userList = result;
+                    _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
                     _this.setIsOpen(false)
                 })
             },

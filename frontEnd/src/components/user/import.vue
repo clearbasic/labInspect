@@ -93,7 +93,7 @@
                         </table>
                     </div>
                     <page
-                        :pages = "Math.ceil(personCount/pageCount)"
+                        :pages = "pages"
                         :setPage = "setPage"
                         :currentPage = "page"
                     ></page>
@@ -115,6 +115,7 @@ export default {
             fileName: "",//上传后保存的文件名称
             personCount: 0,
             page:1,
+            pages:1,
             pageCount:20,
         };
     },
@@ -137,6 +138,7 @@ export default {
             this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
                 _this.person_list = result.person_list;
+                _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
                 _this.fileName = result.SaveName;
                 _this.personCount = result.count;
             });

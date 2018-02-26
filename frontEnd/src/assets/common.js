@@ -61,9 +61,7 @@ function emitAjax(url,opt,success,error){
         console.log(isOk.pathName);
         alert("您没有权限做此操作！");
         if(this){
-            this.$router.go({
-                path:this.$route.fullPath,
-            })
+            this.$router.back()
         }
     }
 }
@@ -126,9 +124,7 @@ function emitAjaxFile(url,formData,success,error){
         console.log(isOk.pathName);
         alert("您没有权限做此操作！");
         if(this){
-            this.$router.go({
-                path:this.$route.fullPath,
-            })
+            this.$router.back()
         }
     }
 }
@@ -147,6 +143,7 @@ function checkPermission(url){
         'admin/Room/roomExport',
         'admin/Person/personExport',
         'admin/SystemConfig/index',
+        'admin/room/roomCard',
     ]
     let flag = false;
     if(authList){

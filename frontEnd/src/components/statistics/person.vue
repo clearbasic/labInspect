@@ -27,6 +27,7 @@
                             @click="searchPerson('lab')">按实验室</button>
                             <button :class="['btn btn-sm',{'btn-primary':searchType!='room'},{'btn-success':searchType=='room'}]"  
                                 @click="searchPerson('room')">按房间</button>
+                            <button class="btn btn-sm btn-primary" @click="exportRoom">导出</button>
                         </div>
                     </h1>
                 </div>
@@ -39,7 +40,7 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th class="center" style="width:60px;">序号</th>
+                                <th class="center" style="width:60px">序号</th>
                                 <th>用户名</th>
                                 <th class="center little">姓名</th>
                                 <th class="hidden-640">单位名称</th>
@@ -67,12 +68,11 @@
                         </tbody>
                     </table>
                 </div>
-                <page
-                    :pages = "Math.ceil(person_list.length/pageCount)"
+                <page 
+                    :pages = "pages"
                     :setPage = "setPage"
                     :currentPage="page"
-                >
-                </page>
+                />
             </div>
         </div>
     </div>
@@ -87,6 +87,7 @@ export default {
             person_list:[],
             searchType:'room',
             page:1,
+            pages:1,
             pageCount:15,
         };
     },
@@ -102,6 +103,7 @@ export default {
             const _this = this;
             this.emitAjax(URL, {org_level:this.searchType}, function(result) {
                 _this.person_list = result;
+                _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
             });
         },
         searchPerson(type){
@@ -110,6 +112,9 @@ export default {
         setPage(page){
             this.page = page;
         },  
+        exportRoom(){
+            window.location.href = this. serverUrl + '/admin/statistics/responExport?org_level='+this.searchType;
+        }
     },
     mounted() {
         this.getPerson();

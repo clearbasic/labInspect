@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul class="pagination">
+        <ul class="pagination nomargin">
             <li>
                 <a @click="clickPage(1)">首页</a>
             </li>
@@ -40,7 +40,7 @@ export default {
     props: {
         pages: {
             type: Number,
-            default: 0
+            default: 1
         },
         setPage: {
             type: Function,
@@ -48,7 +48,7 @@ export default {
         },
         currentPage:{
             type: Number,
-            default: 0
+            default: 1
         }
     },
     methods: {
