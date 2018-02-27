@@ -225,7 +225,10 @@ class Plan extends Common
                 ->field(['plan_id','rule_id','level','college_id','lab_id','creator','dt_create'],true)
                 ->where(array('level'=>$v['level'],'college_id'=>$v['college_id'],'lab_id'=>$v['lab_id'],'plan_id'=>$plan_id))
                 ->select();
-            $v['checklist'] = $rules;
+            foreach ($rules as $vv){
+                $v['checklist'][$vv['checklist_id']] = $vv;
+            }
+
         }
 
         $res['today'] =  time();

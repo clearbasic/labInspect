@@ -245,7 +245,7 @@ class Statistics extends Common
                 $data = db::name('dc_room')->where($where)->field('agent_id,agent_name,room_name as org_name')->select();
                 foreach ($data as $k => $v){
                     $user_info = db::name('dc_person')->field('username,name,email,mobile')->where('username',$v['agent_id'])->find();
-                    $arr[$k]=array_merge($v,$user_info);
+                    if (!empty($user_info)) $arr[$k]=array_merge($v,$user_info);
                 }
                 return $arr;
             }else{
@@ -254,13 +254,14 @@ class Statistics extends Common
         }
 
         $data = db::name('dc_org')->where($map)->where('responsible','neq','')->field('responsible,org_id,org_name')->select();
+
         if (!empty($data)){
             foreach ($data as $k=>$v){
                 $result = array();
                 preg_match_all("/(?:\()(\w+)(?:\))/i",$v['responsible'], $result);
                 $username= $result[1][0];
                 $user_info = db::name('dc_person')->field('username,name,email,mobile')->where('username',$username)->find();
-                $data[$k]=array_merge($v,$user_info);
+                if (!empty($user_info)) $data[$k]=array_merge($v,$user_info);
 
             }
         }

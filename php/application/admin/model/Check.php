@@ -99,10 +99,14 @@ class Check extends Common
 
         $lab_ids = model('org')->where('pid',$college_id)->where($map)->column('org_id');
 
+
+
         $checklist = $this->field('check_id,check_level,org_id,task_id,dt_begin,dt_end,check_state')
             ->where(array('task_id'=>$task_id,'org_id'=>['in',$lab_ids]))
             ->order('org_id')
             ->select();
+
+
         foreach ($checklist as $k => $v){
             $arr=[];
             $checklist[$k]['org_name'] =model('org')->where('org_id',$v['org_id'])->value('org_name');

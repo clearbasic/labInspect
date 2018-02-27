@@ -241,7 +241,9 @@ return [
     'no_check'  =>  [
         'Room/roomExport',
         'Room/roomAptitude',
+        'Room/roomCard',
         'Person/personExport',
+        'Statistics/responExport',
         'SystemConfig/index',
         'Check/checkResult',
         'Task/index',

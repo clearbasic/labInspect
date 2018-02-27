@@ -66,5 +66,20 @@ class Statistics extends Checklogin
         return resultArray(['data' => $data]);
     }
 
+    public function responExport()
+    {
+        $groupModel = model('Statistics');
+        $param = $this->param;
+        $data = $groupModel->responTable($param);
+
+        $fields = array(
+            array('username','用户名'),
+            array('name','姓名'),
+            array('org_name','单位名称'),
+            array('mobile','移动电话'),
+            array('email','邮箱'),
+        );
+        excel_run_export($data,$fields,$filename = '安全责任人登记表');
+    }
 
 }

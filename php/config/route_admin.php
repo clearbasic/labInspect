@@ -188,6 +188,8 @@ return [
     'admin/room/roomExport'   => ['admin/room/roomExport', ['method' => 'GET']],
     // 【房间管理】房间资质
     'admin/room/roomAptitude'   => ['admin/room/roomAptitude', ['method' => 'POST']],
+    // 【房间管理】房间标识卡
+    'admin/room/roomCard'   => ['admin/room/roomCard', ['method' => 'POST']],
 
     // 【房间分组管理】房间分组列表
     'admin/zone/index' => ['admin/zone/index', ['method' => 'POST']],
@@ -252,6 +254,8 @@ return [
     'admin/statistics/setExcellent' => ['admin/statistics/setExcellent', ['method' => 'POST']],
     // 【统计功能】责任人登记表
     'admin/statistics/responTable' => ['admin/statistics/responTable', ['method' => 'POST']],
+    // 【统计功能】责任人登记表导出Excel
+    'admin/statistics/responExport' => ['admin/statistics/responExport', ['method' => 'GET']],
 
     // MISS路由
     '__miss__'  => 'admin/base/miss',

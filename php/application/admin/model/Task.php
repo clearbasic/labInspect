@@ -28,10 +28,10 @@ class Task extends Common
     }
 
     //方法一
-    public function getPlanIdAttr($value,$data)
-    {
-        return $this->belongsTo('Plan','plan_id','plan_id')->where('plan_id',$value)->value('plan_name');
-    }
+//    public function getPlanIdAttr($value,$data)
+//    {
+//        return $this->belongsTo('Plan','plan_id','plan_id')->where('plan_id',$value)->value('plan_name');
+//    }
     //方法二
 //    public function getPlanIdAttr($value,$data)
 //    {

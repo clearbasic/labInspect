@@ -64,6 +64,57 @@ class Room extends Common
         return $data;
     }
 
+    public function roomCards($roomID)
+    {
+        if (empty($roomID)){
+            $this->error = '缺少房间ID';
+            return false;
+        }
+        $room = $this
+            ->alias('room')
+            ->join('dc_org org1', 'room.dept_id=org1.org_id', 'LEFT')
+            ->join('dc_org org2', 'room.lab_id=org2.org_id', 'LEFT')
+            ->field('room.*,org1.org_name as dept_name,org2.org_name as lab_name,org2.smallcategory,org2.responsible,org2.contacts')
+            ->where('room.room_id',$roomID)
+            ->order('room.room_order')
+            ->find();
+        $list = $room->toArray();
+        if (!empty($list['zizhi'])){
+            $zizhi = explode(',',$list['zizhi']);
+
+            $types = model('SystemConfig')->where('pid',1)->group('type')->select();
+            $arr = [];
+            foreach ($types as $val){
+                foreach ($zizhi as $v){
+                    $zz =  model('SystemConfig')->where('id',$v)->find()->toArray();
+                    if ($val['id'] == $zz['pid'] ){
+                        if (count($arr[$val['type']]) > 5) continue;
+                        $arr[$val['type']][] = $zz['title'];
+                    }
+                }
+            }
+
+        }
+        $list['zizhi'] = $arr;
+        if (!empty($list['responsible'])){
+            preg_match_all("/(?:\()(\w+)(?:\))/i",$list['responsible'], $result);
+            $username= $result[1][0];
+            $list['responsible_mobile'] = model('person')->where('username',$username)->value('mobile');
+        }else{
+            $list['responsible_mobile'] = '';
+        }
+
+        if (!empty($list['contacts'])){
+            preg_match_all("/(?:\()(\w+)(?:\))/i",$list['contacts'], $result);
+            $username= $result[1][0];
+            $list['contacts_mobile'] = model('person')->where('username',$username)->value('mobile');
+        }else{
+            $list['contacts_mobile'] = '';
+        }
+        return $list;
+
+    }
+
     /**
      * 创建新房间
      * @param  array   $param  [description]

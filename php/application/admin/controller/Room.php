@@ -150,6 +150,20 @@ class Room extends Checklogin
         excel_run_export($data,$fields,$filename = '房间基本信息');
     }
 
+    /**
+     * 房间标识卡
+     */
+    public function roomCard()
+    {
+        $model = model('Room');
+        $param = $this->param;
+        $data = $model->roomCards($param['room_id']);
+
+        return resultArray(['data' => $data]);
+
+    }
+
+
 
     public function roomAptitude()
     {
