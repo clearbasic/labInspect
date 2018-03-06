@@ -96,6 +96,9 @@ export default {
                 this.page = this.pages;
             }
             this.setPageArray();
+        },
+        currentPage(){
+            this.page = this.currentPage;
         }
     },
     mounted(){
