@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 基础类，无需验证权限。
 // +----------------------------------------------------------------------
-// | Author: linchuangbin <linchuangbin@honraytech.com>
+// | Author: chingo  <chenkq@chingo.cn>
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
@@ -95,5 +95,6 @@ class Base extends Common
             echo 'vuethink接口';
         }
     }
+
 }
  
