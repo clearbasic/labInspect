@@ -43,6 +43,8 @@
 </template>
 <script>
 import { setLocalData, delLocalData } from "../../assets/common.js";
+import {frontUrl} from '../../config/server.js'
+import md5 from "crypto-js/md5";
 export default {
     name: "login",
     data() {
@@ -54,7 +56,8 @@ export default {
             role_list: [],
             isSingle: true,
             selectRole: {},
-            frontUrl: "http://192.168.240.81:8090/login",
+            frontUrl: frontUrl,
+            time:"",        
         }
     },
     methods: {
@@ -65,6 +68,7 @@ export default {
             let data = {
                 username: this.username.replace(/\s+/g, ""),
                 tyrz: this.tyrz.replace(/\s+/g, ""),
+                time:this.time
             }
             this.remeberMe();
             const url = this.serverUrl + "/admin/login/login";
@@ -138,7 +142,8 @@ export default {
             console.log(username)
             if(username){
                 this.username = username;
-                this.tyrz = "111"
+                this.time = Date.parse(new Date());
+                this.tyrz = md5(this.username+"_"+this.time+"_chingo").toString();
                 this.login();
             }
         },
