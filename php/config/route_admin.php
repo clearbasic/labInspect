@@ -153,6 +153,11 @@ return [
     'admin/org/del'     => ['admin/org/del', ['method' => 'POST']],
     // 【组织机构】组织机构修改
     'admin/org/handle'  => ['admin/org/handle', ['method' => 'POST']],
+    // 【组织机构】导入组织机构
+    'admin/org/orgImport'  => ['admin/org/orgImport', ['method' => 'POST']],
+    // 【组织机构】导入组织机构操作
+    'admin/org/orgRunimport'   => ['admin/org/orgRunimport', ['method' => 'POST']],
+
 
     // 【人员管理】人员列表
     'admin/person/index' => ['admin/person/index', ['method' => 'POST']],
@@ -237,6 +242,8 @@ return [
 
     // 【登录】
     'admin/login/login' => ['admin/login/login', ['method' => 'POST']],
+
+    'admin/login/login_tyrz' => ['admin/login/login_tyrz', ['method' => 'GET']],
     // 【登录】
     'admin/login/getVerify'   => ['admin/login/getVerify', ['method' => 'GET']],
     // 【登录】

@@ -274,35 +274,49 @@ class Room extends Common
                 if(empty($data['room_name'])){
                     continue;
                 }
-
-                //判断院系信息是否存在 不存在需要插入院系信息
+                $i = $k + 1 ;
+                //判断院系信息是否存在 （倾向第一种做法）
                 if ($data['college']){
                     $dept_id = model('org')->where(array('org_name'=>$data['college'],'org_level'=>'college'))->value('org_id');
                     if (!$dept_id){
+                        //第一种做法  院系不存在直接终止插入
+                        $this->error = '第'.$i.'条数据中的'.$data['college'].'不存在，请先添加该院系信息';
+                        $this->rollback();
+                        return false;
+
+                        //第二种做法 院系不存在插入院系信息
                         $arr1 = [];
                         $arr1['org_level'] = 'college';
                         $arr1['pid'] = 1;
                         $arr1['org_name'] = $data['college'];
                         $arr1['org_state'] = 'yes';
-//                    $arr['creator'] = $GLOBALS['userInfo']['username'];
-//                    $arr['dt_create'] = time();
                         $org = new Org();
-                        $org->allowField(true)->save($arr1);
+                        try{
+                            $org->allowField(true)->save($arr1);
+                        }catch(\Exception $e){
+                            $this->error = '院系填写有误';
+                            $this->rollback();
+                            return false;
+                        }
                         $dept_id = $org->org_id;
                     }
                 }
 
-                //判断实验室信息是否存在 不存在需要插入实验室信息
+                //判断实验室信息是否存在（倾向第一种做法）
                 if ($data['lab']){
                     $lab_id = model('org')->where(array('org_name'=>$data['lab'],'org_level'=>'lab'))->value('org_id');
                     if (!$lab_id){
+                        //第一种做法  实验室不存在直接终止插入
+                        $this->error = '第'.$i.'条数据中的'.$data['lab'].'不存在，请先添加该实验室信息';
+                        $this->rollback();
+                        return false;
+
+                        //第二种做法 实验室不存在插入实验室信息
                         $arr2 = [];
                         $arr2['org_level'] = 'lab';
                         $arr2['pid'] = $dept_id;
                         $arr2['org_name'] = $data['lab'];
                         $arr2['org_state'] = 'yes';
-//                    $arr['creator'] = $GLOBALS['userInfo']['username'];
-//                    $arr['dt_create'] = time();
                         $org = new Org();
                         $org->allowField(true)->save($arr2);
                         $lab_id = $org->org_id;
@@ -328,6 +342,7 @@ class Room extends Common
                     if (!empty($data['agent_id']))$map['username']=$data['agent_id'];
                     if (!empty($data['agent_name']))$map['name']=$data['agent_name'];
                     $id = model('person')->where($map)->value('id');
+
                     if (!$id){
                         $arr4 = [];
                         $arr4['name'] = $data['agent_name'];
@@ -338,6 +353,9 @@ class Room extends Common
                         $arr4['password']=encrypt_password($arr4['password'],$arr4['password_salt']);
                         $Person = new Person();
                         $Person->allowField(true)->save($arr4);
+
+
+
                     }
                 }
                 //判断房间是否已经存在

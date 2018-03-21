@@ -26,7 +26,7 @@ class Org extends Common
     protected function setCreatorAttr($value,$data)
     {
 
-        return $GLOBALS['userInfo']['username'];
+        return $GLOBALS['userInfo']['username'] ? $GLOBALS['userInfo']['username'] : 'admin';
     }
     //获取器
     //    public function getOrgStateAttr($value, $data){
@@ -155,5 +155,71 @@ class Org extends Common
             return false;
         }
     }
+
+    /**
+     * 导入xls的信息
+     * @param  array   $param  [description]
+     */
+    public function importData($param)
+    {
+        $SaveName = !empty($param['SaveName']) ? $param['SaveName'] : '';
+        if (!$SaveName){
+            $this->error = '文件不存在，读取失败';
+            return false;
+        }
+        $res = read ( 'uploads'. DS .$SaveName );
+        $res = array_splice($res,1);
+        foreach ($res as $k => $v){
+            if (empty($v['0']))unset($res[$k]);
+        }
+        //单位名称  父级单位  单位级别  地址  校区  单位负责人（学号）  单位负责人（姓名） 单位联系人（学号）  单位联系人（姓名）
+        $titles=array('org_name','porg_name','org_level','org_address','campus','responsible_xh','responsible_xm','contacts_xh','contacts_xm');
+        $add_count = 0;
+        $jump_count = 0;
+        $this->startTrans();
+        try {
+            $insert = array();
+
+            foreach ( $res as $k => $v ) {
+
+                $data = array();
+                foreach ($titles as $ColumnIndex => $title) {
+                    $data[$title] = $v[$ColumnIndex];
+                }
+                if(empty($data['org_name'])){
+                    continue;
+                }
+
+                $org_id = model('org')->where(array('org_name'=>$data['org_name'],'org_level'=>strtolower($data['org_level'])))->value('org_id');
+
+                if (!$org_id){
+                    $pid = model('org')->where(array('org_name'=>$data['porg_name'],'org_level'=>['neq',strtolower($data['org_level'])]))->value('org_id');
+                    if (!$pid){
+                        $this->error = $data['org_name'].'父级单位不存在，请先去创建';
+                        return false;
+                    }
+                    $data['pid'] = $pid;
+                    $data['org_level'] = strtolower($data['org_level']);
+                    $data['responsible'] = $data['responsible_xm'].'('.$data['responsible_xh'].')';
+                    $data['contacts'] = $data['contacts_xm'].'('.$data['contacts_xh'].')';
+                    $end =  $this->allowField(true)->save($data);
+                    if ($end)$add_count++;
+                }else{
+                    $jump_count++;
+                }
+            }
+            $result['add'] = $add_count;
+            $result['jump'] = $jump_count;
+            $this->commit();
+            return $result;
+        } catch(\Exception $e) {
+            $this->error = $e->getMessage();
+            $this->rollback();
+            return false;
+        }
+    }
+
+
+
 
 }

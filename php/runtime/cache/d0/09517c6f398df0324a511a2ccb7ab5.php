@@ -1,0 +1,4 @@
+<?php
+//000000003600
+ exit();?>
+a:4:{s:8:"userInfo";a:26:{s:2:"id";i:69;s:8:"username";s:12:"100002016045";s:4:"name";s:6:"朱源";s:6:"org_id";i:1;s:8:"org_name";N;s:7:"college";N;s:5:"major";N;s:5:"grade";N;s:7:"classes";N;s:6:"mobile";N;s:5:"phone";N;s:5:"email";N;s:9:"user_type";s:5:"staff";s:15:"last_login_date";i:1521522611;s:9:"qualified";N;s:8:"add_date";N;s:5:"photo";N;s:11:"login_count";i:2;s:18:"login_failed_count";i:0;s:8:"login_ip";s:14:"192.168.240.81";s:12:"person_state";s:3:"yes";s:12:"person_order";i:1;s:7:"creator";s:6:"chingo";s:9:"dt_create";i:1521516490;s:9:"firstchar";N;s:11:"group_level";s:32:"29e5d6189a4808d5e61425ce671403ec";}s:8:"group_id";i:2;s:9:"sessionId";s:26:"amb9al63dsk30875sjkg5ja9m4";s:7:"authKey";s:32:"12d32e19613828648d55498f3e6b4c31";}

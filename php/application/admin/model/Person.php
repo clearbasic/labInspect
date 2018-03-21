@@ -159,6 +159,9 @@ class Person extends Common
     public function login($param,$username, $password, $verifyCode = '', $isRemember = false, $type = false)
     {
         $flag = !empty($param['flag'])? $param['flag']: '';
+
+        $tyrz = !empty($param['tyrz'])? $param['tyrz']: '';
+
         $group_id = !empty($param['group_id'])? $param['group_id']: '';
         $org_id = !empty($param['org_id'])? $param['org_id']: '';
 
@@ -167,21 +170,25 @@ class Person extends Common
                 $this->error = '帐号不能为空';
                 return false;
             }
-            if (!$password){
-                $this->error = '密码不能为空';
-                return false;
-            }
-            if (1 && !$type) {
-                if (!$verifyCode) {
-                    $this->error = '验证码不能为空';
+            if (!$tyrz){
+                if (!$password){
+                    $this->error = '密码不能为空';
                     return false;
                 }
-                $captcha = new HonrayVerify(config('captcha'));
-                if (!$captcha->check($verifyCode)) {
-                    $this->error = '验证码错误';
-                    return false;
+
+                if (1 && !$type) {
+                    if (!$verifyCode) {
+                        $this->error = '验证码不能为空';
+                        return false;
+                    }
+                    $captcha = new HonrayVerify(config('captcha'));
+                    if (!$captcha->check($verifyCode)) {
+                        $this->error = '验证码错误';
+                        return false;
+                    }
                 }
             }
+
 
             $map['username'] = $username;
 
@@ -192,10 +199,13 @@ class Person extends Common
                 return false;
             }
 
-            if (encrypt_password($password,$userInfo['password_salt']) !== $userInfo['password']) {
-                $this->error = '密码错误';
-                return false;
+            if (!$tyrz){
+                if (encrypt_password($password,$userInfo['password_salt']) !== $userInfo['password']) {
+                    $this->error = '密码错误';
+                    return false;
+                }
             }
+
             if ($userInfo['person_state'] === 'no') {
                 $this->error = '帐号已被禁用';
                 return false;
@@ -244,8 +254,9 @@ class Person extends Common
             $map['username'] = $username;
             $userInfo = $this->where($map)->find();
             $dataList = $this->getMenuAndRule($group_id);
-        }
 
+
+        }
         if (!$dataList['menusList']) {
             $this->error = '没有权限';
             return false;
@@ -256,7 +267,10 @@ class Person extends Common
         $arr['last_login_date'] = time();
         $arr['login_count'] = $userInfo['login_count']+1;
 
+
         $this->allowField(['login_count','login_ip','last_login_date'])->save($arr, ['id' => $userInfo['id']]);
+
+
 
         if ($isRemember || $type) {
             $secret['username'] = $username;
@@ -289,6 +303,80 @@ class Person extends Common
 
         return $data;
     }
+
+
+    /**
+     * [login 统一认证登录]
+     * @AuthorHTL
+     * @DateTime  2017-02-10T22:37:49+0800
+     * @param     [string]                   $u_username [账号]
+     * @param     [string]                   $u_pwd      [密码]
+     * @param     [string]                   $verifyCode [验证码]
+     * @param     Boolean                    $isRemember [是否记住密码]
+     * @param     Boolean                    $type       [是否重复登录]
+     * @return    [type]                               [description]
+     */
+    public function login_tyrz($param)
+    {
+        //CAS Server的登陆URL
+        $loginServer = "http://cas.xzhmu.edu.cn/cas/login";
+        //CAS Server的验证URL
+        $validateServer = "http://cas.xzhmu.edu.cn/cas/serviceValidate";
+
+        //当前集成系统所在的服务器和端口号，服务器可以是机器名、域名或ip，建议使用域名。端口不指定的话默认是80
+        //以及新增加的集成登录入口
+        $this_url = "http://192.168.240.81:8081/lab-inspect/php/index.php/admin/login/login_tyrz";
+
+        //判断是否有验证成功后需要跳转页面，如果有，增加跳转参数
+        if(isset($param["redirectUrl"]) && !empty($param["redirectUrl"])) {
+            $this_url = $this_url."?redirectUrl=".$param["redirectUrl"];
+        }
+
+        //判断是否已经登录
+        if(isset($param["ticket"]) && !empty($param["ticket"])) {
+            //获取登录后的返回信息
+            try {
+                $validateurl = $validateServer . "?ticket=" . $_REQUEST["ticket"] . "&service=" . $this_url;
+                header("Content-Type:text/html;charset=utf-8");
+                $validateResult = file_get_contents($validateurl);
+                $validateResult = iconv("gb2312", "utf-8//IGNORE", $validateResult);
+
+                //节点替换，去除sso:，否则解析的时候有问题
+                $validateResult = preg_replace("/sso:/", "", $validateResult);
+
+                $validateXML = simplexml_load_string($validateResult);
+
+                //获取验证成功节点
+                $successnode = $validateXML->authenticationSuccess[0];
+
+                if(!empty($successnode)){
+                    $username = $successnode->user;
+
+                    return $username;
+
+                }else{
+
+                    //重定向浏览器
+                    header("Location: ".$loginServer."?service=".$this_url);
+
+                    //确保重定向后，后续代码不会被执行
+                    exit;
+                }
+            }catch (\Exception $e){
+                echo "出错了";
+                echo $e-> getMessage();
+            }
+        }else{
+            //重定向浏览器
+            header("Location: ".$loginServer."?service=".$this_url);
+            //确保重定向后，后续代码不会被执行
+            exit;
+        }
+    }
+
+
+
+
 
     /**
      * 获取菜单和权限

@@ -141,6 +141,8 @@ function checkPermission(url){
     const pathName = urlArray[urlArray.length-3]+'/'+urlArray[urlArray.length-2]+'/'+urlArray[urlArray.length-1];
     const noCheck =  [
         'admin/Room/roomExport',
+        'admin/org/orgImport',
+        'admin/org/orgRunimport',
         'admin/Person/personExport',
         'admin/SystemConfig/index',
         'admin/room/roomCard',

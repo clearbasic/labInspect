@@ -240,6 +240,7 @@ export default {
             }
         },
         saveReview(org){
+
             //保存整改通知
             if(this.loginUser.group_level == 'lab' && org.check[0].review_state =='pending'){
                 org.check[0].review_state = 'finished';
@@ -250,6 +251,7 @@ export default {
                 reply:org.check[0].reply,
                 review_state:org.check[0].review_state
             }
+
             const URL = this.serverUrl + "/admin/check/feedback";
             const _this = this;
             this.emitAjax(URL,data,function(){

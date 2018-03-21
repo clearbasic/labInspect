@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | Description: 基础类，无需验证权限。
 // +----------------------------------------------------------------------
-// | Author: linchuangbin <linchuangbin@honraytech.com>
+// | Author: chingo  <chenkq@chingo.cn>
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
@@ -11,6 +11,7 @@ use com\verify\HonrayVerify;
 use app\common\controller\Common;
 use think\Request;
 use think\cache;
+use think\Cookie;
 
 class Login extends Common
 {
@@ -22,11 +23,26 @@ class Login extends Common
         $password = $param['password'];
         $verifyCode = !empty($param['verifyCode'])? $param['verifyCode']: '';
         $isRemember = !empty($param['isRemember'])? $param['isRemember']: '';
+
         $data = $model->login($param,$username, $password, $verifyCode, $isRemember);
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }
         return resultArray(['data' => $data]);
+    }
+
+    public function login_tyrz()
+    {
+        $model = model('person');
+        $param = $this->param;
+        $data = $model->login_tyrz($param);
+        if (!$data) {
+            return redirect(config('redirect'));
+        }
+        Cookie::delete('tyrz');
+        Cookie::set('tyrz',array('username'=>(string)$data,'tyrz'=>true),'60');
+
+        return redirect(config('redirect'));
     }
 
     public function relogin()
@@ -46,7 +62,6 @@ class Login extends Common
 
     public function logout()
     {
-//        Cache::clear();
         $param = $this->param;
         cache('Auth_'.$param['authkey'], null);
         return resultArray(['data'=>'退出成功']);

@@ -35,14 +35,10 @@ class Plan extends Common
         $map = [];
 
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
-        if ($keywords) {
-            $map['plan_name'] = ['like', '%'.$keywords.'%'];
-        }
+        if ($keywords) $map['plan_name'] = ['like', '%'.$keywords.'%'];
 
         $plan_id = !empty($param['plan_id']) ? $param['plan_id']: '';
-        if ($plan_id) {
-            $map['plan_id'] = $plan_id;
-        }
+        if ($plan_id) $map['plan_id'] = $plan_id;
 
         $current = !empty($param['current']) ? $param['current']: '';
         if ($current == '1') {
