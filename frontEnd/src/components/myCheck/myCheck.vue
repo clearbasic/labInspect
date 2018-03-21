@@ -152,7 +152,6 @@ export default {
             const _this = this;
             const URL = this.serverUrl+'/admin/check/mycheck'
             this.emitAjax(URL,null,function(result){
-                console.log(result)
                 _this.task_list = result.task_list?result.task_list:[];
                 _this.currentPlan = result.plan?result.plan:{};
                 _this.today = result.today;

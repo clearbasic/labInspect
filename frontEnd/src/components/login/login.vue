@@ -9,7 +9,7 @@
                 <div class="loginBox">
                     <div class="loginFormBox" v-if="isSingle" @keyup="enterLogin($event)">
                         <div class="loginHead">
-                            <h3>统一身份认证登录</h3>   
+                            <h3>本地登录</h3>
                         </div>
                         <div class="inputGroup">
                             <input type="text" name="username" class="inputText" v-model="username" placeholder="帐号">

@@ -146,7 +146,6 @@ export default {
             formData.append("file", this.file);
             this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
-                console.log(result);
                 _this.org_list = result.org_list;
                 _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
                 _this.fileName = result.SaveName;

@@ -240,7 +240,6 @@ export default {
                 task_id: this.$route.params.id,
             };
             this.emitAjax(URL, data, function(result) {
-                console.log(result)
                 _this.check_list = result.content;
                 _this.today = result.today;
             });
