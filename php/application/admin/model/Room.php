@@ -259,20 +259,14 @@ class Room extends Common
         }
         //学院 实验室 房间分组  房间名 所在楼  责任人ID  责任人姓名
         $titles=array('college','lab','zone','room_name','building_name','agent_id','agent_name');
-
-        $add_count = 0;
-        $jump_count = 0;
+        $add_count = 0; $jump_count = 0;
         $this->startTrans();
         try {
             $insert = array();
             foreach ( $res as $k => $v ) {
-
                 $data = array();
                 foreach ($titles as $ColumnIndex => $title) {
                     $data[$title] = $v[$ColumnIndex];
-                }
-                if(empty($data['room_name'])){
-                    continue;
                 }
                 $i = $k + 1 ;
                 //判断院系信息是否存在 （倾向第一种做法）
@@ -283,22 +277,6 @@ class Room extends Common
                         $this->error = '第'.$i.'条数据中的'.$data['college'].'不存在，请先添加该院系信息';
                         $this->rollback();
                         return false;
-
-                        //第二种做法 院系不存在插入院系信息
-                        $arr1 = [];
-                        $arr1['org_level'] = 'college';
-                        $arr1['pid'] = 1;
-                        $arr1['org_name'] = $data['college'];
-                        $arr1['org_state'] = 'yes';
-                        $org = new Org();
-                        try{
-                            $org->allowField(true)->save($arr1);
-                        }catch(\Exception $e){
-                            $this->error = '院系填写有误';
-                            $this->rollback();
-                            return false;
-                        }
-                        $dept_id = $org->org_id;
                     }
                 }
 
@@ -310,16 +288,6 @@ class Room extends Common
                         $this->error = '第'.$i.'条数据中的'.$data['lab'].'不存在，请先添加该实验室信息';
                         $this->rollback();
                         return false;
-
-                        //第二种做法 实验室不存在插入实验室信息
-                        $arr2 = [];
-                        $arr2['org_level'] = 'lab';
-                        $arr2['pid'] = $dept_id;
-                        $arr2['org_name'] = $data['lab'];
-                        $arr2['org_state'] = 'yes';
-                        $org = new Org();
-                        $org->allowField(true)->save($arr2);
-                        $lab_id = $org->org_id;
                     }
                 }
 
@@ -332,54 +300,47 @@ class Room extends Common
                         $arr3['zone_name'] = $data['zone'];
                         $Zone = new Zone();
                         $Zone->allowField(true)->save($arr3);
+//                        $Zone->create($arr3,true);
                         $zone_id = $Zone->zone_id;
                     }
                 }
 
                 //判断人员信息是否存在
-                if ($data['agent_id'] || $data['agent_name']){
-                    $map = [];
-                    if (!empty($data['agent_id']))$map['username']=$data['agent_id'];
-                    if (!empty($data['agent_name']))$map['name']=$data['agent_name'];
-                    $id = model('person')->where($map)->value('id');
-
-                    if (!$id){
-                        $arr4 = [];
-                        $arr4['name'] = $data['agent_name'];
-                        $arr4['username'] = $data['agent_id'];
-                        $arr4['org_id'] = $GLOBALS['userInfo']['org_id'];
-                        $arr4['password'] = config('default_password');
-                        $arr4['password_salt']=random(10);
-                        $arr4['password']=encrypt_password($arr4['password'],$arr4['password_salt']);
-                        $Person = new Person();
-                        $Person->allowField(true)->save($arr4);
-
-
-
-                    }
-                }
+//                if ($data['agent_id'] || $data['agent_name']){
+//                    $map = [];
+//                    if (!empty($data['agent_id']))$map['username']=$data['agent_id'];
+//                    if (!empty($data['agent_name']))$map['name']=$data['agent_name'];
+//                    $id = model('person')->where($map)->value('id');
+//                    if (!$id){
+//                        $this->error = '第'.$i.'条数据中的人员信息不存在，请先添加该人员信息';
+//                        $this->rollback();
+//                        return false;
+////                        $arr4 = [];
+////                        $arr4['name'] = $data['agent_name'];
+////                        $arr4['username'] = $data['agent_id'];
+////                        $arr4['org_id'] = $GLOBALS['userInfo']['org_id'];
+////                        $arr4['password'] = config('default_password');
+////                        $arr4['password_salt']=random(10);
+////                        $arr4['password']=encrypt_password($arr4['password'],$arr4['password_salt']);
+////                        $Person = new Person();
+////                        $Person->allowField(true)->save($arr4);
+//                    }
+//                }
                 //判断房间是否已经存在
-                if ($data['room_name']){
-                    $room_id = $this->where(array('room_name'=>$data['room_name'],'dept_id'=>$dept_id,'lab_id'=>$lab_id))->value('room_id');
-                }
+                $room_id = $this->where(array('room_name'=>$data['room_name'],'dept_id'=>$dept_id,'lab_id'=>$lab_id))->value('room_id');
+                if ($room_id){ $jump_count++; continue;}
                 $data['dept_id'] = $dept_id;
                 $data['lab_id']  = $lab_id;
                 $data['zone_id']  = $zone_id;
-
-                if (!$room_id){
-                    $insert[$k] = $data;
-                    $add_count++;
-                }else{
-                    $jump_count++;
-                }
+                $this->create($data,true);
+                $add_count++;
             }
-            $end =  $this->allowField(true)->saveAll($insert);
-            $result['add'] = count($end);
+            $result['add'] = $add_count;
             $result['jump'] = $jump_count;
             $this->commit();
             return $result;
         } catch(\Exception $e) {
-            $this->error = '一次导入数据量过大，请分批导入。';
+            $this->error = $e->getMessage();
             $this->rollback();
             return false;
         }

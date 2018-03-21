@@ -74,7 +74,6 @@ class Org extends Checklogin
                 $data['count'] = $count;
                 $data['SaveName'] = $info->getSaveName();
                 $data['org_list'] = $res;
-//                p(resultArray(['data' => $data]));
                 return resultArray(['data' => $data]);
             }
         }
