@@ -8,10 +8,51 @@
             <div class="clearfix">
                 <div class="loginBox">
                     <div class="loginFormBox" v-if="isSingle" @keyup="enterLogin($event)">
-                        <div class="loginHead">
-                            <h3>统一身份认证登录</h3>
+                        <div class="loginType blue">
+                            <i class="ace-icon fa fa-credit-card pointer" 
+                                v-if="loginType=='local'" 
+                                @click="loginType='tyrz'"
+                                title="点击切换登录方式"
+                            ></i>
+                            <i class="ace-icon fa fa-desktop pointer" 
+                                v-else @click="loginType='local'"
+                                title="点击切换登录方式"></i>
                         </div>
-                        <div class="inputGroup">
+                        <div class="loginHead">
+                            <h3 v-if="loginType=='local'">本地登录</h3>
+                            <h3 v-else>统一身份认证登录</h3>
+                        </div>
+                        <div v-if="loginType=='local'">
+                            <div class="inputGroup">
+                                <input type="text" name="username" class="inputText" v-model="username" placeholder="帐号">
+                            </div>
+                            <div class="inputGroup">
+                                <input type="password" name="password" class="inputText" v-model="password" placeholder="密码">
+                            </div>
+                            <div class="inputGroup clearfix verificationCode">
+                                <div class="fl">
+                                    <input type="text" v-model="verifyCode" class="inputText" placeholder="验证码">
+                                </div>
+                                <div class="fr">
+                                    <img :src="serverUrl+'/admin/login/getVerify'" class="verifyCode" alt="验证码" @click="refreshVerifyCode">
+                                </div>
+                            </div>
+                            <div class="remeberme">
+                                <label>
+                                    <input type="checkbox" class="ace" v-model="remeberme" />
+                                    <span class="lbl"> 记住帐号？</span>
+                                </label>
+                            </div>
+                            <div class="inputGroup clearfix">
+                                <div class="fl verificationCode">
+                                    <button class="loginBtn fl" @click="login"> 登录</button>
+                                </div>
+                                <div class="fr verificationCodeImg">
+                                    <input type="reset" class="loginBtn fr" value="重置">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inputGroup" v-else>
                             <a class='btn btn-block btn-primary' :href="'http://cas.xzhmu.edu.cn/cas/login?service='+serverUrl+'/admin/login/login_tyrz?redirectUrl='+frontUrl">统一身份认证登录</a>
                         </div>
                     </div>
@@ -43,13 +84,14 @@
 </template>
 <script>
 import { setLocalData, delLocalData } from "../../assets/common.js";
-import {frontUrl} from '../../config/server.js'
+import { frontUrl } from '../../config/server.js'
 import md5 from "crypto-js/md5";
 export default {
     name: "login",
     data() {
         return {
             username: "",
+            password:"",
             tyrz: "",
             verifyCode: "",
             remeberme: false,
@@ -57,7 +99,8 @@ export default {
             isSingle: true,
             selectRole: {},
             frontUrl: frontUrl,
-            time:"",        
+            time: "",
+            loginType: "local",
         }
     },
     methods: {
@@ -65,10 +108,20 @@ export default {
             //登录
             if (!this.isNotEmpty()) { return false };
             const _this = this;
-            let data = {
-                username: this.username.replace(/\s+/g, ""),
-                tyrz: this.tyrz.replace(/\s+/g, ""),
-                time:this.time
+            let data = {}
+
+            if(this.loginType == 'local'){
+                data = {
+                    username:this.username.replace(/\s+/g,""),
+                    password:this.password.replace(/\s+/g,""),
+                    verifyCode:this.verifyCode.replace(/\s+/g,""),
+                }
+            }else{
+                data = {
+                    username: this.username.replace(/\s+/g, ""),
+                    tyrz: this.tyrz.replace(/\s+/g, ""),
+                    time: this.time
+                }
             }
             this.remeberMe();
             const url = this.serverUrl + "/admin/login/login";
@@ -139,13 +192,14 @@ export default {
                 this.$router.push(this.pathName + "/");
             }
             const username = this.getCookie("tyrz");
-            console.log(username)
-            if(username){
+            if (username) {
+                this.loginType = "tyrz"
                 this.username = username;
                 this.time = Date.parse(new Date());
-                this.tyrz = md5(this.username+"_"+this.time+"_chingo").toString();
+                this.tyrz = md5(this.username + "_" + this.time + "_chingo").toString();
                 this.login();
             }
+            
         },
         enterLogin(event) {
             if (event.type == "keyup" && event.key == "Enter") {
@@ -157,8 +211,16 @@ export default {
                 alert("请填写用户名！");
                 return false;
             }
-            if (this.tyrz == "") {
-                alert("请填写密码！");
+            if(this.password =='' && this.loginType=='local'){
+                alert("密码不能为空！");
+                return false;
+            }
+            if(this.verifyCode =='' && this.loginType=='local'){
+                alert("验证码不能为空！");
+                return false;
+            }
+            if (this.tyrz == "" && this.loginType=='tyrz') {
+                alert("验证码不正确！");
                 return false;
             }
             return true;

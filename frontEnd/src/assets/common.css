@@ -218,6 +218,7 @@ input[readonly]:hover {
     height: 319px;
     background: url(./images/logoBox.png) no-repeat center center;
     margin:20px auto;
+    position: relative;
 }
 .loginFormBox {
     padding: 17px;
@@ -228,6 +229,11 @@ input[readonly]:hover {
     text-align:center;
     font-size: 20px;
     font-weight: normal;
+}
+.loginType {
+    position: absolute;
+    right: 5px;
+    top: 5px;
 }
 .inputGroup {
     height: 42px;
