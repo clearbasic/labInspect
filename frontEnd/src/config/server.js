@@ -1,5 +1,5 @@
 const env = process.env.NODE_ENV;
-let serverUrl = "http://192.168.240.81:8081/lab-inspect/php/index.php";
+let serverUrl = "http://ckq.chingo.cn:8081/lab-inspect/php/index.php";
 const pathName = "";
 
 if(env === "production"){
