@@ -174,39 +174,30 @@ class Org extends Common
         }
         //单位名称  父级单位  单位级别  地址  校区  单位负责人（学号）  单位负责人（姓名） 单位联系人（学号）  单位联系人（姓名）
         $titles=array('org_name','porg_name','org_level','org_address','campus','responsible_xh','responsible_xm','contacts_xh','contacts_xm');
-        $add_count = 0;
-        $jump_count = 0;
+        $add_count = 0; $jump_count = 0;
         $this->startTrans();
         try {
-            $insert = array();
-
             foreach ( $res as $k => $v ) {
-
                 $data = array();
+
                 foreach ($titles as $ColumnIndex => $title) {
                     $data[$title] = $v[$ColumnIndex];
                 }
-                if(empty($data['org_name'])){
-                    continue;
+                $org_id = $this->where(array('org_name'=>$data['org_name'],'org_level'=>strtolower($data['org_level'])))->value('org_id');
+                if ($org_id) {
+                    $jump_count++;continue;
                 }
-
-                $org_id = model('org')->where(array('org_name'=>$data['org_name'],'org_level'=>strtolower($data['org_level'])))->value('org_id');
-
-                if (!$org_id){
-                    $pid = model('org')->where(array('org_name'=>$data['porg_name'],'org_level'=>['neq',strtolower($data['org_level'])]))->value('org_id');
-                    if (!$pid){
-                        $this->error = $data['org_name'].'父级单位不存在，请先去创建';
-                        return false;
-                    }
-                    $data['pid'] = $pid;
-                    $data['org_level'] = strtolower($data['org_level']);
-                    $data['responsible'] = $data['responsible_xm'].'('.$data['responsible_xh'].')';
-                    $data['contacts'] = $data['contacts_xm'].'('.$data['contacts_xh'].')';
-                    $end =  $this->allowField(true)->save($data);
-                    if ($end)$add_count++;
-                }else{
-                    $jump_count++;
+                $pid = $this->where(array('org_name'=>$data['porg_name'],'org_level'=>['neq',strtolower($data['org_level'])]))->value('org_id');
+                if (!$pid){
+                    $this->error = $data['org_name'].'父级单位不存在，请先去创建';
+                    return false;
                 }
+                $data['pid'] = $pid;
+                $data['org_level'] = strtolower($data['org_level']);
+                $data['responsible'] = $data['responsible_xm'].'('.$data['responsible_xh'].')';
+                $data['contacts'] = $data['contacts_xm'].'('.$data['contacts_xh'].')';
+                $this->create($data,true);
+                $add_count++;
             }
             $result['add'] = $add_count;
             $result['jump'] = $jump_count;

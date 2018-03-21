@@ -20,6 +20,9 @@ export default {
         const url = serverUrl +"/admin/login/logout";
         emitAjax(url,null,function(result){
             delLocalData();
+            const iframe = document.createElement("iframe");
+            iframe.src = "http://cas.xzhmu.edu.cn/cas/logout";
+            document.getElementsByTagName("body")[0].appendChild(iframe);
             window.location.href = pathName+"/login";
         })
     },

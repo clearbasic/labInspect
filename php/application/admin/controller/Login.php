@@ -46,15 +46,8 @@ class Login extends Common
             return redirect($redirectUrl);
         }
 
-//        $domain = Request::instance()->domain();
-//        $temp = parse_url($redirectUrl);
-//        $arr = explode('.', $temp['host']);
-//        $size = count($arr);
-//        $name = $arr[$size - 2] . '.' . $arr[$size - 1];
-//        cookie(['path' => '/', 'domain' => $name]);
-
         cookie('tyrz', null);
-        Cookie::set('tyrz',(string)$data,'60');
+        Cookie::set('tyrz',(string)$data,'5');
         return redirect($redirectUrl);
     }
 
@@ -77,7 +70,7 @@ class Login extends Common
     {
         $param = $this->param;
         cache('Auth_'.$param['authkey'], null);
-        Cookie::delete('tyrz');
+        cookie(null,'tyrz');
         return resultArray(['data'=>'退出成功']);
     }
 

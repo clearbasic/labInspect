@@ -56,7 +56,7 @@
                     </div>
                     <button class="btn btn-success btn-sm" @click="submitFile" v-if="file">提交文件</button>
                     <button class="btn btn-defualt btn-sm" v-if="!file">提交文件</button>
-                    <a class="file" :href="pathName+'/static/importTemplate/person.xls'">
+                    <a class="file" :href="pathName+'/static/importTemplate/org.xls'">
                         <i class="ace-icon fa fa-cloud-download">下载示例表格</i>
                     </a>
                     <span class="red">
@@ -146,9 +146,8 @@ export default {
             formData.append("file", this.file);
             this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
-                console.log(result);
                 _this.org_list = result.org_list;
-                _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
+                _this.pages = Math.ceil(result.org_list.length/_this.pageCount)>0?Math.ceil(result.org_list.length/_this.pageCount):1;
                 _this.fileName = result.SaveName;
                 _this.orgCount = result.count;
             });

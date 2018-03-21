@@ -142,7 +142,7 @@ export default {
             this.emitAjaxFile(URL, formData, function(result) {
                 _this.file = null;
                 _this.room_list = result.room_list;
-                _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
+                _this.pages = Math.ceil(result.room_list.length/_this.pageCount)>0?Math.ceil(result.room_list.length/_this.pageCount):1;
                 _this.fileName = result.SaveName;
                 _this.roomCount = result.count;
             });

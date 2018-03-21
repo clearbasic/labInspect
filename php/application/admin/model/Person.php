@@ -158,19 +158,27 @@ class Person extends Common
      */
     public function login($param,$username, $password, $verifyCode = '', $isRemember = false, $type = false)
     {
+        //是否多角色判断
         $flag = !empty($param['flag'])? $param['flag']: '';
-
+        //统一认证登录
         $tyrz = !empty($param['tyrz'])? $param['tyrz']: '';
+        $time = !empty($param['time'])? $param['tyrz']: '';
+        $tyrz_st = md5($username.'_'.$param['time'].'_chingo');
+        $tyrz_flag = true;
+        if (!$tyrz || $tyrz != $tyrz_st) $tyrz_flag = false;
 
+        //角色ID
         $group_id = !empty($param['group_id'])? $param['group_id']: '';
+        //单位ID
         $org_id = !empty($param['org_id'])? $param['org_id']: '';
 
-        if ($flag != 'true' && !$group_id ){
+        if ( !$flag ){
             if (!$username) {
                 $this->error = '帐号不能为空';
                 return false;
             }
-            if (!$tyrz){
+
+            if (!$tyrz && $tyrz == $tyrz_st){
                 if (!$password){
                     $this->error = '密码不能为空';
                     return false;
