@@ -242,6 +242,8 @@ return [
         'Room/roomExport',
         'Room/roomAptitude',
         'Room/roomCard',
+        'Org/orgImport',
+        'Org/orgRunimport',
         'Person/personExport',
         'Statistics/responExport',
         'SystemConfig/index',
@@ -250,6 +252,8 @@ return [
     ],
 
     'default_password' => '123456',
+
+    'redirect' => 'http://192.168.240.81:8090',
 
 
 ];

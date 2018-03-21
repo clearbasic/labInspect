@@ -16,10 +16,27 @@
             </div>
             <!-- 右侧主要内容 -->
             <div class="page-content">
+
                 <div class="page-header">
                     <h1>
                         {{title}}
                         <div class="pull-right">
+                            <span class="dropdown" slot="right">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    操作
+                                    <i class="ace-icon fa fa-caret-down bigger-110 width-auto"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-info">
+                                    <li>
+                                        <router-link class="" :to="pathName+'/importOrg'">
+                                            <i class="ace-icon fa fa-cloud-upload"></i>
+                                            导入单位信息
+                                        </router-link>
+                                    </li>
+                                </ul>
+                            </span>
+
+
                             <router-link class="btn btn-primary btn-sm" tag="button" v-if="permission[loginUser.group_level] >= permission.college"
                             :to="{path:pathName+'/orgEdit'}">
                                 <i class="ace-icon glyphicon glyphicon-plus hidden-480"></i>
@@ -28,6 +45,7 @@
                         </div>
                     </h1>
                 </div>
+
                 <div class="table-responsive" v-if="loginUser.group_level != 'school'">
                     <table class="table table-striped table-bordered table-hover dataTable">
                         <thead>

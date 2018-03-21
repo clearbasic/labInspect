@@ -1,7 +1,7 @@
 <template>
     <div class="login boxCenter">
         <div class="loginherder">
-            <img src="../../assets/images/loginLogo.png" alt="loginLogo">
+            <img src="../../assets/images/cgsoft.png" width="290px" height="61px" alt="loginLogo">
             <span class="bigger-200" style="display:inline-block;vertical-align:bottom;color:#014099">实验室安全检查管理系统</span>
         </div>
         <div class="loginContent">
@@ -33,7 +33,7 @@
                         </div>
                         <div class="inputGroup clearfix">
                             <div class="fl verificationCode">
-                                <button class="loginBtn fl" @click="login"> 登录</button>
+                               <button class="loginBtn fl" @click="login"> 登录</button>
                             </div>
                             <div class="fr verificationCodeImg">
                                 <input type="reset" class="loginBtn fr" value="重置">
@@ -62,7 +62,7 @@
             </div>
         </div>         
         <div class="loginfooter">
-            <p>技术支持：杭州创高软件科技有限公司 2017 徐州医科大学 版权所有</p>
+            <p>技术支持：杭州创高软件科技有限公司 2017  版权所有</p>
         </div>
     </div>
 </template>
@@ -93,12 +93,18 @@
                 }
                 this.remeberMe();
                 const url = this.serverUrl +"/admin/login/login";
+
+                //const url = "http://cas.xzhmu.edu.cn/cas/login?service="+this.serverUrl+"/admin/login/login";
+
                 this.emitAjax(url,data,function(result){
                     _this.loginSuccess(result);
                 },function(){
+
                     delLocalData();
                     _this.refreshVerifyCode();
                 })
+
+
             },
             loginSuccess(result){
                 //登录成功做处理

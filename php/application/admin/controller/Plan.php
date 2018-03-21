@@ -30,7 +30,6 @@ class Plan extends Checklogin
         $model = model('plan');
         $param = $this->param;
         $data = $model->createData($param);
-
         if (!$data) {
             return resultArray(['error' => $model->getError()]);
         }

@@ -65,7 +65,7 @@
                 </div>
                 <div class="room_list" v-if="room_list.length > 0">
                     <h4>
-                        上传数据预览
+                        上传数据预览<span class="red">*导入房间信息时请确保所属院系和实验室信息已在系统中</span>
                     </h4>
                     <div class="table-responsive">
                         <table class="table table-bordered nomargin">

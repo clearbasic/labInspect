@@ -304,7 +304,6 @@ function getClientIP(){
     }elseif(getenv("REMOTE_ADDR")) {
         $ip = getenv("REMOTE_ADDR");
     }else $ip = "Unknow";
-
     return $ip;
 }
 

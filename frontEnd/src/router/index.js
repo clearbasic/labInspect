@@ -15,6 +15,7 @@ import CheckWorkResult from "../components/checkWork/checkWorkResult.vue";
 import MyCheck from "../components/myCheck/myCheck.vue";
 import OrgList from "../components/org/orgList.vue";
 import OrgEdit from "../components/org/orgEdit.vue";
+import ImportOrg from "../components/org/import.vue";
 import User from "../components/user/user.vue";
 import ImportPerson from "../components/user/import.vue";
 import Room from "../components/room/room.vue";
@@ -108,6 +109,14 @@ export default new Router({
 						active:pathName+"/orgList",
 					}
 				},{
+                    path:pathName+"/importOrg",
+                    name:"importOrg",
+                    component:ImportOrg,
+                    meta:{
+                        title:"单位导入 - "+title,
+                        active:pathName+"/orgList",
+                    }
+                },{
 					path:pathName+"/userList",
 					name:"userList",
 					component:User,

@@ -88,7 +88,7 @@ export default {
     name: "checkStatistics",
     data() {
         return {
-            title: "检查统计表",
+            title: "评优推荐",
             selectPlan: {},
             task_list:{
                 school:[],

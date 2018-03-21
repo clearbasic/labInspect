@@ -29,6 +29,20 @@ class Common extends Model
 		return $data;
 	}
 
+    /**
+     * @param string $id
+     * @param $name
+     */
+
+	public function getDataByids($id =''){
+        $data = $this->get($id);
+        if (!$data){
+            $this->error='暂无此数据';
+            return false;
+        }
+        return $data;
+    }
+
 	/**
 	 * [createData 新建]
 	 * @linchuangbin
@@ -53,6 +67,15 @@ class Common extends Model
 			return false;
 		}
 	}
+
+	public function createDa($param){
+	    //验证
+        $validate = validate($this->name);
+        if (!$validate->check($param)){
+            $this->error = $validate->getError();
+        }
+    }
+
 
 	/**
 	 * [updateDataById 编辑]

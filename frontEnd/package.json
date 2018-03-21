@@ -5,7 +5,7 @@
   "author": "liuwusong",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --host 192.168.240.85 --config build/webpack.dev.conf.js --port 5050",
+    "dev": "webpack-dev-server --inline --progress --host 192.168.240.81 --config build/webpack.dev.conf.js --port 8090",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
