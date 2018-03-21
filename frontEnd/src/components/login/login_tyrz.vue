@@ -139,7 +139,6 @@ export default {
                 this.$router.push(this.pathName + "/");
             }
             const username = this.getCookie("tyrz");
-            console.log(username)
             if(username){
                 this.username = username;
                 this.time = Date.parse(new Date());
@@ -158,7 +157,7 @@ export default {
                 return false;
             }
             if (this.tyrz == "") {
-                alert("请填写密码！");
+                alert("验证码不正确！");
                 return false;
             }
             return true;
