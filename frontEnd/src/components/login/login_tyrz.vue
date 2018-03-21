@@ -48,13 +48,13 @@ export default {
     data() {
         return {
             username: "",
-            falg: "",
+            tyrz: "",
             verifyCode: "",
             remeberme: false,
             role_list: [],
             isSingle: true,
             selectRole: {},
-            frontUrl: "http://lws.chingo.cn:5050/login",
+            frontUrl: "http://192.168.240.81:8090/login",
         }
     },
     methods: {
@@ -64,7 +64,7 @@ export default {
             const _this = this;
             let data = {
                 username: this.username.replace(/\s+/g, ""),
-                falg: this.falg.replace(/\s+/g, ""),
+                tyrz: this.tyrz.replace(/\s+/g, ""),
             }
             this.remeberMe();
             const url = this.serverUrl + "/admin/login/login";
@@ -138,7 +138,7 @@ export default {
             console.log(username)
             if(username){
                 this.username = username;
-                this.falg = "111"
+                this.tyrz = "111"
                 this.login();
             }
         },
@@ -152,12 +152,8 @@ export default {
                 alert("请填写用户名！");
                 return false;
             }
-            if (this.falg == "") {
+            if (this.tyrz == "") {
                 alert("请填写密码！");
-                return false;
-            }
-            if (this.verifyCode == "") {
-                alert("请填写验证码！");
                 return false;
             }
             return true;
@@ -167,7 +163,7 @@ export default {
                 let c_start = document.cookie.indexOf(c_name + "=")
                 if (c_start != -1) {
                     c_start = c_start + c_name.length + 1
-                    c_end = document.cookie.indexOf(";", c_start)
+                    let c_end = document.cookie.indexOf(";", c_start)
                     if (c_end == -1) c_end = document.cookie.length
                     return unescape(document.cookie.substring(c_start, c_end));
                 }

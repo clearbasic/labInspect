@@ -36,13 +36,26 @@ class Login extends Common
         $model = model('person');
         $param = $this->param;
         $data = $model->login_tyrz($param);
-        if (!$data) {
-            return redirect(config('redirect'));
-        }
-        Cookie::delete('tyrz');
-        Cookie::set('tyrz',array('username'=>(string)$data,'tyrz'=>true),'60');
 
-        return redirect(config('redirect'));
+        if(isset($param["redirectUrl"]) && !empty($param["redirectUrl"])) {
+            $redirectUrl = $param["redirectUrl"];
+        }else{
+            $redirectUrl = '/';
+        }
+        if (!$data) {
+            return redirect($redirectUrl);
+        }
+
+//        $domain = Request::instance()->domain();
+//        $temp = parse_url($redirectUrl);
+//        $arr = explode('.', $temp['host']);
+//        $size = count($arr);
+//        $name = $arr[$size - 2] . '.' . $arr[$size - 1];
+//        cookie(['path' => '/', 'domain' => $name]);
+
+        cookie('tyrz', null);
+        Cookie::set('tyrz',(string)$data,'60');
+        return redirect($redirectUrl);
     }
 
     public function relogin()
@@ -64,6 +77,7 @@ class Login extends Common
     {
         $param = $this->param;
         cache('Auth_'.$param['authkey'], null);
+        Cookie::delete('tyrz');
         return resultArray(['data'=>'退出成功']);
     }
 
