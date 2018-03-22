@@ -19,12 +19,6 @@
                     <span><small>实验室安全检查</small></span>
                     <b class="ace-icon fa fa-caret-down"></b>
                 </a>
-                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                    <li><a href="">其他系统</a></li>
-                    <li><a href="">其他系统</a></li>
-                    <li><a href="">其他系统</a></li>
-                    <li><a href="">其他系统</a></li>
-                </ul>
             </div>
             <div class="navbar-buttons navbar-header pull-right" v-if="loginUser.username">
                 <ul class="nav ace-nav">

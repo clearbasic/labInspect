@@ -15,5 +15,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="tpAdmin" />
+    <orderEntry type="module" module-name="think" />
+    <orderEntry type="module" module-name="tp5" />
   </component>
 </module>

@@ -175,6 +175,7 @@ return [
     'cache'                  => [
         // 驱动方式
         'type'   => 'File',
+//        'type'   => 'Redis',
         // 缓存保存目录
         'path'   => CACHE_PATH,
         // 缓存前缀
@@ -195,6 +196,7 @@ return [
         'prefix'         => '',
         // 驱动方式 支持redis memcache memcached
         'type'           => '',
+//        'type'           => 'redis',
         // 是否自动开启 SESSION
         'auto_start'     => true,
     ],
@@ -254,7 +256,7 @@ return [
     'default_password' => '123456',
 
 //    'redirect' => 'http://192.168.240.81:8090',
-    'redirect' => 'ckq.chingo.cn:5050/login',
+    'redirect' => '/',
 
     'paginate'               => [
         'type'      => 'bootstrap',

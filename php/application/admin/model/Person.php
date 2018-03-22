@@ -43,11 +43,12 @@ class Person extends Common
         $map = [];
         //获取登录用户的子单位ID组
         $flag = !empty($param['flag']) ? $param['flag']: '0';
+        $map['person.org_id'] = ['exp',' is not null'];
+
         if ($flag !== 'all'){
             $childIds = getChildOrgIds($GLOBALS['userInfo']['org_id']);
             if (!empty($childIds))$map['person.org_id'] = ['in', $childIds];
         }
-
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         if ($keywords) {
             $map['person.username|person.name'] = ['like', '%'.$keywords.'%'];
@@ -79,7 +80,6 @@ class Person extends Common
             `person`.person_state, org.org_name AS org_name')
             ->order('person.org_id')
             ->select();
-
        foreach ($list as $k => $v){
             $data[] = $v->append(['Groups'])->toarray();
         }
@@ -102,10 +102,7 @@ class Person extends Common
         return $checkData;
     }
 
-    /**
-     * 通过id修改指标体系
-     * @param  array   $param  [description]
-     */
+
     public function addData($param)
     {
         // 验证
@@ -114,8 +111,6 @@ class Person extends Common
             $this->error = $validate->getError();
             return false;
         }
-
-//        $param['firstchar']=GetFirstCharter($param['name']);
         $param['password_salt']=random(10);
         $param['password']=encrypt_password($param['password'],$param['password_salt']);
 
@@ -351,7 +346,8 @@ class Person extends Common
 
         //当前集成系统所在的服务器和端口号，服务器可以是机器名、域名或ip，建议使用域名。端口不指定的话默认是80
         //以及新增加的集成登录入口
-        $this_url = "http://192.168.240.81:8081/lab-inspect/php/index.php/admin/login/login_tyrz";
+//        $this_url = "http://192.168.240.81:8081/lab-inspect/php/index.php/admin/login/login_tyrz";
+        $this_url = "http://222.193.95.173/php/index.php/admin/login/login_tyrz";
 
         //判断是否有验证成功后需要跳转页面，如果有，增加跳转参数
         if(isset($param["redirectUrl"]) && !empty($param["redirectUrl"])) {

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/lab-inspect.iml" filepath="$PROJECT_DIR$/.idea/lab-inspect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../think/.idea/think.iml" filepath="$PROJECT_DIR$/../think/.idea/think.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tp5/.idea/tp5.iml" filepath="$PROJECT_DIR$/../tp5/.idea/tp5.iml" />
       <module fileurl="file://$PROJECT_DIR$/../tpAdmin/.idea/tpAdmin.iml" filepath="$PROJECT_DIR$/../tpAdmin/.idea/tpAdmin.iml" />
     </modules>
   </component>
