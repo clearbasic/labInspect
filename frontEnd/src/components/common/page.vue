@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul class="pagination nomargin">
+        <ul class="pagination">
             <li>
                 <a @click="clickPage(1)">首页</a>
             </li>

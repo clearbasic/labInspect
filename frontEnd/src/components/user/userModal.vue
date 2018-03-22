@@ -32,7 +32,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user,index) in userList" :key="'user'+index"
-                        v-if="(index>=(page-1)*pageCount && index<page*pageCount)&&user.username!='admin'"
+                        v-if="user.username!='admin'"
                     >
                         <td>
                             {{user.username}} <span v-if="user.username == loginUser.username">（自己）</span>
@@ -98,14 +98,33 @@
                 isOpen:false,
             }
         },
+        watch:{
+            searchType(){
+                this.getUserList();
+            },
+            page(){
+                this.getUserList();
+            }
+        },
         methods:{
-            getUserList(data){
+            getUserList(){
                 const _this = this;
                 const URL = this.serverUrl +"/admin/person/index";
-                this.emitAjax(URL,data,function(result){    
-                    _this.userList = result;
-                    _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
-                    _this.setIsOpen(false)
+                let datas = {
+                    page:this.page,
+                    limit:this.pageCount,
+                }
+                if(this.searchUserName){
+                    datas.keywords = this.searchUserName;
+                }
+                if(this.searchType){
+                    datas.flag = this.searchType;
+                }
+                this.emitAjax(URL,datas,function(result){
+                    _this.userList = result.person_list;
+                    _this.pages = result.pages;
+                    
+                    _this.setIsOpen(false);
                 })
             },
             showUserList(){
@@ -125,9 +144,8 @@
                 if(event.type == "keyup" && event.key!="Enter"){
                     return false;
                 }
-                this.getUserList({
-                    keywords:this.searchUserName
-                })
+                this.page=1;
+                this.getUserList()
             },
             setPage(page){
                 this.page = page;
@@ -135,19 +153,6 @@
             setIsOpen(bool){
                 this.isOpen = bool;
             }
-        },
-        watch:{
-            searchType(){
-                if(this.searchType){
-                    this.getUserList({
-                        flag:this.searchType
-                    })
-                }else{
-                    this.getUserList();
-                }
-                
-            }
-            
         },
         mounted(){
             this.getUserList();
