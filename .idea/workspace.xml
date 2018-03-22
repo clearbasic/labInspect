@@ -16,14 +16,6 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../think/application/base/model/AdminUser.php" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../think/application/index/controller/New1.php" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../think/application/index/model/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/lab-inspect.iml" afterPath="$PROJECT_DIR$/.idea/lab-inspect.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontEnd/config/index.js" afterPath="$PROJECT_DIR$/frontEnd/config/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontEnd/src/components/common/header.vue" afterPath="$PROJECT_DIR$/frontEnd/src/components/common/header.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/application/admin/model/Person.php" afterPath="$PROJECT_DIR$/php/application/admin/model/Person.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/php/config/config.php" afterPath="$PROJECT_DIR$/php/config/config.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../think/application/common.php" afterPath="$PROJECT_DIR$/../think/application/common.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../think/application/config.php" afterPath="$PROJECT_DIR$/../think/application/config.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../think/application/database.php" afterPath="$PROJECT_DIR$/../think/application/database.php" />
@@ -414,7 +406,7 @@
       <workItem from="1520815399079" duration="1377000" />
       <workItem from="1521443001091" duration="7532000" />
       <workItem from="1521695412837" duration="2939000" />
-      <workItem from="1521702520199" duration="4854000" />
+      <workItem from="1521702520199" duration="5449000" />
     </task>
     <task id="LOCAL-00001" summary="php测试接口提交">
       <created>1512366959202</created>
@@ -511,7 +503,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="768616000" />
+    <option name="totallyTimeSpent" value="769211000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -523,7 +515,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15884861" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
