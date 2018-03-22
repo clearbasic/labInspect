@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="inputGroup" v-else>
-                            <a class='btn btn-block btn-primary' :href="'http://cas.xzhmu.edu.cn/cas/login?service='+serverUrl+'/admin/login/login_tyrz?redirectUrl='+frontUrl">统一身份认证登录</a>
+                            <a class='btn btn-block btn-primary' style='margin-top:60px' :href="'http://cas.xzhmu.edu.cn/cas/login?service='+serverUrl+'/admin/login/login_tyrz?redirectUrl='+frontUrl">统一身份认证登录</a>
                         </div>
                     </div>
                     <div class="loginFormBox" v-if="!isSingle">

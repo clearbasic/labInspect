@@ -136,8 +136,9 @@
                 const _this = this;
                 const URL = this.serverUrl +"/admin/person/index";
                 this.emitAjax(URL,data,function(result){
-                    _this.userList = result;
+                    _this.userList = result.person_list;
                     _this.pages = Math.ceil(result.length/_this.pageCount)>0?Math.ceil(result.length/_this.pageCount):1;
+                    _this.pages = result.pages;
                     if(_this.searchUserName){
                         _this.setDownUrl("?keywords="+_this.searchUserName);
                     }else{

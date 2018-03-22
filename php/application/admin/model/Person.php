@@ -53,21 +53,39 @@ class Person extends Common
             $map['person.username|person.name'] = ['like', '%'.$keywords.'%'];
         }
         $list = $this->alias('person')->where($map);
+
+
+        $count = db::name('dc_person')
+            ->alias('person')
+            ->where($map)
+            ->join('dc_org org', 'person.org_id=org.org_id', 'LEFT')
+            ->field('`person`.username,`person`.name,`person`.mobile,`person`.email,`person`.org_id,
+            `person`.person_state, org.org_name as org_name')
+            ->order('person.org_id')
+            ->count();
+        $limits = $limit ? $limit : config('paginate')['list_rows'];
+        $pages = ceil($count/$limits);
+
         // 若有分页
         if ($page && $limit) {
             $list = $list->page($page, $limit);
+        }else{
+            $list = $list->page(1, config('paginate')['list_rows']);
         }
+
         $list = $list
             ->join('dc_org org', 'person.org_id=org.org_id', 'LEFT')
-            ->field('person.*,org.org_name as org_name')
-            ->order('org.org_level,id')
+            ->field('`person`.username,`person`.name,`person`.mobile,`person`.email,`person`.org_id,
+            `person`.person_state, org.org_name AS org_name')
+            ->order('person.org_id')
             ->select();
 
-        foreach ($list as $k => $v){
+       foreach ($list as $k => $v){
             $data[] = $v->append(['Groups'])->toarray();
         }
-
-        return $data;
+        $result['pages'] = $pages;
+        $result['person_list'] = $data;
+        return $result;
     }
 
     public function getuser($username)

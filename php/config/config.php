@@ -256,5 +256,9 @@ return [
 //    'redirect' => 'http://192.168.240.81:8090',
     'redirect' => 'ckq.chingo.cn:5050/login',
 
-
+    'paginate'               => [
+        'type'      => 'bootstrap',
+        'var_page'  => 'page',
+        'list_rows' => 20,
+    ],
 ];

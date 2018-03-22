@@ -70,7 +70,7 @@ class Login extends Common
     {
         $param = $this->param;
         cache('Auth_'.$param['authkey'], null);
-        cookie(null,'tyrz');
+        cookie('tyrz',null);
         return resultArray(['data'=>'退出成功']);
     }
 

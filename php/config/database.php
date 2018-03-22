@@ -11,8 +11,8 @@ return [
     'hostname'       => 'mysql-web.crigh.net',
 //    'hostname'       => 'localhost',
     // 数据库名
-    'database'       => 'lab-inspect',
-//    'database'       => 'lab_inspect',
+//    'database'       => 'lab-inspect',
+    'database'       => 'lab_inspect_xzmu',
     // 用户名
     'username'       => 'root',
     // 密码
